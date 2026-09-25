@@ -30,7 +30,7 @@
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
 window.HERO_RELEASE = 91;
-window.HERO_BUILD = 'R121-2026.09.24.1';
+window.HERO_BUILD = 'R122-2026.09.25.1';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -390,6 +390,9 @@ window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
   input:focus,select:focus{outline:none;border-color:var(--signal)}
   input:disabled,select:disabled{background:#f4f2ee;color:#8a8f96;cursor:not-allowed}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* R122: grid cells may shrink, so long labels wrap instead of pushing off the screen */
+.row2>*{min-width:0} label{overflow-wrap:break-word}
+@media(max-width:600px){#ge-details-block .row2{grid-template-columns:1fr}}
   .hint{font-size:11px;color:var(--steel);margin-top:4px}
   .btn{width:100%;background:var(--signal);color:#fff;border:none;border-radius:8px;padding:13px;font-family:'Barlow Condensed';font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
   .btn:hover{background:var(--signal-d)} .btn:disabled{background:#c9b8b4;cursor:not-allowed}
@@ -6247,6 +6250,15 @@ function geShowForm(){
     const sel=document.getElementById('ge-loc');
     for(const o of sel.options){ if(aliasWs(normWs(o.value))===list[0]){ sel.value=o.value; break; } }
   }
+  /* R122 (Ravi 25-09-2026): "Location has to be Chinchwad as default now. No need to select
+     location again and again." Last choice on this phone, else CHINCHWAD. */
+  { const sel=document.getElementById('ge-loc');
+    if(sel && !sel.value){
+      let want=''; try{ want=localStorage.getItem('hero_ge_loc')||''; }catch(e){}
+      const opts=[...sel.options].map(o=>o.value).filter(Boolean);
+      sel.value = opts.includes(want) ? want : (opts.find(v=>/CHINCHWAD/i.test(v))||'');
+    }
+    if(sel && !sel._r122){ sel._r122=1; sel.addEventListener('change',()=>{ try{ localStorage.setItem('hero_ge_loc', sel.value); }catch(e){} }); } }
   // Guard name always comes from logged-in user — no dropdown needed
   document.getElementById('ge-guard').value = USER.personName || '';
   GE_GUARD_LOCKED=true;
@@ -6260,7 +6272,8 @@ function geLoadMyDashboard(){
   jgetReliable('today', {}, function(res, isStale){
     if(!res || res.ok===false){ if(!isStale){ const box=document.getElementById('ge-mylist'); if(box) box.innerHTML='<div class="hint" style="color:var(--signal-d)">Could not load — still retrying in the background.</div>'; } return; }
     const all=((res&&res.entries)||[]).filter(g=>wsAllowed(g.location));
-    GE_MY_LIST=all.slice().reverse();
+    /* R122 (Ravi 25-09-2026): list runs first to last, not last to first */
+    GE_MY_LIST=all.slice().sort((a,b)=>(new Date(a.time).getTime()||0)-(new Date(b.time).getTime()||0));
     GE_TODAY_COUNT=all.filter(g=>String(g.empno||'')===String(USER.empno||'')).length;
     const title=document.getElementById('ge-mylist-title');
     if(title) title.textContent="Today's Gate Entries — All Guards";
@@ -6269,7 +6282,7 @@ function geLoadMyDashboard(){
   });
 }
 function geUpdateMyCount(total){ const el=document.getElementById('ge-mycount'); if(el) el.textContent=(total!==undefined?total:GE_MY_LIST.length)+(GE_TODAY_COUNT?' · '+GE_TODAY_COUNT+' by me':''); }
-function geAddMyEntry(e){ GE_MY_LIST.unshift(e); GE_TODAY_COUNT++; geUpdateMyCount(GE_MY_LIST.length); geRenderMyList(); }
+function geAddMyEntry(e){ GE_MY_LIST.push(e); GE_TODAY_COUNT++; geUpdateMyCount(GE_MY_LIST.length); geRenderMyList(); }
 function geRenderMyList(){
   const box=document.getElementById('ge-mylist'); if(!box) return;
   if(!GE_MY_LIST.length){ box.innerHTML='<div class="hint">No entries logged yet today — saved entries from all guards will appear here.</div>'; return; }
@@ -28129,11 +28142,10 @@ window.heroChangeMobile=function(){
       '<div style="margin:8px 0 6px;font-size:16px;font-weight:800;color:var(--signal-d);line-height:1.45">लोकेशनशिवाय Sehgal Hero ॲप चालणार नाही.</div>'+
       '<div style="margin:0 0 10px;font-size:14px;line-height:1.5" id="gl-msg">'+esc(why)+' गेट एन्ट्री आणि एस्टिमेट वर्कशॉपमधूनच झाले, हे लोकेशनवरून नोंदवले जाते.</div>'+
       HOWTO_MR+
-      '<button class="btn" id="gl-retry" style="background:#15803d;border-color:#15803d;font-size:16px">✅ लोकेशन चालू केले — पुन्हा तपासा</button>'+
-      '<div style="text-align:center;margin-top:12px"><span id="gl-skip" style="cursor:pointer;color:#94a3b8;font-size:12px;text-decoration:underline">नंतर (Later)</span></div>');
+      '<button class="btn" id="gl-retry" style="background:#15803d;border-color:#15803d;font-size:16px">✅ लोकेशन चालू केले — पुन्हा तपासा</button>');
+    /* R122 (Ravi 25-09-2026): "Drop the Later button. Keep only 1. They have to update." */
     m.setAttribute('data-kind','perm');
     $('gl-retry').onclick=function(){ $('gl-msg').textContent='तपासत आहे…'; heroGeoCheck(true); };
-    $('gl-skip').onclick=function(){ goOn(m); };
   }
   function lockScreen(msg, v){
     geoLog('premises', v||{message:msg});
@@ -28162,7 +28174,7 @@ window.heroChangeMobile=function(){
       if(top){ busy=false; lastOk=Date.now(); var g0=$('geo-lock'); if(g0) g0.remove(); return; }
       return sbRpc('hero_site_check',{p_lat:f.lat==null?null:f.lat, p_lng:f.lng==null?null:f.lng, p_acc:f.acc==null?null:f.acc, p_platform:plat}).then(function(v){
         busy=false;
-        if(v && v.ok){ lastOk=Date.now(); var g=$('geo-lock'); if(g) g.remove(); return; }
+        if(v && v.ok){ if(!lastOk) geoLog('ok', {acc:f.acc==null?null:Math.round(f.acc)}); lastOk=Date.now(); var g=$('geo-lock'); if(g) g.remove(); return; }
         if(!v || v.ok!==false) return;          /* server unreachable: never lock on our own failure */
         lockScreen((f && f.err && v.why==='no-location') ? f.err : (v.message||'The app works only inside the workshop.'), v);
       });
@@ -28215,7 +28227,7 @@ window.heroChangeMobile=function(){
     var t=document.getElementById(id+'-wa');
     if(!t){
       t=document.createElement('div'); t.id=id+'-wa';
-      t.style.cssText='display:none;margin-top:4px;padding:2px 8px;border-radius:999px;border:1px solid;font-size:11.5px;font-weight:700;line-height:1.5;width:max-content;max-width:100%;white-space:normal';
+      t.style.cssText='display:none;margin-top:4px;padding:2px 8px;border-radius:999px;border:1px solid;font-size:11.5px;font-weight:700;line-height:1.5;width:fit-content;max-width:100%;white-space:normal;overflow-wrap:break-word';
       inp.insertAdjacentElement('afterend', t);
     }
     return t;
