@@ -29,8 +29,8 @@
    new app. Nothing else to decode.
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
-window.HERO_RELEASE = 115;
-window.HERO_BUILD = 'R162-2026.10.24.1';
+window.HERO_RELEASE = 116;
+window.HERO_BUILD = 'R163-2026.10.24.2';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -8276,6 +8276,18 @@ function esBuild(fam, dec, km, modelName){
     if(x.src!=='service') return;
     x.why=(x.why||'Service labour for this visit')+' — normally charged on a '+String((dec&&dec.label)||'service').toLowerCase()+' visit; ✕ it, or let the amount trim it, if the customer is negotiating.';
   });
+  /* R163 (Ravi 24-10-2026): "Keep on increasing the estimates slowly by slowly 100 rs every week."
+     hero-app 0157 adds Rs 100 every Monday to hero_estimate_step.total (and to every class floor). The PAID
+     service labour line (Hero DMS 202001, src 'service') carries that total on top of its billed rate, so every
+     paid estimate rises by itself, week after week. esBuild makes fresh lines on every call, so it is added once.
+     The line stays what R97 made it: the SA may still ✕ it or discount it (down to the class floor). */
+  try{
+    var _stp=window.HERO_EST_STEP, _stpRs=(_stp&&_stp.on!==false)?Math.max(0,Math.round(+_stp.total||0)):0;
+    if(_stpRs>0 && dec && dec.type==='paid') L.labour.forEach(function(x){
+      if(x.src!=='service' || !(+x.p>0)) return;
+      x.p=(+x.p||0)+_stpRs; x._stepRs=_stpRs;
+    });
+  }catch(e){}
   ES_ADDLAB.forEach(x=>L.labour.push({...x}));
   ES_ADDPART.forEach(x=>L.parts.push({...x}));
   if(ES_REMOVED.size){
@@ -31296,6 +31308,21 @@ var ES_BODY=null;
     }catch(e){}
   }
   setTimeout(loadFloors, 3000);
+  /* R163 (Ravi 24-10-2026, "Keep on increasing the estimates slowly by slowly 100 rs every week."): the weekly
+     step from hero-app 0157. esBuild adds window.HERO_EST_STEP.total to the paid-service labour line. Read at start
+     and again every 6 hours, so a phone left open over a Monday still picks up the new week. */
+  window.HERO_EST_STEP=window.HERO_EST_STEP||null;
+  function loadEstStep(){
+    try{
+      if(typeof sbRpc!=='function') return;
+      sbRpc('hero_estimate_step_state',{}).then(function(d){
+        if(d&&d.ok){ var was=window.HERO_EST_STEP&&window.HERO_EST_STEP.total; window.HERO_EST_STEP=d;
+          if(was!==d.total && typeof esUpdateLive==='function' && document.getElementById('es-type')){ try{ esUpdateLive(); }catch(e){} } }
+      }).catch(function(){});
+    }catch(e){}
+  }
+  setTimeout(loadEstStep, 2500);
+  setInterval(loadEstStep, 6*60*60*1000);
   /* the line under the labour discount box: labour lines under the class floor */
   setInterval(function(){
     try{
@@ -31307,6 +31334,9 @@ var ES_BODY=null;
       w.innerHTML=st.below
         ? '<span class="es-warn">⚠ Labour '+rs(st.labour)+' is below the '+esc(cls.replace('upto110','up to 110 cc').replace('cc125','125 cc').replace('cc150plus','150 cc +').replace('premium','premium'))+' standard '+rs(st.floor)+' — add the service labour lines. No labour discount below the standard.</span>'
         : '<span style="color:#166534">● Labour '+rs(st.labour)+' · standard for this class '+rs(st.floor)+' (labour discount stops there)</span>';
+      /* R163: the weekly step, said in one line to the SA (screen only - never on the printed estimate) */
+      var ws=window.HERO_EST_STEP;
+      if(ws && ws.on!==false && +ws.total>0) w.innerHTML+='<div style="color:#1e40af;margin-top:2px">▲ Workshop rate step week '+num(ws.week)+': paid-service labour includes +'+rs(ws.total)+' (+'+rs(ws.step)+' every Monday'+(ws.next?', next on '+esc(ws.next):'')+')</div>';
     }catch(e){}
   }, 1200);
 
@@ -31339,7 +31369,8 @@ var ES_BODY=null;
     var b=document.getElementById('wp-body'); if(!b) return;
     if(!force && D) { paint(); return; }
     b.innerHTML='<div class="hint">Loading the ten objectives…</div>';
-    sbRpc('hero_programme_page',{p_log:150}).then(function(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'no data'); D=d; paint(); })
+    var stp=sbRpc('hero_estimate_step_state',{}).then(function(x){ if(x&&x.ok) window.HERO_EST_STEP=x; }).catch(function(){});
+    sbRpc('hero_programme_page',{p_log:150}).then(function(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'no data'); D=d; return stp; }).then(function(){ paint(); })
       .catch(function(e){ b.innerHTML='<div class="vh-alert">▲ '+esc(e&&e.message||e)+'</div>'; });
   };
   function names(arr, k, max){ arr=arr||[]; var s=arr.slice(0,max||6).map(function(x){ return x[k||'name']; }).join(', '); return s+(arr.length>(max||6)?' +'+(arr.length-(max||6)):''); }
@@ -31389,6 +31420,20 @@ var ES_BODY=null;
       html+='<tr class="'+(x.belowFloor?'wp-bad':'')+'"><td><b>'+esc(x.model)+'</b></td><td>'+esc(x.class)+'</td><td>'+num(x.bills)+'</td><td>'+rs(x.avg)+'</td><td>'+rs(x.median)+'</td><td>'+rs(x.p75)+'</td><td>'+(x.estimateAvg!=null?rs(x.estimateAvg)+' ('+num(x.estimates)+')':'—')+'</td><td>'+rs(x.floor)+(x.belowFloor?' <span class="wp-red">below</span>':'')+'</td></tr>';
     });
     html+='</tbody></table>';
+    /* R163 · 9 · the weekly estimate step (hero-app 0157; Ravi 24-10-2026) */
+    var ws=window.HERO_EST_STEP;
+    html+='<div class="vh-h3">9 · Estimates up every week — Ravi 24-10-2026: "Keep on increasing the estimates slowly by slowly 100 rs every week."</div>';
+    if(!ws){ html+='<div class="vh-s">Loading the weekly step…</div>'; }
+    else{
+      html+='<div class="vh-form" style="margin-bottom:6px"><b style="color:'+(ws.on?'#166534':'#7F1D1D')+'">'+(ws.on?'● ON':'■ OFF')+'</b> · +'+rs(ws.step)+' every Monday 00:05 · started '+esc(ws.startedOn||'—')+
+        ' · week '+num(ws.week)+' · paid-service labour now carries <b>+'+rs(ws.total)+'</b>'+(ws.on&&ws.next?' · next step <b>'+esc(ws.next)+'</b>':'')+
+        (isTop()?' <label style="margin-left:8px">Step ₹ <input id="wp-step-rs" type="number" inputmode="numeric" value="'+esc(ws.step)+'" style="width:70px;padding:4px;border:1px solid #cbd5e1;border-radius:6px"></label> <button class="vh-mini" onclick="wpStep(null)">Set</button> <button class="vh-mini" onclick="wpStep('+(ws.on?'false':'true')+')">'+(ws.on?'Switch off':'Switch on')+'</button> <span id="wp-step-msg" class="vh-s"></span>':'')+'</div>';
+      html+='<table class="vh-t wp-t"><thead><tr><th>Week</th><th>Date</th><th>Step</th><th>Total over base</th><th>Floors after (110 · 125 · 150+ · premium)</th></tr></thead><tbody>';
+      (ws.history||[]).forEach(function(h){ var f=h.floors||{};
+        html+='<tr><td>'+num(h.week)+'</td><td>'+esc(h.at)+'</td><td>+'+rs(h.step)+'</td><td><b>+'+rs(h.total)+'</b></td><td>'+rs(f.upto110)+' · '+rs(f.cc125)+' · '+rs(f.cc150plus)+' · '+rs(f.premium)+'</td></tr>'; });
+      if(!(ws.history||[]).length) html+='<tr><td colspan="5" class="vh-s">No step yet.</td></tr>';
+      html+='</tbody></table>';
+    }
     /* 7 · reports */
     var reps=(m.o7||{}).reports||[];
     html+='<div class="vh-h3">7 · Daily reports today</div><table class="vh-t wp-t"><thead><tr><th>Report</th><th>Dealer</th><th>Expected</th><th>Last loaded</th><th>Fix</th></tr></thead><tbody>';
@@ -31410,6 +31455,12 @@ var ES_BODY=null;
     if(!cls) return; btn.disabled=true;
     sbRpc('hero_labour_floor_set',{p_class:cls, p_floor:v}).then(function(r){ if(!r||!r.ok) throw new Error((r&&r.error)||'not saved'); window.HERO_LABOUR_FLOOR[cls]=v; wpBoot(true); })
       .catch(function(e){ alert('Not saved: '+(e&&e.message||e)); btn.disabled=false; });
+  };
+  window.wpStep=function(on){
+    var inp=document.getElementById('wp-step-rs'), msg=document.getElementById('wp-step-msg');
+    var step=inp?Math.round(+inp.value||0):null; if(msg) msg.textContent='Saving…';
+    sbRpc('hero_estimate_step_set',{p_on:(on===null||on===undefined)?null:!!on, p_step:step}).then(function(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'not saved'); window.HERO_EST_STEP=d; wpBoot(true); })
+      .catch(function(e){ if(msg) msg.textContent='Not saved: '+(e&&e.message||e); });
   };
   window.wpNote=function(){
     var el=document.getElementById('wp-note'), msg=document.getElementById('wp-note-msg'); if(!el||!el.value.trim()) return;
