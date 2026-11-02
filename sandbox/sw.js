@@ -1,5 +1,5 @@
 /* Sandbox service worker — does nothing but own scope /sandbox/ (see build.py). */
-const HERO_BUILD = 'R164-2026.11.02.1';
+const HERO_BUILD = 'R165-2026.11.02.2';
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
 self.addEventListener('message', function (event) {
