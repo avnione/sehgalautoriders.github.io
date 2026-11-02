@@ -3,104 +3,303 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Download Sehgal Hero App</title>
-<meta property="og:title" content="Download the Sehgal Hero App">
-<meta property="og:description" content="Android · iPhone · Windows">
+<title>Install Sehgal Dealership App — Hero · Maruti · TATA</title>
+<meta property="og:title" content="Install Sehgal Dealership App (Hero · Maruti · TATA)">
+<meta property="og:description" content="One Single Route for Installation · Android · iPhone iOS · Windows · Tenant 1: Sehgal Autoriders">
 <meta property="og:image" content="https://sehgalautoriders.github.io/icon-192.png">
-<meta name="theme-color" content="#15181c">
+<meta name="theme-color" content="#0f2342">
 <link rel="icon" href="../icon-192.png">
 <style>
-  :root{--bg:#f6f5f2;--card:#fff;--ink:#171717;--mute:#6b6b6b;--line:#e5e5e5;--red:#d71920}
+  :root{--bg:#f6f5f2;--card:#fff;--ink:#171717;--mute:#5b6472;--line:#e2e8f0;--red:#d71920;--blue:#0f2342;--emerald:#047857;--amber:#b45309}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-  header{background:#15181c;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
-  header img{width:44px;height:44px;border-radius:10px;background:#fff}
-  header h1{font-size:18px;margin:0;flex:1}
+  header{background:linear-gradient(90deg,#15181c 0%,#0f2342 100%);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--red)}
+  header img{width:44px;height:44px;border-radius:10px;background:#fff;padding:2px}
+  .h-txt{flex:1}
+  .h-eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd}
+  header h1{font-size:18px;margin:2px 0 0;line-height:1.2}
   .lang{display:flex;gap:4px}
-  .lang button{border:1px solid #475569;background:transparent;color:#fff;border-radius:8px;padding:3px 9px;font-weight:800;font-size:13px}
-  .lang button.on{background:#fff;color:#15181c}
-  .pick{text-align:center;font-weight:700;color:var(--mute);margin:18px 16px 8px}
-  nav.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px;margin:0 auto;padding:0 16px}
-  nav.tiles button{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px 6px 12px;cursor:pointer;font:800 16px system-ui,sans-serif;color:var(--ink)}
-  nav.tiles button svg{width:56px;height:56px}
-  nav.tiles button small{font-weight:600;font-size:12px;color:var(--mute)}
-  nav.tiles button.on{border-color:var(--red);box-shadow:0 4px 14px rgba(215,25,32,.18)}
-  .get svg{width:26px;height:26px;vertical-align:-6px;margin-right:8px}
-  .get.dark{background:#111}
-  main{max-width:560px;margin:0 auto;padding:16px}
+  .lang button{border:1px solid #475569;background:transparent;color:#fff;border-radius:8px;padding:4px 10px;font-weight:800;font-size:13px;cursor:pointer}
+  .lang button.on{background:#fff;color:#0f2342}
+  .wrap{max-width:680px;margin:0 auto;padding:14px 16px 28px}
+  .section-box{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(15,35,66,.05)}
+  .pick-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin:0 0 4px}
+  .pick-sub{font-size:14px;font-weight:700;color:var(--mute);margin:0 0 12px}
+  nav.divisions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  nav.divisions button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:4px;background:#f8fafc;border:2px solid var(--line);border-radius:14px;padding:12px 10px;cursor:pointer;font:800 15px system-ui,sans-serif;color:var(--ink);transition:all .15s}
+  nav.divisions button .badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+  nav.divisions button .badge.hero{background:#fee2e2;color:#b91c1c}
+  nav.divisions button .badge.maruti{background:#dbeafe;color:#1e40af}
+  nav.divisions button .badge.tata{background:#fef3c7;color:#92400e}
+  nav.divisions button .d-name{font-size:15px;font-weight:900;margin-top:2px}
+  nav.divisions button .d-desc{font-size:11.5px;font-weight:600;color:var(--mute);line-height:1.35}
+  nav.divisions button.on[data-div="hero"]{background:#fff1f2;border-color:var(--red);box-shadow:0 4px 14px rgba(215,25,32,.16)}
+  nav.divisions button.on[data-div="maruti"]{background:#eff6ff;border-color:#1d4ed8;box-shadow:0 4px 14px rgba(29,78,216,.16)}
+  nav.divisions button.on[data-div="tata"]{background:#fffbeb;border-color:var(--amber);box-shadow:0 4px 14px rgba(180,83,9,.16)}
+  nav.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+  nav.tiles button{display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 6px 10px;cursor:pointer;font:800 15px system-ui,sans-serif;color:var(--ink)}
+  nav.tiles button svg{width:44px;height:44px}
+  nav.tiles button small{font-weight:700;font-size:11.5px;color:var(--mute)}
+  nav.tiles button.on{border-color:var(--red);background:#fff;box-shadow:0 4px 14px rgba(215,25,32,.15)}
+  body[data-active-div="maruti"] nav.tiles button.on{border-color:#1d4ed8;box-shadow:0 4px 14px rgba(29,78,216,.16)}
+  .div-pane{display:none}.div-pane.on{display:block}
   .tab{display:none}.tab.on{display:block}
-  .get{display:block;text-align:center;background:var(--red);color:#fff;text-decoration:none;font-weight:800;font-size:18px;padding:14px;border-radius:12px;margin:4px 0 14px}
-  .meta{color:var(--mute);font-size:13px;text-align:center;margin:-8px 0 14px}
+  .get{display:block;text-align:center;background:var(--red);color:#fff;text-decoration:none;font-weight:800;font-size:17px;padding:13px 14px;border-radius:12px;margin:6px 0 10px}
+  .get.blue{background:var(--blue)}
+  .get.emerald{background:var(--emerald)}
+  .get.dark{background:#111}
+  .get svg{width:24px;height:24px;vertical-align:-5px;margin-right:8px}
+  .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0 14px}
+  .quick-link{display:block;text-align:center;text-decoration:none;font-weight:800;font-size:13px;padding:10px 8px;border-radius:10px;border:1.5px solid #bfdbfe;background:#eff6ff;color:#1e3a8a}
+  .quick-link.hero-q{border-color:#fecaca;background:#fef2f2;color:#991b1b}
+  .meta{color:var(--mute);font-size:12.5px;text-align:center;margin:-4px 0 12px}
   ol{margin:0;padding-left:22px}
-  li{margin:6px 0}
-  .note{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:14px}
-  b.k{background:#f1f5f9;border:1px solid var(--line);border-radius:6px;padding:0 5px;font-weight:700}
+  li{margin:6px 0;font-size:14.5px}
+  .note{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+  .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+  footer{text-align:center;font-size:12px;color:var(--mute);padding:8px 16px 24px}
+  @media(max-width:520px){
+    nav.divisions{grid-template-columns:1fr}
+    .quick-grid{grid-template-columns:1fr}
+  }
 </style>
 </head>
-<body>
+<body data-active-div="hero">
 <header>
   <img src="../icon-192.png" alt="">
-  <h1 data-t="title">Sehgal Hero App</h1>
-  <div class="lang"><button data-l="en">EN</button><button data-l="hi">हिं</button><button data-l="mr">मरा</button></div>
+  <div class="h-txt">
+    <div class="h-eyebrow" data-t="tenantEye">TENANT 1 · SEHGAL AUTORIDERS · ONE INSTALL ROUTE</div>
+    <h1 data-t="title">Sehgal Dealership App</h1>
+  </div>
+  <div class="lang"><button data-l="en" class="on">EN</button><button data-l="hi">हिं</button><button data-l="mr">मरा</button></div>
 </header>
-<div class="pick" data-t="pick">Choose your phone or computer</div>
-<nav class="tiles">
-  <button data-tab="android"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#3DDC84"><path d="M14 30a18 18 0 0 1 36 0z"/><rect x="14" y="32" width="36" height="22" rx="4"/><rect x="5" y="32" width="7" height="18" rx="3.5"/><rect x="52" y="32" width="7" height="18" rx="3.5"/><rect x="21" y="50" width="7" height="12" rx="3.5"/><rect x="36" y="50" width="7" height="12" rx="3.5"/><path d="M21 9.5l4 6.5M43 9.5l-4 6.5" stroke="#3DDC84" stroke-width="2.6" stroke-linecap="round"/></g><circle cx="25" cy="23" r="2.4" fill="#fff"/><circle cx="39" cy="23" r="2.4" fill="#fff"/></svg><span>Android</span><small data-t="tA">APK</small></button>
-  <button data-tab="iphone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span>iPhone</span><small data-t="tI">iOS</small></button>
-  <button data-tab="windows"><svg viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/><rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/><rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/><rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/></svg><span>Windows</span><small data-t="tW">Microsoft</small></button>
-</nav>
-<main>
-  <section class="tab" id="android">
-    <a class="get" id="apk" href="https://github.com/sehgalautoriders/sehgalautoriders.github.io/releases/latest/download/SehgalHero.apk"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#fff"><path d="M14 30a18 18 0 0 1 36 0z"/><rect x="14" y="32" width="36" height="22" rx="4"/><rect x="5" y="32" width="7" height="18" rx="3.5"/><rect x="52" y="32" width="7" height="18" rx="3.5"/><rect x="21" y="50" width="7" height="12" rx="3.5"/><rect x="36" y="50" width="7" height="12" rx="3.5"/><path d="M21 9.5l4 6.5M43 9.5l-4 6.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g><circle cx="25" cy="23" r="2.4" fill="#d71920"/><circle cx="39" cy="23" r="2.4" fill="#d71920"/></svg><span data-t="getApk">Download the Android app</span></a>
-    <p class="meta" id="apkmeta"></p>
-    <ol>
-      <li data-t="a1">Tap the red button. The file SehgalHero.apk downloads.</li>
-      <li data-t="a2">Open it from the notification (or Files → Downloads).</li>
-      <li data-t="a3">If the phone says "not allowed", tap Settings → turn on "Allow from this source" → go back.</li>
-      <li data-t="a4">Tap Install, then Open. Log in once with your Employee No. and password.</li>
-      <li data-t="a5">If "Play Protect" warns about an unknown app: tap More details → Install anyway. The app is from Sehgal Autoriders, not the Play Store, so Google shows this once.</li>
-    </ol>
-    <p class="note" data-t="aNote">Updates to the screens come by themselves — you do not reinstall for every change. Remove the old Chrome shortcut from the home screen after the app works.</p>
+
+<div class="wrap">
+  <!-- STEP 1: TENANT 1 DIVISION CHOOSER (SEHGAL HERO OR SEHGAL MARUTI, NEXT SEHGAL TATA) -->
+  <section class="section-box" aria-label="Choose Dealership Division">
+    <p class="pick-title" data-t="step1Title">Step 1 · Tenant 1 (Sehgal Autoriders) — Choose Dealership Division</p>
+    <p class="pick-sub" data-t="step1Sub">Select Sehgal Hero or Sehgal Maruti below. Next division in Tenant 1: Sehgal TATA.</p>
+    <nav class="divisions" id="divNav">
+      <button type="button" data-div="hero" class="on">
+        <span class="badge hero" data-t="bHero">ACTIVE · 2W</span>
+        <span class="d-name" data-t="dHero">🏍️ Sehgal Hero</span>
+        <span class="d-desc" data-t="dHeroSub">Two-State Holdup · Vehicle History · 5-Tier Insurance Calling · CRM (SMR &amp; PSF)</span>
+      </button>
+      <button type="button" data-div="maruti">
+        <span class="badge maruti" data-t="bMaruti">ACTIVE · 4W</span>
+        <span class="d-name" data-t="dMaruti">🚗 Sehgal Maruti</span>
+        <span class="d-desc" data-t="dMarutiSub">W2 Portal + Hero Functions + CRM (SMR · PSF) + 5-Tier Insurance &amp; 13-Portal Rates</span>
+      </button>
+      <button type="button" data-div="tata">
+        <span class="badge tata" data-t="bTata">NEXT IN TENANT 1</span>
+        <span class="d-name" data-t="dTata">🚙 Sehgal TATA</span>
+        <span class="d-desc" data-t="dTataSub">Next division slot ready on the same multi-tenant Dealership App stack</span>
+      </button>
+    </nav>
   </section>
 
-  <section class="tab" id="windows">
-    <a class="get" id="msi" href="https://github.com/sehgalautoriders/sehgalautoriders.github.io/releases/latest/download/SehgalHero-Setup.msi"><svg viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/><rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/><rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/><rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/></svg><span data-t="getWin">Download for Windows</span></a>
-    <p class="meta" id="msimeta"></p>
-    <ol>
-      <li data-t="w1">Click the red button. SehgalHero-Setup.msi downloads.</li>
-      <li data-t="w2">Open it. If Windows shows "Windows protected your PC", click More info → Run anyway. No administrator password is needed.</li>
-      <li data-t="w3">Start "Sehgal Hero" from the desktop icon or the Start menu.</li>
-    </ol>
+  <!-- STEP 2: PLATFORM CHOOSER (ANDROID · IPHONE · WINDOWS) -->
+  <section class="section-box" id="platformSection">
+    <p class="pick-title" data-t="step2Title">Step 2 · Choose Your Phone or Computer (Android · iPhone · Windows)</p>
+    <p class="pick-sub" data-t="pick">Same single route for installation across Android APK, iPhone iOS and Windows PC.</p>
+    <nav class="tiles" id="platNav">
+      <button type="button" data-tab="android">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#3DDC84"><path d="M14 30a18 18 0 0 1 36 0z"/><rect x="14" y="32" width="36" height="22" rx="4"/><rect x="5" y="32" width="7" height="18" rx="3.5"/><rect x="52" y="32" width="7" height="18" rx="3.5"/><rect x="21" y="50" width="7" height="12" rx="3.5"/><rect x="36" y="50" width="7" height="12" rx="3.5"/><path d="M21 9.5l4 6.5M43 9.5l-4 6.5" stroke="#3DDC84" stroke-width="2.6" stroke-linecap="round"/></g><circle cx="25" cy="23" r="2.4" fill="#fff"/><circle cx="39" cy="23" r="2.4" fill="#fff"/></svg>
+        <span>Android</span>
+        <small data-t="tA">APK + Web</small>
+      </button>
+      <button type="button" data-tab="iphone">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+        <span>iPhone</span>
+        <small data-t="tI">iOS Home Screen</small>
+      </button>
+      <button type="button" data-tab="windows">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/><rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/><rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/><rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/></svg>
+        <span>Windows</span>
+        <small data-t="tW">PC App</small>
+      </button>
+    </nav>
   </section>
 
-  <section class="tab" id="iphone">
-    <a class="get dark" href="https://sehgalautoriders.github.io/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span data-t="getIos">Open the iPhone app</span></a>
-    <p class="meta" data-t="iMeta">No App Store needed — add it to the Home Screen (steps below)</p>
-    <ol>
-      <li data-t="i1">Open this link in Safari or Chrome on the iPhone: sehgalautoriders.github.io</li>
-      <li data-t="i2">Tap the Share button (square with an arrow; in Chrome it is at the top right).</li>
-      <li data-t="i3">Tap "Add to Home Screen", then Add.</li>
-      <li data-t="i4">Always open Sehgal Hero from that home-screen icon — not from the browser.</li>
-    </ol>
-    <p class="note" data-t="iNote">Opening from the icon keeps you logged in and keeps your saved vehicles on the phone. An iPhone clears a website's saved data if it is only opened in the browser and not used for 7 days.</p>
-  </section>
-</main>
+  <!-- ==================== DIVISION 1: SEHGAL HERO ==================== -->
+  <div class="div-pane on" id="pane-hero">
+    <section class="section-box">
+      <div class="tab" data-plat="android">
+        <a class="get" id="apk" href="https://github.com/sehgalautoriders/sehgalautoriders.github.io/releases/latest/download/SehgalHero.apk">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#fff"><path d="M14 30a18 18 0 0 1 36 0z"/><rect x="14" y="32" width="36" height="22" rx="4"/><rect x="5" y="32" width="7" height="18" rx="3.5"/><rect x="52" y="32" width="7" height="18" rx="3.5"/><rect x="21" y="50" width="7" height="12" rx="3.5"/><rect x="36" y="50" width="7" height="12" rx="3.5"/><path d="M21 9.5l4 6.5M43 9.5l-4 6.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g><circle cx="25" cy="23" r="2.4" fill="#d71920"/><circle cx="39" cy="23" r="2.4" fill="#d71920"/></svg>
+          <span data-t="getApkHero">Download Sehgal Hero Android App (SehgalHero.apk)</span>
+        </a>
+        <p class="meta" id="apkmeta">SehgalHero.apk · Android Package</p>
+        <div class="quick-grid">
+          <a class="quick-link hero-q" href="https://sehgalautoriders.github.io/">🏍️ Open Sehgal Hero Live App →</a>
+          <a class="quick-link hero-q" href="https://sehgalautoriders.github.io/#insurance">🛡️ Hero Insurance Calling (5-Tier Fuzzy) →</a>
+        </div>
+        <ol>
+          <li data-t="a1">Tap the red button. The file SehgalHero.apk downloads.</li>
+          <li data-t="a2">Open it from the notification (or Files → Downloads).</li>
+          <li data-t="a3">If the phone says "not allowed", tap Settings → turn on "Allow from this source" → go back.</li>
+          <li data-t="a4">Tap Install, then Open. Log in once with your Employee No. and password.</li>
+          <li data-t="a5">If "Play Protect" warns about an unknown app: tap More details → Install anyway. The app is from Sehgal Autoriders, not the Play Store, so Google shows this once.</li>
+        </ol>
+        <p class="note" data-t="aNote">Updates to the screens come by themselves — you do not reinstall for every change. Remove the old Chrome shortcut from the home screen after the app works.</p>
+      </div>
+
+      <div class="tab" data-plat="iphone">
+        <a class="get dark" href="https://sehgalautoriders.github.io/">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+          <span data-t="getIosHero">Open Sehgal Hero on iPhone (iOS)</span>
+        </a>
+        <p class="meta" data-t="iMeta">No App Store needed — add it to the Home Screen (steps below)</p>
+        <ol>
+          <li data-t="i1">Open this link in Safari or Chrome on the iPhone: sehgalautoriders.github.io</li>
+          <li data-t="i2">Tap the Share button (square with an arrow; in Chrome it is at the top right).</li>
+          <li data-t="i3">Tap "Add to Home Screen", then Add.</li>
+          <li data-t="i4">Always open Sehgal Hero from that home-screen icon — not from the browser.</li>
+        </ol>
+        <p class="note" data-t="iNote">Opening from the icon keeps you logged in and keeps your saved vehicles on the phone.</p>
+      </div>
+
+      <div class="tab" data-plat="windows">
+        <a class="get" id="msi" href="https://github.com/sehgalautoriders/sehgalautoriders.github.io/releases/latest/download/SehgalHero-Setup.msi">
+          <svg viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/><rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/><rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/><rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/></svg>
+          <span data-t="getWinHero">Download Sehgal Hero for Windows (MSI)</span>
+        </a>
+        <p class="meta" id="msimeta">SehgalHero-Setup.msi · Windows Installer</p>
+        <ol>
+          <li data-t="w1">Click the red button. SehgalHero-Setup.msi downloads.</li>
+          <li data-t="w2">Open it. If Windows shows "Windows protected your PC", click More info → Run anyway. No administrator password is needed.</li>
+          <li data-t="w3">Start "Sehgal Hero" from the desktop icon or the Start menu.</li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== DIVISION 2: SEHGAL MARUTI ==================== -->
+  <div class="div-pane" id="pane-maruti">
+    <section class="section-box">
+      <div class="pill-row" style="margin-bottom:10px">
+        <span class="pill">✅ W2 Portal (Gate OCR · Driver KM · Trips · Ledger)</span>
+        <span class="pill">✅ Hero Functions (Vehicle History · Two-State Holdup)</span>
+        <span class="pill">✅ CRM: SMR (91.6% Top-10%) &amp; PSF Chooser</span>
+        <span class="pill">✅ Maruti Insurance (14,847 MIBL · 5-Tier Fuzzy · 13-Portal Rates)</span>
+      </div>
+
+      <div class="tab" data-plat="android">
+        <a class="get blue" href="https://sehgalautoriders.github.io/sehgalmaruti/install/SehgalMaruti.apk">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#3DDC84"><path d="M14 30a18 18 0 0 1 36 0z"/><rect x="14" y="32" width="36" height="22" rx="4"/><rect x="5" y="32" width="7" height="18" rx="3.5"/><rect x="52" y="32" width="7" height="18" rx="3.5"/><rect x="21" y="50" width="7" height="12" rx="3.5"/><rect x="36" y="50" width="7" height="12" rx="3.5"/><path d="M21 9.5l4 6.5M43 9.5l-4 6.5" stroke="#3DDC84" stroke-width="2.6" stroke-linecap="round"/></g><circle cx="25" cy="23" r="2.4" fill="#0f2342"/><circle cx="39" cy="23" r="2.4" fill="#0f2342"/></svg>
+          <span data-t="getApkMaruti">Download Sehgal Maruti Android App (SehgalMaruti.apk)</span>
+        </a>
+        <p class="meta">Version 1.0 · SehgalMaruti.apk · 9.2 MB · Or open instant PWA below</p>
+        <div class="quick-grid">
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/">🚗 Open Sehgal Maruti App →</a>
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms">📞 Maruti CRM (Choose SMR or PSF) →</a>
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/g/insurance/ins-due">🛡️ Maruti Insurance Calling (5-Tier Fuzzy) →</a>
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/vehicle-history">🚘 Maruti Vehicle History Lookup →</a>
+        </div>
+        <ol>
+          <li data-t="mA1">Tap the blue button above to download SehgalMaruti.apk (or tap "Open Sehgal Maruti App" to use immediately).</li>
+          <li data-t="a2">Open it from the notification (or Files → Downloads).</li>
+          <li data-t="a3">If the phone says "not allowed", tap Settings → turn on "Allow from this source" → go back.</li>
+          <li data-t="a4">Tap Install, then Open. Log in once with your Employee No. and password.</li>
+        </ol>
+      </div>
+
+      <div class="tab" data-plat="iphone">
+        <a class="get blue" href="https://sehgalautoriders.github.io/sehgalmaruti/app/">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+          <span data-t="getIosMaruti">Open Sehgal Maruti on iPhone (iOS)</span>
+        </a>
+        <p class="meta" data-t="iMeta">No App Store needed — add it to the Home Screen (steps below)</p>
+        <div class="quick-grid">
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms">📞 Maruti CRM (SMR · PSF) →</a>
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/g/insurance/ins-due">🛡️ Maruti Insurance Calling →</a>
+        </div>
+        <ol>
+          <li data-t="mI1">Open sehgalautoriders.github.io/sehgalmaruti/app/ in Safari on the iPhone.</li>
+          <li data-t="i2">Tap the Share button (square with an arrow).</li>
+          <li data-t="i3">Tap "Add to Home Screen", then Add.</li>
+          <li data-t="mI4">Always open Sehgal Maruti from that home-screen icon so you stay logged in.</li>
+        </ol>
+      </div>
+
+      <div class="tab" data-plat="windows">
+        <a class="get blue" href="https://sehgalautoriders.github.io/sehgalmaruti/app/">
+          <svg viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/><rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/><rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/><rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/></svg>
+          <span data-t="getWinMaruti">Open &amp; Install Sehgal Maruti on Windows PC</span>
+        </a>
+        <p class="meta">Works in Microsoft Edge &amp; Google Chrome · Install as Desktop App</p>
+        <div class="quick-grid">
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms">📞 Maruti CRM (SMR · PSF) →</a>
+          <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/g/insurance/ins-due">🛡️ Maruti Insurance Calling →</a>
+        </div>
+        <ol>
+          <li data-t="mW1">Click the blue button above to open Sehgal Maruti in Edge or Chrome.</li>
+          <li data-t="mW2">Click the install icon in the browser address bar (or Menu → Apps → Install Sehgal Maruti) for a desktop icon.</li>
+          <li data-t="mW3">Log in with your Employee No. and password. Switch between Sehgal Hero and Sehgal Maruti anytime from the top bar.</li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== DIVISION 3: SEHGAL TATA (NEXT IN TENANT 1) ==================== -->
+  <div class="div-pane" id="pane-tata">
+    <section class="section-box">
+      <h2 style="margin:0 0 6px;font-size:18px;color:#92400e">🚙 Sehgal TATA — Next Division in Tenant 1 (Sehgal Autoriders)</h2>
+      <p style="margin:0 0 12px;font-size:14px;color:var(--ink)">
+        Tenant 1 (<strong>Sehgal Autoriders</strong>) is architected as a multi-division dealership platform. <strong>Sehgal Hero</strong> and <strong>Sehgal Maruti</strong> are live today; <strong>Sehgal TATA</strong> plugs directly into this third division slot using the exact same Golden Stack:
+      </p>
+      <div class="pill-row" style="margin-bottom:14px">
+        <span class="pill">Gate-In / Gate-Out OCR Tree</span>
+        <span class="pill">Two-State Holdup (No Invoice = Holdup · Invoiced = Out)</span>
+        <span class="pill">CRM: SMR vs PSF Chooser (Top-10% Priority Queue)</span>
+        <span class="pill">5-Tier Fuzzy Insurance &amp; 13-Portal Live Rates</span>
+        <span class="pill">Multi-Tenant Ready for Future Dealership Groups (Tenant 2, Tenant 3…)</span>
+      </div>
+      <div class="quick-grid">
+        <a class="quick-link hero-q" href="https://sehgalautoriders.github.io/">🏍️ Go to Sehgal Hero App →</a>
+        <a class="quick-link" href="https://sehgalautoriders.github.io/sehgalmaruti/app/">🚗 Go to Sehgal Maruti App →</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  Tenant 1: Sehgal Autoriders · Divisions: Sehgal Hero · Sehgal Maruti · Sehgal TATA (Next) · One Single Route for Installation
+</footer>
+
 <script>
 (function(){
   var T={
-    title:['Sehgal Hero App','सहगल हीरो ऐप','सहगल हीरो ॲप'],
-    pick:['Choose your phone or computer','अपना फ़ोन या कंप्यूटर चुनें','तुमचा फोन किंवा कॉम्प्युटर निवडा'],
-    tA:['APK','APK','APK'],tI:['iOS','iOS','iOS'],tW:['Microsoft','Microsoft','Microsoft'],
-    getIos:['Open the iPhone app','iPhone ऐप खोलें','iPhone ॲप उघडा'],
+    tenantEye:['TENANT 1 · SEHGAL AUTORIDERS · ONE INSTALL ROUTE','टेनेंट 1 · सहगल ऑटोराइडर्स · एक इंस्टॉल पेज','टेनंट 1 · सहगल ऑटोरायडर्स · एकच इंस्टॉल पेज'],
+    title:['Sehgal Dealership App','सहगल डीलरशिप ऐप','सहगल डीलरशिप ॲप'],
+    step1Title:['Step 1 · Tenant 1 (Sehgal Autoriders) — Choose Dealership Division','स्टेप 1 · टेनेंट 1 (सहगल ऑटोराइडर्स) — डीलरशिप डिवीज़न चुनें','स्टेप 1 · टेनंट 1 (सहगल ऑटोरायडर्स) — डीलरशिप विभाग निवडा'],
+    step1Sub:['Select Sehgal Hero or Sehgal Maruti below. Next division in Tenant 1: Sehgal TATA.','नीचे सहगल हीरो या सहगल मारुति चुनें। अगला डिवीज़न: सहगल टाटा।','खाली सहगल हीरो किंवा सहगल मारुती निवडा. पुढील विभाग: सहगल टाटा.'],
+    bHero:['ACTIVE · 2W','सक्रिय · 2W','सक्रिय · 2W'],
+    dHero:['🏍️ Sehgal Hero','🏍️ सहगल हीरो','🏍️ सहगल हीरो'],
+    dHeroSub:['Two-State Holdup · Vehicle History · 5-Tier Insurance Calling · CRM (SMR & PSF)','होल्डअप · गाड़ी हिस्ट्री · 5-टियर इंश्योरेंस कॉलिंग · CRM (SMR व PSF)','होल्डअप · वाहन हिस्ट्री · 5-टियर इन्शुरन्स कॉलिंग · CRM (SMR व PSF)'],
+    bMaruti:['ACTIVE · 4W','सक्रिय · 4W','सक्रिय · 4W'],
+    dMaruti:['🚗 Sehgal Maruti','🚗 सहगल मारुति','🚗 सहगल मारुती'],
+    dMarutiSub:['W2 Portal + Hero Functions + CRM (SMR · PSF) + 5-Tier Insurance & 13-Portal Rates','W2 पोर्टल + हीरो फ़ंक्शन + CRM (SMR · PSF) + इंश्योरेंस कॉलिंग','W2 पोर्टल + हीरो फंक्शन्स + CRM (SMR · PSF) + इन्शुरन्स कॉलिंग'],
+    bTata:['NEXT IN TENANT 1','अगला डिवीज़न','पुढील विभाग'],
+    dTata:['🚙 Sehgal TATA','🚙 सहगल टाटा','🚙 सहगल टाटा'],
+    dTataSub:['Next division slot ready on the same multi-tenant Dealership App stack','उसी डीलरशिप ऐप स्टैक पर अगला डिवीज़न तैयार','त्याच डीलरशिप ॲप स्टॅकवर पुढील विभाग तयार'],
+    step2Title:['Step 2 · Choose Your Phone or Computer (Android · iPhone · Windows)','स्टेप 2 · अपना फ़ोन या कंप्यूटर चुनें (Android · iPhone · Windows)','स्टेप 2 · तुमचा फोन किंवा कॉम्प्युटर निवडा (Android · iPhone · Windows)'],
+    pick:['Same single route for installation across Android APK, iPhone iOS and Windows PC.','Android APK, iPhone iOS और Windows PC के लिए एक ही इंस्टॉलेशन पेज।','Android APK, iPhone iOS आणि Windows PC साठी एकच इंस्टॉलेशन पेज.'],
+    tA:['APK + Web','APK + Web','APK + Web'],tI:['iOS Home Screen','iOS होम स्क्रीन','iOS होम स्क्रीन'],tW:['PC App','PC ऐप','PC ॲप'],
+    getApkHero:['Download Sehgal Hero Android App (SehgalHero.apk)','सहगल हीरो Android ऐप डाउनलोड करें (SehgalHero.apk)','सहगल हीरो Android ॲप डाउनलोड करा (SehgalHero.apk)'],
+    getIosHero:['Open Sehgal Hero on iPhone (iOS)','iPhone पर सहगल हीरो खोलें','iPhone वर सहगल हीरो उघडा'],
+    getWinHero:['Download Sehgal Hero for Windows (MSI)','Windows के लिए सहगल हीरो डाउनलोड करें','Windows साठी सहगल हीरो डाउनलोड करा'],
+    getApkMaruti:['Download Sehgal Maruti Android App (SehgalMaruti.apk)','सहगल मारुति Android ऐप डाउनलोड करें (SehgalMaruti.apk)','सहगल मारुती Android ॲप डाउनलोड करा (SehgalMaruti.apk)'],
+    getIosMaruti:['Open Sehgal Maruti on iPhone (iOS)','iPhone पर सहगल मारुति खोलें','iPhone वर सहगल मारुती उघडा'],
+    getWinMaruti:['Open & Install Sehgal Maruti on Windows PC','Windows PC पर सहगल मारुति खोलें और इंस्टॉल करें','Windows PC वर सहगल मारुती उघडा आणि इंस्टॉल करा'],
     iMeta:['No App Store needed — add it to the Home Screen (steps below)','App Store की ज़रूरत नहीं — होम स्क्रीन पर जोड़ें (नीचे के स्टेप)','App Store ची गरज नाही — होम स्क्रीनवर जोडा (खालील स्टेप्स)'],
-    getApk:['Download the Android app','Android ऐप डाउनलोड करें','Android ॲप डाउनलोड करा'],
     a1:['Tap the red button. The file SehgalHero.apk downloads.','लाल बटन दबाएँ। SehgalHero.apk फ़ाइल डाउनलोड होगी।','लाल बटण दाबा. SehgalHero.apk फाइल डाउनलोड होईल.'],
     a2:['Open it from the notification (or Files → Downloads).','नोटिफ़िकेशन से खोलें (या Files → Downloads में)।','नोटिफिकेशनमधून उघडा (किंवा Files → Downloads मध्ये).'],
     a3:['If the phone says "not allowed", tap Settings → turn on "Allow from this source" → go back.','अगर फ़ोन "अनुमति नहीं" बोले तो Settings → "Allow from this source" चालू करें → वापस जाएँ।','फोन "परवानगी नाही" म्हणाला तर Settings → "Allow from this source" चालू करा → मागे जा.'],
     a4:['Tap Install, then Open. Log in once with your Employee No. and password.','Install दबाएँ, फिर Open। एक बार कर्मचारी नंबर और पासवर्ड से लॉगिन करें।','Install दाबा, मग Open. एकदा कर्मचारी क्रमांक आणि पासवर्डने लॉगिन करा.'],
-    aNote:['Updates to the screens come by themselves — you do not reinstall for every change. Remove the old Chrome shortcut from the home screen after the app works.','स्क्रीन के अपडेट अपने-आप आते हैं — हर बदलाव पर दोबारा इंस्टॉल नहीं करना है। ऐप चलने के बाद होम स्क्रीन से पुराना Chrome शॉर्टकट हटा दें।','स्क्रीनचे अपडेट आपोआप येतात — प्रत्येक बदलासाठी पुन्हा इंस्टॉल करायची गरज नाही. ॲप चालू झाल्यावर होम स्क्रीनवरचा जुना Chrome शॉर्टकट काढा.'],
     a5:['If "Play Protect" warns about an unknown app: tap More details → Install anyway. The app is from Sehgal Autoriders, not the Play Store, so Google shows this once.','अगर "Play Protect" अनजान ऐप की चेतावनी दे: More details → Install anyway दबाएँ। ऐप सहगल ऑटोराइडर्स का है, Play Store का नहीं, इसलिए Google एक बार यह दिखाता है।','"Play Protect" अनोळखी ॲपची सूचना दाखवेल तर: More details → Install anyway दाबा. ॲप सहगल ऑटोरायडर्सचे आहे, Play Store चे नाही, म्हणून Google एकदा हे दाखवते.'],
-    getWin:['Download for Windows','Windows के लिए डाउनलोड करें','Windows साठी डाउनलोड करा'],
+    aNote:['Updates to the screens come by themselves — you do not reinstall for every change. Remove the old Chrome shortcut from the home screen after the app works.','स्क्रीन के अपडेट अपने-आप आते हैं — हर बदलाव पर दोबारा इंस्टॉल नहीं करना है। ऐप चलने के बाद होम स्क्रीन से पुराना Chrome शॉर्टकट हटा दें।','स्क्रीनचे अपडेट आपोआप येतात — प्रत्येक बदलासाठी पुन्हा इंस्टॉल करायची गरज नाही. ॲप चालू झाल्यावर होम स्क्रीनवरचा जुना Chrome शॉर्टकट काढा.'],
     w1:['Click the red button. SehgalHero-Setup.msi downloads.','लाल बटन दबाएँ। SehgalHero-Setup.msi डाउनलोड होगी।','लाल बटण दाबा. SehgalHero-Setup.msi डाउनलोड होईल.'],
     w2:['Open it. If Windows shows "Windows protected your PC", click More info → Run anyway. No administrator password is needed.','इसे खोलें। अगर "Windows protected your PC" दिखे तो More info → Run anyway दबाएँ। एडमिन पासवर्ड की ज़रूरत नहीं।','ती उघडा. "Windows protected your PC" दिसले तर More info → Run anyway दाबा. ॲडमिन पासवर्ड लागत नाही.'],
     w3:['Start "Sehgal Hero" from the desktop icon or the Start menu.','डेस्कटॉप आइकन या Start मेनू से "Sehgal Hero" खोलें।','डेस्कटॉप आयकॉन किंवा Start मेनूमधून "Sehgal Hero" उघडा.'],
@@ -108,7 +307,13 @@
     i2:['Tap the Share button (square with an arrow; in Chrome it is at the top right).','Share बटन दबाएँ (तीर वाला चौकोर; Chrome में ऊपर दाईं ओर)।','Share बटण दाबा (बाण असलेला चौकोन; Chrome मध्ये वर उजवीकडे).'],
     i3:['Tap "Add to Home Screen", then Add.','"Add to Home Screen" दबाएँ, फिर Add।','"Add to Home Screen" दाबा, मग Add.'],
     i4:['Always open Sehgal Hero from that home-screen icon — not from the browser.','सहगल हीरो हमेशा होम स्क्रीन के आइकन से खोलें — ब्राउज़र से नहीं।','सहगल हीरो नेहमी होम स्क्रीनवरच्या आयकॉनमधून उघडा — ब्राउझरमधून नाही.'],
-    iNote:['Opening from the icon keeps you logged in and keeps your saved vehicles on the phone. An iPhone clears a website\'s saved data if it is only opened in the browser and not used for 7 days.','आइकन से खोलने पर लॉगिन और सेव की हुई गाड़ियाँ फ़ोन पर बनी रहती हैं। सिर्फ़ ब्राउज़र में खोलकर 7 दिन इस्तेमाल न करें तो iPhone सेव डेटा मिटा देता है।','आयकॉनमधून उघडल्यास लॉगिन आणि सेव्ह केलेली वाहने फोनवर राहतात. फक्त ब्राउझरमध्ये उघडून 7 दिवस वापरले नाही तर iPhone सेव्ह डेटा पुसून टाकतो.']
+    iNote:['Opening from the icon keeps you logged in and keeps your saved vehicles on the phone.','आइकन से खोलने पर लॉगिन और सेव की हुई गाड़ियाँ फ़ोन पर बनी रहती हैं।','आयकॉनमधून उघडल्यास लॉगिन आणि सेव्ह केलेली वाहने फोनवर राहतात.'],
+    mA1:['Tap the blue button above to download SehgalMaruti.apk (or tap "Open Sehgal Maruti App" to use immediately).','SehgalMaruti.apk डाउनलोड करने के लिए ऊपर नीला बटन दबाएँ (या तुरंत चलाने के लिए "Open Sehgal Maruti App" दबाएँ)।','SehgalMaruti.apk डाउनलोड करण्यासाठी वरील निळे बटण दाबा (किंवा लगेच वापरण्यासाठी "Open Sehgal Maruti App" दाबा).'],
+    mI1:['Open sehgalautoriders.github.io/sehgalmaruti/app/ in Safari on the iPhone.','iPhone पर Safari में sehgalautoriders.github.io/sehgalmaruti/app/ खोलें।','iPhone वर Safari मध्ये sehgalautoriders.github.io/sehgalmaruti/app/ उघडा.'],
+    mI4:['Always open Sehgal Maruti from that home-screen icon so you stay logged in.','लॉगिन बने रहने के लिए हमेशा होम-स्क्रीन आइकन से सहगल मारुति खोलें।','लॉगिन राहण्यासाठी नेहमी होम-स्क्रीन आयकॉनवरूनच सहगल मारुती उघडा.'],
+    mW1:['Click the blue button above to open Sehgal Maruti in Edge or Chrome.','Edge या Chrome में सहगल मारुति खोलने के लिए ऊपर नीला बटन दबाएँ।','Edge किंवा Chrome मध्ये सहगल मारुती उघडण्यासाठी वरील निळे बटण दाबा.'],
+    mW2:['Click the install icon in the browser address bar (or Menu → Apps → Install Sehgal Maruti) for a desktop icon.','डेस्कटॉप आइकन के लिए ब्राउज़र एड्रेस बार में इंस्टॉल आइकन दबाएँ।','डेस्कटॉप आयकॉनसाठी ब्राउझर ॲड्रेस बारमधील इंस्टॉल आयकॉन दाबा.'],
+    mW3:['Log in with your Employee No. and password. Switch between Sehgal Hero and Sehgal Maruti anytime from the top bar.','कर्मचारी नंबर और पासवर्ड से लॉगिन करें। ऊपर के बार से कभी भी सहगल हीरो और सहगल मारुति के बीच बदलें।','कर्मचारी क्रमांक आणि पासवर्डने लॉगिन करा. वरील बारमधून कधीही सहगल हीरो आणि सहगल मारुती दरम्यान बदला.']
   };
   var IDX={en:0,hi:1,mr:2};
   function get(k,d){ try{ return localStorage.getItem(k)||d; }catch(e){ return d; } }
@@ -118,16 +323,27 @@
     document.querySelectorAll('[data-t]').forEach(function(n){ var e=T[n.getAttribute('data-t')]; if(e) n.textContent=e[i]; });
     document.querySelectorAll('.lang button').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-l')===l); });
   }
+  function setDiv(d){
+    if(['hero','maruti','tata'].indexOf(d)<0) d='hero';
+    put('sehgal_div',d);
+    document.body.setAttribute('data-active-div',d);
+    document.querySelectorAll('#divNav button').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-div')===d); });
+    document.querySelectorAll('.div-pane').forEach(function(p){ p.classList.toggle('on',p.id==='pane-'+d); });
+    var ps=document.getElementById('platformSection');
+    if(ps) ps.style.display=(d==='tata'?'none':'block');
+  }
   function tab(t){
-    document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('on',s.id===t); });
-    document.querySelectorAll('nav.tiles button').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-tab')===t); });
+    document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('on',s.getAttribute('data-plat')===t); });
+    document.querySelectorAll('#platNav button').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-tab')===t); });
   }
   document.querySelectorAll('.lang button').forEach(function(b){ b.onclick=function(){ lang(b.getAttribute('data-l')); }; });
-  document.querySelectorAll('nav.tiles button').forEach(function(b){ b.onclick=function(){ tab(b.getAttribute('data-tab')); }; });
+  document.querySelectorAll('#divNav button').forEach(function(b){ b.onclick=function(){ setDiv(b.getAttribute('data-div')); }; });
+  document.querySelectorAll('#platNav button').forEach(function(b){ b.onclick=function(){ tab(b.getAttribute('data-tab')); }; });
   var ua=navigator.userAgent;
   tab(/iPhone|iPad|iPod/.test(ua)?'iphone':(/Android/.test(ua)?'android':(/Windows/.test(ua)?'windows':'android')));
+  var qDiv=(new URLSearchParams(window.location.search)).get('div');
+  setDiv(qDiv||get('sehgal_div','hero'));
   lang(get('hero_lang','en'));
-  /* version + size from the latest release, when GitHub answers */
   fetch('https://api.github.com/repos/sehgalautoriders/sehgalautoriders.github.io/releases/latest').then(function(r){ return r.ok?r.json():null; }).then(function(j){
     if(!j) return;
     (j.assets||[]).forEach(function(a){
