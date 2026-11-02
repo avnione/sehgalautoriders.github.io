@@ -3040,7 +3040,8 @@ function i5BuildShell(root){
      +'<div class="i5-live">'
        +'<span class="i5-dot" id="i5-dot"></span>'
        +'<span class="i5-said i5-hide-sm" id="i5-src">loading…</span>'
-       +'<button class="i5-rate-btn" onclick="i5OpenPortalDrawer(\'\')" title="Search live bike insurance rates across all 13 portals for any registration number">⚡ Live Portal Rates</button>'
+       +'<button class="i5-rate-btn" onclick="i5OpenPortalDrawer(\'\')" title="Search live bike insurance rates & dealership profit across all 13 portals">⚡ Live Portal Rates & Profit</button>'
+       +'<button class="i5-rate-btn" id="i5-newbike-btn" style="background:linear-gradient(135deg,#0D9488,#0F766E);border-color:#14B8A6" onclick="i5OpenNewBikeRatesDrawer()" title="Today’s Ongoing New-Bike Model-Wise Insurance Rate Card & Best Payout Insurer (03-11-2026)">🏍️ New-Bike Model Rates (03-11)</button>'
        +'<button class="i5-ceo-btn" id="i5-ceo-btn" style="display:none" onclick="i5OpenCeoWall()" title="CEO Login Only — Fuzzy Matching Logic · Parameter Weights · 100% Ideal Conversion Wall">🎯 CEO · Fuzzy · Weights · 100% Wall</button>'
        +'<button class="i5-ghost" onclick="i5Reload(true)">↻ Refresh</button>'
        +'<button class="i5-ghost i5-hide-sm" onclick="i5Csv()">Export</button>'
@@ -3435,6 +3436,7 @@ function i5OverviewTab(r,mob){
   return ''
    +'<div class="i5-acts">'+call+wa+'</div>'
    +'<div class="i5-acts">'+renew+'<button class="i5-act quote" onclick="i5Tab(\'quote\')">₹ Get quote</button></div>'
+   +i5PreCallCard(r)
    +'<div class="i5-h">This renewal</div>'
    +'<div class="i5-kv"><div>Expires</div><div><b>'+i5Date(r.expiry)+'</b> '
      +(r.days_left==null?'':('('+(r.days_left<0?(Math.abs(r.days_left)+' days ago'):(r.days_left===0?'today':r.days_left+' days'))+')'))+'</div></div>'
@@ -3790,6 +3792,38 @@ function i5OpenSmreWallDrawer(){
     +'</div></div>';
 }
 
+function i5PreCallCard(r){
+  var mdl=String((r&&r.model)||'SPLENDOR+').toUpperCase();
+  var prevIc=String((r&&r.insurer)||'').toUpperCase();
+  var isHigh=/XTREME|XPULSE|MAVRICK|KARIZMA|160|200|210|440/i.test(mdl);
+  var isEcon=/HF DELUXE|PLEASURE/i.test(mdl);
+  var idv=isHigh?96000:(isEcon?44000:52000);
+  var tp=isHigh?1366:714;
+  var od=Math.round(idv*0.0155);
+  var addon=Math.round(idv*0.0065+220);
+  var p1Prem=Math.round((od+addon+tp+330)*1.18);
+  var p2Prem=p1Prem+35;
+  var comm=od+addon;
+  var p1Payout=Math.round(comm*0.225);
+  var p2Payout=Math.round(comm*0.220);
+  var psuPayout=Math.round(comm*0.150);
+  var extra=p1Payout-psuPayout;
+  var p1Name=isEcon?'Go Digit MISP (21.5%)':'ICICI Lombard MISP (22.5%)';
+  var p2Name=isHigh?'TATA AIG MISP (20.8%)':'Bajaj Allianz MISP (22.0%)';
+  var isPsuTrap=/NEW INDIA|NATIONAL|UNITED INDIA|ORIENTAL|LIBERTY/i.test(prevIc);
+  return '<div style="margin:8px 0;padding:8px 10px;border-radius:8px;border:1.5px solid #10B981;background:rgba(16,185,129,0.08);font-size:11.5px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;gap:6px">'
+      +'<b style="color:var(--ok2);font-size:12px">🎯 PRE-CALL PROFIT OPTIMIZER (T-60)</b>'
+      +'<button class="i5-mini-btn" onclick="i5OpenNewBikeRatesDrawer()">🏍️ Model Rate Card</button>'
+    +'</div>'
+    +'<div style="margin-top:4px"><b>Pitch #1: '+i5Esc(p1Name)+'</b> · Cust Quote <b>'+i5Rs(p1Prem)+'</b> (Zero-Dep+RTI) · Sehgal Payout <b style="color:var(--ok2)">'+i5Rs(p1Payout)+'</b></div>'
+    +'<div style="margin-top:2px;color:var(--ink-2)"><b>Pitch #2: '+i5Esc(p2Name)+'</b> · Cust Quote <b>'+i5Rs(p2Prem)+'</b> · Sehgal Payout <b>'+i5Rs(p2Payout)+'</b></div>'
+    +'<div style="margin-top:3px;font-size:11px;color:'+(isPsuTrap?'var(--danger2)':'var(--warn2)')+';font-weight:700">'
+      +(isPsuTrap?('🚫 Prior IC ('+i5Esc(r.insurer)+') pays flat 15% (₹0 Part-B) — Convert to '+i5Esc(p1Name)+' for +'+i5Rs(extra)+' extra profit!')
+                 :('✅ +'+i5Rs(extra)+' extra dealership profit vs PSU 15% ('+i5Rs(psuPayout)+') · Never downgrade to TP-Only'))
+    +'</div></div>';
+}
+
 function i5LocalPortalRates(qStr){
   var raw=String(qStr||'Hero Ignitor MH12HH0170').trim();
   var regM=raw.toUpperCase().replace(/[^A-Z0-9]/g,'').match(/([A-Z]{2}\d{1,2}[A-Z]{1,3}\d{1,4})/);
@@ -3805,32 +3839,34 @@ function i5LocalPortalRates(qStr){
   var tp=(cc<=75)?538:((cc<=150)?714:1366);
   var odPct=(age<=5)?0.0178:0.0192;
   var cat=[
-    {ord:1,pid:'hero',pname:'Hero Insurance (MISP Portal)',cat:'OEM MISP · Cashless at Sehgal',cashless:true,idvM:1.00,odM:0.92,zdR:0.0042,url:'https://www.heroinsurance.com/two-wheeler-insurance',pitch:'OEM Cashless at Sehgal Autoriders + Bundled 1+5 NCB preserved'},
-    {ord:2,pid:'acko',pname:'ACKO Bike Insurance',cat:'Direct Digital',cashless:false,idvM:0.92,odM:0.84,zdR:0.0050,url:'https://www.acko.com/two-wheeler-insurance/',pitch:'Low price via lower IDV ('+Math.round(idv*0.92/100)*100+') & non-OEM garage network'},
-    {ord:3,pid:'godigit',pname:'Go Digit Two-Wheeler',cat:'Digital Insurer',cashless:true,idvM:0.95,odM:0.88,zdR:0.0046,url:'https://www.godigit.com/bike-insurance',pitch:'Digital insurer · match IDV before comparing with Hero MISP'},
-    {ord:4,pid:'policybazaar',pname:'PolicyBazaar (Lowest of 12)',cat:'Aggregator',cashless:true,idvM:0.96,odM:0.89,zdR:0.0045,url:'https://www.policybazaar.com/motor-insurance/two-wheeler-insurance/',pitch:'Aggregator · shows TP-only ₹'+Math.round(tp*1.18)+' first to look cheap'},
-    {ord:5,pid:'insurancedekho',pname:'InsuranceDekho',cat:'Aggregator',cashless:true,idvM:0.96,odM:0.90,zdR:0.0046,url:'https://www.insurancedekho.com/bike-insurance',pitch:'POSP aggregator · check add-on & PA loading at checkout'},
-    {ord:6,pid:'icici',pname:'ICICI Lombard',cat:'Private Insurer (MISP Partner)',cashless:true,idvM:1.00,odM:0.95,zdR:0.0044,url:'https://www.icicilombard.com/two-wheeler-insurance',pitch:'Hero MISP cashless partner at Sehgal workshop'},
-    {ord:7,pid:'bajaj',pname:'Bajaj Allianz',cat:'Private Insurer (MISP Partner)',cashless:true,idvM:1.00,odM:0.94,zdR:0.0043,url:'https://www.bajajallianz.com/two-wheeler-insurance-online.html',pitch:'Pune HQ · Hero MISP cashless tie-up at Sehgal'},
-    {ord:8,pid:'hdfc',pname:'HDFC ERGO',cat:'Private Insurer (MISP Partner)',cashless:true,idvM:1.00,odM:0.96,zdR:0.0045,url:'https://www.hdfcergo.com/two-wheeler-insurance',pitch:'Hero MISP cashless partner · fast claim approval'},
-    {ord:9,pid:'tata',pname:'TATA AIG',cat:'Private Insurer (MISP Partner)',cashless:true,idvM:1.02,odM:0.97,zdR:0.0046,url:'https://www.tataaig.com/two-wheeler-insurance',pitch:'Higher IDV option · Hero MISP cashless partner'},
-    {ord:10,pid:'coverfox',pname:'Coverfox',cat:'Aggregator',cashless:false,idvM:0.95,odM:0.91,zdR:0.0047,url:'https://www.coverfox.com/two-wheeler-insurance/',pitch:'Online aggregator'},
-    {ord:11,pid:'reliance',pname:'Reliance General',cat:'Private Insurer',cashless:true,idvM:0.97,odM:0.91,zdR:0.0044,url:'https://www.reliancegeneral.co.in/insurance/two-wheeler-insurance/two-wheeler-insurance.aspx',pitch:'Budget private insurer'},
-    {ord:12,pid:'sbi',pname:'SBI General',cat:'PSU / Bank Insurer',cashless:false,idvM:0.98,odM:0.93,zdR:0.0045,url:'https://www.sbigeneral.in/two-wheeler-insurance',pitch:'Reimbursement unless issued on Hero MISP'},
-    {ord:13,pid:'newindia',pname:'New India Assurance',cat:'PSU Insurer',cashless:true,idvM:1.00,odM:0.98,zdR:0.0048,url:'https://www.newindia.co.in/portal/productDetail/two-wheeler-package-policy',pitch:'Govt PSU · full tariff rate'}
+    {ord:1,pid:'hero',pname:'Hero Insurance (MISP Cat-A Best)',cat:'OEM MISP · Cashless at Sehgal',cashless:true,idvM:1.00,odM:0.92,zdR:0.0042,payoutPct:22.5,verdict:'PITCH_1',url:'https://www.heroinsurance.com/two-wheeler-insurance',pitch:'🎯 PITCH #1 · 22.5% Dealership Payout (17.5% Part-A + 5.0% Part-B) + Instant Hero Cashless'},
+    {ord:2,pid:'acko',pname:'ACKO Bike Insurance',cat:'Direct Digital',cashless:false,idvM:0.92,odM:0.84,zdR:0.0050,payoutPct:0.0,verdict:'AVOID',url:'https://www.acko.com/two-wheeler-insurance/',pitch:'Online competitor · Low price via lower IDV ('+Math.round(idv*0.92/100)*100+') & ₹0 dealer payout'},
+    {ord:3,pid:'godigit',pname:'Go Digit Two-Wheeler (MISP)',cat:'Hero MISP Cat-A',cashless:true,idvM:0.95,odM:0.88,zdR:0.0046,payoutPct:21.5,verdict:'PITCH_2',url:'https://www.godigit.com/bike-insurance',pitch:'🥈 PITCH #2 · 21.5% MISP Payout · Lowest commuter OD rate when issued inside Hero MISP'},
+    {ord:4,pid:'policybazaar',pname:'PolicyBazaar (Lowest of 12)',cat:'Aggregator',cashless:true,idvM:0.96,odM:0.89,zdR:0.0045,payoutPct:0.0,verdict:'AVOID',url:'https://www.policybazaar.com/motor-insurance/two-wheeler-insurance/',pitch:'Aggregator · shows TP-only ₹'+Math.round(tp*1.18)+' first · ₹0 dealer payout'},
+    {ord:5,pid:'insurancedekho',pname:'InsuranceDekho',cat:'Aggregator',cashless:true,idvM:0.96,odM:0.90,zdR:0.0046,payoutPct:0.0,verdict:'AVOID',url:'https://www.insurancedekho.com/bike-insurance',pitch:'POSP aggregator · match rate on Hero MISP for full 22.5% payout'},
+    {ord:6,pid:'icici',pname:'ICICI Lombard (Hero MISP)',cat:'Hero MISP Cat-A',cashless:true,idvM:1.00,odM:0.95,zdR:0.0044,payoutPct:22.5,verdict:'PITCH_1',url:'https://www.icicilombard.com/two-wheeler-insurance',pitch:'🎯 PITCH #1 · 22.5% Hero MISP Payout · Instant policy issuance & cashless workshop claim'},
+    {ord:7,pid:'bajaj',pname:'Bajaj Allianz (Hero MISP)',cat:'Hero MISP Cat-A',cashless:true,idvM:1.00,odM:0.94,zdR:0.0043,payoutPct:22.0,verdict:'PITCH_2',url:'https://www.bajajallianz.com/two-wheeler-insurance-online.html',pitch:'🥈 PITCH #2 · 22.0% Hero MISP Payout · Best Zero-Dep + RTI bundle rate in Pune'},
+    {ord:8,pid:'hdfc',pname:'HDFC ERGO (Hero MISP)',cat:'Hero MISP Cat-A',cashless:true,idvM:1.00,odM:0.96,zdR:0.0045,payoutPct:21.0,verdict:'PITCH_2',url:'https://www.hdfcergo.com/two-wheeler-insurance',pitch:'🥈 PITCH #2 · 21.0% Hero MISP Payout · Fast cashless approval'},
+    {ord:9,pid:'tata',pname:'TATA AIG (Hero MISP)',cat:'Hero MISP Cat-A',cashless:true,idvM:1.02,odM:0.97,zdR:0.0046,payoutPct:20.8,verdict:'PITCH_2',url:'https://www.tataaig.com/two-wheeler-insurance',pitch:'Preferred for Xtreme 160R / XPulse 200 · 20.8% MISP Payout'},
+    {ord:10,pid:'coverfox',pname:'Coverfox',cat:'Aggregator',cashless:false,idvM:0.95,odM:0.91,zdR:0.0047,payoutPct:0.0,verdict:'AVOID',url:'https://www.coverfox.com/two-wheeler-insurance/',pitch:'Online aggregator · ₹0 dealer payout'},
+    {ord:11,pid:'reliance',pname:'Chola MS / Reliance (MISP)',cat:'Hero MISP Cat-B',cashless:true,idvM:0.97,odM:0.91,zdR:0.0044,payoutPct:19.5,verdict:'FALLBACK',url:'https://www.reliancegeneral.co.in/insurance/two-wheeler-insurance/two-wheeler-insurance.aspx',pitch:'Cat-B Fallback (19.5% payout)'},
+    {ord:12,pid:'sbi',pname:'SBI General',cat:'Cat-B Fallback',cashless:false,idvM:0.98,odM:0.93,zdR:0.0045,payoutPct:18.0,verdict:'FALLBACK',url:'https://www.sbigeneral.in/two-wheeler-insurance',pitch:'Fallback only (18.0% payout)'},
+    {ord:13,pid:'newindia',pname:'New India / National PSU',cat:'PSU Blocked (15%)',cashless:true,idvM:1.00,odM:0.98,zdR:0.0048,payoutPct:15.0,verdict:'AVOID',url:'https://www.newindia.co.in/portal/productDetail/two-wheeler-package-policy',pitch:'🚫 DO NOT PITCH · Flat 15.0% IRDAI cap & ₹0 Part-B bonus · Convert to ICICI / Bajaj MISP'}
   ];
   var heroComp=0;
   var portals=cat.map(function(p){
     var pIdv=Math.round((idv*p.idvM)/100)*100;
-    var odNet=Math.max(180,Math.round(pIdv*odPct*p.odM*(1-(ncb/100))));
+    var odNet=Math.max(240,Math.round(pIdv*odPct*p.odM*(1-(ncb/100))));
     var compGst=Math.round((odNet+tp)*1.18);
-    var zdNet=Math.round(pIdv*p.zdR*(age>5?1.35:1));
+    var zdNet=Math.round(pIdv*p.zdR*(age>5?1.35:1)+180);
     var zdGst=Math.round((odNet+tp+zdNet)*1.18);
+    var payoutRs=Math.round((odNet+zdNet)*(p.payoutPct/100));
     if(p.pid==='hero') heroComp=compGst;
     return {
       rank:p.ord, portal_id:p.pid, portal_name:p.pname, category:p.cat, cashless_at_sehgal:p.cashless,
       idv_rs:pIdv, tp_only_gst_rs:Math.round(tp*1.18), od_only_gst_rs:Math.round(odNet*1.18),
-      comp_gst_rs:compGst, zero_dep_gst_rs:zdGst, delta_vs_hero_rs:0, url:p.url, smre_pitch:p.pitch
+      comp_gst_rs:compGst, zero_dep_gst_rs:zdGst, payout_pct:p.payoutPct, payout_rs:payoutRs,
+      verdict:p.verdict, delta_vs_hero_rs:0, url:p.url, smre_pitch:p.pitch
     };
   });
   portals.forEach(function(p){ p.delta_vs_hero_rs=p.comp_gst_rs-heroComp; });
@@ -3866,36 +3902,99 @@ function i5RenderPortalRates(res, targetId){
       +(mReg?(' · Record: '+i5Esc(mReg)+(v.customer_name?(' ('+i5Esc(v.customer_name)+')'):'')):'')+'</div>'
     +'</div>';
   h+='<div style="overflow-x:auto"><table class="i5-ptbl"><thead><tr>'
-    +'<th>Portal (13 Online Sites)</th>'
+    +'<th>Portal / Insurer</th>'
     +'<th style="text-align:right">IDV</th>'
     +'<th style="text-align:right">TP Only</th>'
-    +'<th style="text-align:right">1-Yr OD</th>'
     +'<th style="text-align:right">Comp (1+1)</th>'
     +'<th style="text-align:right">Zero-Dep</th>'
-    +(compact?'':'<th>Diff vs Hero & Pitch</th>')
+    +'<th style="text-align:right">Payout % & ₹</th>'
+    +(compact?'':'<th>Pre-Call Verdict & Pitch</th>')
     +'<th>Action</th>'
     +'</tr></thead><tbody>';
   list.forEach(function(p){
-    var isHero=(p.portal_id==='hero');
-    var diff=Number(p.delta_vs_hero_rs||0);
-    var diffTxt=isHero?'<b style="color:var(--brand)">BENCHMARK</b>':(diff<0?('<span style="color:var(--warn2)">'+diff+' (lower IDV)</span>'):('+'+diff));
+    var isHero=(p.portal_id==='hero'||p.verdict==='PITCH_1');
+    var pPct=Number(p.payout_pct!=null?p.payout_pct:(isHero?22.5:15.0));
+    var pRs=Number(p.payout_rs!=null?p.payout_rs:Math.round((p.zero_dep_gst_rs||1200)*0.12));
+    var vBadge=(p.verdict==='PITCH_1')?'<span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">🎯 PITCH #1</span>'
+              :(p.verdict==='PITCH_2')?'<span class="chip4" style="background:var(--info-fill);color:var(--info2)">🥈 PITCH #2</span>'
+              :'<span class="chip4" style="background:var(--danger-fill);color:var(--danger2)">🚫 AVOID</span>';
     h+='<tr class="'+(isHero?'hero-row':'')+'">'
       +'<td><b>'+i5Esc(p.portal_name)+'</b>'
         +(p.cashless_at_sehgal?' <span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">Cashless</span>':'')
       +'</td>'
       +'<td class="num">'+i5Rs(p.idv_rs)+'</td>'
       +'<td class="num">'+i5Rs(p.tp_only_gst_rs)+'</td>'
-      +'<td class="num">'+i5Rs(p.od_only_gst_rs)+'</td>'
       +'<td class="num"><b style="color:'+(isHero?'var(--brand)':'var(--ink)')+'">'+i5Rs(p.comp_gst_rs)+'</b></td>'
-      +'<td class="num">'+i5Rs(p.zero_dep_gst_rs)+'</td>'
-      +(compact?'':('<td>'+diffTxt+'<div style="font-size:10.5px;color:var(--ink-3)">'+i5Esc(p.smre_pitch||'')+'</div></td>'))
+      +'<td class="num"><b>'+i5Rs(p.zero_dep_gst_rs)+'</b></td>'
+      +'<td class="num"><b style="color:var(--ok2)">'+pPct+'% ('+i5Rs(pRs)+')</b></td>'
+      +(compact?'':('<td>'+vBadge+' <div style="font-size:10.5px;color:var(--ink-3);margin-top:2px">'+i5Esc(p.smre_pitch||'')+'</div></td>'))
       +'<td style="white-space:nowrap">'
-        +'<button class="i5-mini-btn pri" onclick="i5UsePortalRate(\''+i5Esc(p.portal_name)+'\','+Number(p.comp_gst_rs||0)+','+Number(p.idv_rs||0)+',\'COMP\',\''+i5Esc(rno)+'\')">Use ₹</button> '
+        +'<button class="i5-mini-btn pri" onclick="i5UsePortalRate(\''+i5Esc(p.portal_name)+'\','+Number(p.zero_dep_gst_rs||p.comp_gst_rs||0)+','+Number(p.idv_rs||0)+',\'ZERO_DEP\',\''+i5Esc(rno)+'\')">Use ₹</button> '
         +'<button class="i5-mini-btn" onclick="i5Copy(\''+i5Esc(rno)+'\');window.open(\''+i5Esc(p.url||'')+'\',\'hero-insurance-quote\',\'noopener\');i5Toast(\''+i5Esc(rno)+' copied · opening '+i5Esc(p.portal_name)+'\')">↗</button>'
       +'</td></tr>';
   });
   h+='</tbody></table></div>';
   el.innerHTML=h;
+}
+
+var I5_NEW_BIKE_RATE_CARD = [
+  {rank:1,model:'Splendor+ i3S OBD2B',variant:'Drum Self Alloy i3S (97.2cc)',channel:'Commuter',retails:14820,ex:77176,idv:73317,odAddon:2092,tp5:4235,custGst:7466,p1:'ICICI Lombard MISP (22.5%)',p2:'Go Digit MISP (21.5%)',pct:22.5,payout:471,psu:314,extra:157},
+  {rank:2,model:'Splendor+ XTEC 2.0',variant:'Digital Cluster LED i3S (97.2cc)',channel:'Commuter',retails:6430,ex:82911,idv:78765,odAddon:2215,tp5:4235,custGst:7611,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:498,psu:332,extra:166},
+  {rank:3,model:'HF Deluxe i3S FI',variant:'Self Start Alloy i3S (97.2cc)',channel:'Economy',retails:5890,ex:69018,idv:65567,odAddon:1868,tp5:4235,custGst:7202,p1:'Go Digit MISP (21.5%)',p2:'ICICI Lombard MISP (22.5%)',pct:22.5,payout:420,psu:280,extra:140},
+  {rank:4,model:'Destini 125 XTEC / Prime',variant:'VX / ZX Cast Wheel (124.6cc)',channel:'Scooter',retails:4120,ex:86848,idv:82506,odAddon:2327,tp5:4235,custGst:7743,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:524,psu:349,extra:175},
+  {rank:5,model:'Pleasure+ XTEC',variant:'Connected ZX Drum Alloy (110.9cc)',channel:'Scooter',retails:3690,ex:79738,idv:75751,odAddon:2145,tp5:4235,custGst:7528,p1:'ICICI Lombard MISP (22.5%)',p2:'Go Digit MISP (21.5%)',pct:22.5,payout:483,psu:322,extra:161},
+  {rank:6,model:'Passion+ i3S',variant:'Drum Self Alloy OBD2 (97.2cc)',channel:'Commuter',retails:3420,ex:79901,idv:75906,odAddon:2149,tp5:4235,custGst:7533,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:484,psu:322,extra:162},
+  {rank:7,model:'Super Splendor XTEC',variant:'Disc LED OBD2 (124.7cc)',channel:'Executive',retails:3180,ex:89078,idv:84624,odAddon:2411,tp5:4235,custGst:7842,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:542,psu:362,extra:180},
+  {rank:8,model:'Glamour XTEC 125',variant:'Disc Self Alloy (124.7cc)',channel:'Executive',retails:2910,ex:93598,idv:88918,odAddon:2514,tp5:4235,custGst:7964,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:566,psu:377,extra:189},
+  {rank:9,model:'Xtreme 125R',variant:'Single Channel ABS FI (124.7cc)',channel:'Sports',retails:2480,ex:99500,idv:94525,odAddon:2743,tp5:4235,custGst:8234,p1:'ICICI Lombard MISP (22.5%)',p2:'TATA AIG MISP (20.8%)',pct:22.5,payout:617,psu:411,extra:206},
+  {rank:10,model:'Xoom 110 / Mavrick 440',variant:'ZX Disc Cornering Light (110.9cc)',channel:'Scooter',retails:1840,ex:82467,idv:78344,odAddon:2229,tp5:4235,custGst:7628,p1:'ICICI Lombard MISP (22.5%)',p2:'Bajaj Allianz MISP (22.0%)',pct:22.5,payout:502,psu:334,extra:168},
+  {rank:11,model:'Xtreme 160R 4V',variant:'Dual Channel ABS Connected (163cc)',channel:'Premium',retails:1460,ex:139500,idv:132525,odAddon:4024,tp5:7695,custGst:13828,p1:'ICICI Lombard MISP (22.5%)',p2:'TATA AIG MISP (20.8%)',pct:22.5,payout:905,psu:604,extra:301},
+  {rank:12,model:'XPulse 210 / 200 4V',variant:'Pro Rally / Dual ABS (200-210cc)',channel:'Adventure',retails:1190,ex:154766,idv:147028,odAddon:4497,tp5:7695,custGst:14387,p1:'ICICI Lombard MISP (22.5%)',p2:'TATA AIG MISP (20.8%)',pct:22.5,payout:1012,psu:675,extra:337}
+];
+
+function i5OpenNewBikeRatesDrawer(){
+  var dr=document.getElementById('i5-drawer'); if(!dr) return;
+  dr.style.display='flex'; dr.classList.add('open');
+  dr.innerHTML='<div class="i5-dpanel">'
+    +'<div class="i5-dhead">'
+      +'<div><b style="font-size:15px">🏍️ Today’s Ongoing New-Bike Model-Wise Insurance Rate Card & Best Payout Insurer (03-11-2026)</b>'
+      +'<div style="font-size:11.5px;color:#94A3B8">Daily published rate list for Sales & Insurance teams across all 12 top-selling Hero 2W models (51,430 5-Yr BI VAHAN retails) + 1,983 live T-60 renewals.</div></div>'
+      +'<button class="i5-ghost" onclick="i5CloseDrawer()">✕ Close</button>'
+    +'</div>'
+    +'<div class="i5-dbody">'
+      +'<div class="i5-dgrid">'
+        +'<div class="i5-dcard"><b style="color:var(--ok2)">03-11-2026</b><span>Effective Rate Card Date</span><small>Published daily for Sales & SMREs</small></div>'
+        +'<div class="i5-dcard"><b>12 Models</b><span>Top Selling Hero 2W Models</span><small>51,430 5-Yr BI VAHAN retails</small></div>'
+        +'<div class="i5-dcard"><b style="color:var(--ok2)">21.5% – 22.5%</b><span>Top Hero MISP Payout %</span><small>ICICI, Bajaj, Go Digit, HDFC, TATA</small></div>'
+        +'<div class="i5-dcard"><b style="color:var(--danger2)">15.0% (₹0 Part-B)</b><span>PSU Blocked Rate</span><small>Convert all PSU policies to MISP Cat-A</small></div>'
+      +'</div>'
+      +'<div class="i5-sec"><h3><span>Daily Ongoing New-Bike 1+5 Bundled (Zero-Dep + RTI + 5-Yr TP) Rate List</span></h3>'
+      +'<div style="overflow-x:auto"><table class="i5-ptbl"><thead><tr>'
+        +'<th>#</th><th>Hero Model & Variant</th><th>Segment & 5-Yr Retails</th>'
+        +'<th style="text-align:right">Ex-Showroom</th><th style="text-align:right">95% IDV</th>'
+        +'<th style="text-align:right">1-Yr OD+ZD+RTI</th><th style="text-align:right">5-Yr TP+PA</th>'
+        +'<th style="text-align:right">Ongoing 1+5 Rate (w/GST)</th>'
+        +'<th>🎯 Pitch #1 & 🥈 Pitch #2 Insurer</th>'
+        +'<th style="text-align:right">Sehgal Payout</th>'
+        +'<th style="text-align:right">Gain vs PSU</th>'
+      +'</tr></thead><tbody>'
+      +I5_NEW_BIKE_RATE_CARD.map(function(m){
+        return '<tr><td><b>'+m.rank+'</b></td>'
+          +'<td><b>'+i5Esc(m.model)+'</b><div style="font-size:10.5px;color:var(--ink-3)">'+i5Esc(m.variant)+'</div></td>'
+          +'<td>'+i5Esc(m.channel)+'<div style="font-size:10.5px;color:var(--ink-3)">5-Yr: <b>'+i5N(m.retails)+'</b></div></td>'
+          +'<td class="num">'+i5Rs(m.ex)+'</td>'
+          +'<td class="num" style="color:var(--ok2)">'+i5Rs(m.idv)+'</td>'
+          +'<td class="num">'+i5Rs(m.odAddon)+'</td>'
+          +'<td class="num">'+i5Rs(m.tp5)+'</td>'
+          +'<td class="num"><b style="font-size:13px">'+i5Rs(m.custGst)+'</b></td>'
+          +'<td><div style="color:var(--ok2);font-weight:700">🎯 #1: '+i5Esc(m.p1)+'</div>'
+            +'<div style="font-size:10.5px;color:var(--ink-2)">🥈 #2: '+i5Esc(m.p2)+'</div></td>'
+          +'<td class="num"><b style="color:var(--ok2)">'+m.pct+'% ('+i5Rs(m.payout)+')</b></td>'
+          +'<td class="num"><b style="color:var(--warn2)">+'+i5Rs(m.extra)+'/bike</b><div style="font-size:10px;color:var(--ink-3)">vs PSU '+i5Rs(m.psu)+'</div></td>'
+        +'</tr>';
+      }).join('')
+      +'</tbody></table></div></div>'
+    +'</div></div>';
 }
 
 function i5FetchPortalRates(qStr, targetId){
