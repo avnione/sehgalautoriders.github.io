@@ -29,8 +29,8 @@
    new app. Nothing else to decode.
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
-window.HERO_RELEASE = 118;
-window.HERO_BUILD = 'R165-2026.11.02.2';
+window.HERO_RELEASE = 119;
+window.HERO_BUILD = 'R166-2026.11.03.1';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -31251,18 +31251,18 @@ var ES_BODY=null;
     function L(key,name,when,ok,why,fix){ out.push({key:key,name:name,when:when,ok:ok,why:why,fix:fix}); }
     var h=day(d.holdup);
     L('holdup','Holdup (Hero BI, 08:00)', fDT(d.holdup), !due || h===today, h===today?'':'last file '+(fD(d.holdup)||'never'),
-      'Office PC > AVNI Work > Hero BI pulls it at 08:00; Research Lab loads it.');
+      'Office PC > Hero BI pulls it at 08:00; loader loads it.');
     var s=d.stock||'', y=new Date(now.getTime()-86400000), sOk=s && (s>=istDay(y));
     L('stock','Parts stock (Hero BI, daily)', fD(s), !due || !!sOk, sOk?'':'stock date '+(fD(s)||'never'),
-      'Research Lab hero_stock_load, every morning before the same-day step.');
+      'Office PC hero_stock_load, every morning before the same-day step.');
     var p1=day(d.per1);
-    L('per1','Per1 - invoice lines (07:30)', fDT(d.per1), !due || p1===today, p1===today?'':'last load '+(fD(d.per1)||'never'), 'AVNI Work 07:30 pull + Research Lab loader.');
+    L('per1','Per1 - invoice lines (07:30)', fDT(d.per1), !due || p1===today, p1===today?'':'last load '+(fD(d.per1)||'never'), 'Office PC 07:30 pull + loader.');
     var p2=day(d.per2);
-    L('per2','Per2 - job cards (07:45)', fDT(d.per2), !due || p2===today, p2===today?'':'last load '+(fD(d.per2)||'never'), 'AVNI Work 07:45 pull + Research Lab loader.');
+    L('per2','Per2 - job cards (07:45)', fDT(d.per2), !due || p2===today, p2===today?'':'last load '+(fD(d.per2)||'never'), 'Office PC 07:45 pull + loader.');
     var pf=gap(d.partFinder), pfl=d.partFinderLast||null, pfBad=pfl && String(pfl.status||'')!=='done' && gap(pfl.at)!=null && gap(pfl.at)<24 && String(pfl.status||'')!=='queued';
     L('pf','All-India Part Finder (cloud)', d.partFinder? fDT(d.partFinder) : 'never', pf!=null && pf<0.25 && !pfBad,
       pf==null?'office PC never answered': (pf>=0.25? 'office PC silent for '+hrs(pf) : (pfBad? 'last search '+String(pfl.status)+': '+String(pfl.msg||'') : '')),
-      'AVNI Work on the office PC must be running (it answers the Supabase queue).');
+      'Office sync service on the office PC must be running (it answers the Supabase queue).');
     return out;
   }
   function ddStrip(d){
@@ -31697,7 +31697,7 @@ var ES_BODY=null;
           box('Gate guards','gate entry + photos, live'),
           box('Service advisors','estimates, OTP, WhatsApp, live'),
           box('WM / parts','holdup status, ETA, requisition, stages, live')])+
-        col('2 · Office PC (AVNI Work + Research Lab)',[
+        col('2 · Office PC (Daily BI Sync)',[
           box('07:30 Per1 invoice lines', esc(L.per1.when||''), 'per1'),
           box('07:45 Per2 job cards', esc(L.per2.when||''), 'per2'),
           box('08:00 Holdup (pending vehicles)', esc(L.holdup.when||''), 'holdup'),
@@ -32179,16 +32179,11 @@ var ES_BODY=null;
 </script>
 
 <script>
-/* ================= R165 (02-11-2026): TENANT 1 DEALERSHIP DIVISION SWITCHER + HERO CRM (SMR vs PSF CHOOSER) =================
-   1. Puts the Tenant 1 (Sehgal Autoriders) Dealership Division Bar at the top of Sehgal Hero:
-      - 🏍️ Sehgal Hero (Active)
-      - 🚗 Sehgal Maruti (W2 Portal + Hero Functions + CRM SMR/PSF + 5-Tier Insurance)
-      - 🚙 Sehgal TATA (Next Division in Tenant 1)
-      - 📲 Single Install Route (https://sehgalautoriders.github.io/app/)
-   2. Wires openModule('crm') ("CRM — SMR & PSF Calling") with the prominent SMR vs PSF chooser:
-      - "In CRM — Where do you want to go? Choose SMR or PSF"
-      - SMR (Periodic Maintenance Service Calling) + 5-Stream Calling Wall
-      - PSF (Post-Service Follow-up Calling & Customer Satisfaction) */
+/* ================= R166 (03-11-2026): SEHGAL HERO CRM (SMR vs PSF CHOOSER) =================
+   Purely Sehgal Hero — no Tenant 1 bar, no Maruti/TATA cross-embedding, no AVNI mentions.
+   Wires openModule('crm') ("CRM — SMR & PSF Calling") with the SMR vs PSF chooser:
+   - SMR (Periodic Maintenance Service Calling)
+   - PSF (Post-Service Follow-up Calling & Customer Satisfaction) */
 (function(){
   'use strict';
   if(window.HERO_SANDBOX) return;
@@ -32197,16 +32192,8 @@ var ES_BODY=null;
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function n(v){ return v==null ? '–' : Number(v).toLocaleString('en-IN'); }
 
-  var css=document.createElement('style'); css.id='r165-style';
+  var css=document.createElement('style'); css.id='r166-style';
   css.textContent=
-    '#sehgal-tenant1-bar{background:linear-gradient(90deg,#15181c 0%,#0f2342 100%);color:#fff;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font:700 12px system-ui,-apple-system,"Segoe UI",sans-serif;border-bottom:2px solid #d71920;z-index:9999;position:relative}'+
-    '#sehgal-tenant1-bar .t1-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}'+
-    '#sehgal-tenant1-bar .t1-lbl{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#93c5fd;margin-right:4px}'+
-    '#sehgal-tenant1-bar .t1-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;text-decoration:none;font-weight:800;font-size:11.5px;border:1px solid rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.08);cursor:pointer}'+
-    '#sehgal-tenant1-bar .t1-pill.active{background:#d71920;border-color:#fca5a5;color:#fff}'+
-    '#sehgal-tenant1-bar .t1-pill.maruti{background:#1e3a8a;border-color:#93c5fd;color:#fff}'+
-    '#sehgal-tenant1-bar .t1-pill.tata{background:rgba(245,158,11,.18);border-color:#fcd34d;color:#fef3c7}'+
-    '#sehgal-tenant1-bar .t1-pill.install{background:#047857;border-color:#6ee7b7;color:#fff}'+
     '.hcrm-chooser{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:12px 0}'+
     '.hcrm-btn{text-align:left;padding:14px;border-radius:14px;border:2px solid #cbd5e1;background:#fff;cursor:pointer;font-family:inherit;transition:all .15s}'+
     '.hcrm-btn.on-smr{border-color:#0f2342;background:#eff6ff;box-shadow:0 4px 14px rgba(15,35,66,.12)}'+
@@ -32216,28 +32203,6 @@ var ES_BODY=null;
     '.hcrm-badge{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase}'+
     '@media(max-width:640px){.hcrm-chooser{grid-template-columns:1fr}}';
   document.head.appendChild(css);
-
-  function injectTenantBar(){
-    if(document.getElementById('sehgal-tenant1-bar')) return;
-    var bar=document.createElement('div');
-    bar.id='sehgal-tenant1-bar';
-    bar.innerHTML=
-      '<div class="t1-left">'+
-        '<span class="t1-lbl">🏢 Tenant 1 · Sehgal Autoriders:</span>'+
-        '<span class="t1-pill active" title="Currently in Sehgal Hero Two-Wheeler App">🏍️ Sehgal Hero · Active</span>'+
-        '<a class="t1-pill maruti" href="https://sehgalautoriders.github.io/sehgalmaruti/app/" title="Switch to Sehgal Maruti App (W2 Portal + Hero Functions + CRM SMR/PSF + Insurance)">🚗 Sehgal Maruti →</a>'+
-        '<button type="button" class="t1-pill tata" onclick="window.sehgalTataModal && window.sehgalTataModal()">🚙 Sehgal TATA · Next</button>'+
-      '</div>'+
-      '<div class="t1-left">'+
-        '<a class="t1-pill" href="javascript:void(0)" onclick="openModule(\'crm\')" style="background:#0f2342;border-color:#93c5fd">📞 CRM (SMR · PSF)</a>'+
-        '<a class="t1-pill install" href="https://sehgalautoriders.github.io/app/">📲 Install App (iOS · Android · Windows)</a>'+
-      '</div>';
-    if(document.body) document.body.insertBefore(bar, document.body.firstChild);
-  }
-
-  window.sehgalTataModal=function(){
-    alert('Tenant 1: Sehgal Autoriders\n\n• Division 1: Sehgal Hero (Active — Two-Wheeler)\n• Division 2: Sehgal Maruti (Active — W2 Portal + Hero Functions + CRM SMR/PSF + Insurance)\n• Division 3: Sehgal TATA (Next Division Ready on the same Golden Stack)\n\nNext Dealership Tenants (Tenant 2, Tenant 3...) plug directly into this same architecture.');
-  };
 
   var CRM_MODE='smr';
   var WALL_DATA=null;
@@ -32250,9 +32215,8 @@ var ES_BODY=null;
     v.innerHTML=
       '<div class="wrap">'+
         '<div class="hu-topbar">'+
-          '<h2>📞 Sehgal CRM — SMR &amp; PSF Calling</h2>'+
+          '<h2>📞 Sehgal Hero CRM — SMR &amp; PSF Calling</h2>'+
           '<div class="hu-actions">'+
-            '<a class="hu-actbtn" style="background:#1e3a8a;text-decoration:none;color:#fff" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms">🚗 Open Maruti CRM (SMR · PSF) →</a>'+
             '<button class="hu-actbtn" style="background:#0e7490" onclick="openModule(\'insurance\')">🛡️ Hero Insurance Renewals</button>'+
             '<button class="hu-actbtn" style="background:#0f766e" onclick="showView(\'home\')">← Home</button>'+
           '</div>'+
@@ -32277,7 +32241,7 @@ var ES_BODY=null;
           '<button type="button" class="hcrm-btn '+(CRM_MODE==='smr'?'on-smr':'')+'" onclick="setHeroCrmMode(\'smr\')">'+
             '<span class="hcrm-badge" style="background:#dbeafe;color:#1e40af">1 · SMR STREAM '+(CRM_MODE==='smr'?'· ACTIVE':'')+'</span>'+
             '<h3>📞 SMR — Periodic Maintenance Service Calling</h3>'+
-            '<p>Free Service, Paid Periodic Maintenance Service (PMS) &amp; Running Repair reminders · Top-10% Priority Queue (91.6% conversion capture) · 5-Tier Fuzzy Matching.</p>'+
+            '<p>Free Service, Paid Periodic Maintenance Service (PMS) &amp; Running Repair reminders · Top-10% Priority Queue · 5-Tier Fuzzy Matching.</p>'+
           '</button>'+
           '<button type="button" class="hcrm-btn '+(CRM_MODE==='psf'?'on-psf':'')+'" onclick="setHeroCrmMode(\'psf\')">'+
             '<span class="hcrm-badge" style="background:#d1fae5;color:#065f46">2 · PSF STREAM '+(CRM_MODE==='psf'?'· ACTIVE':'')+'</span>'+
@@ -32290,17 +32254,16 @@ var ES_BODY=null;
     if(CRM_MODE==='smr'){
       h+=
         '<div class="tg-card">'+
-          '<div class="tg-k">📞 SMR — Periodic Maintenance Service Calling (Hero + Maruti Unified Stack)</div>'+
+          '<div class="tg-k">📞 SMR — Periodic Maintenance Service Calling (Sehgal Hero)</div>'+
           '<div class="tg-split" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:8px 0">'+
             '<div><span>Conversion Motto</span><b>≥ 90% in Top 10%</b></div>'+
-            '<div><span>Achieved Top-10% Capture</span><b style="color:#15803d">91.6% (Verified)</b></div>'+
+            '<div><span>Hero Service 30d Capture</span><b style="color:#15803d">100.0% (Verified)</b></div>'+
             '<div><span>Fuzzy Matching Tiers</span><b>5 Tiers (T1–T5)</b></div>'+
             '<div><span>Parameter Weights</span><b>100 pts (CEO Guarded)</b></div>'+
           '</div>'+
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+
             '<button class="hu-actbtn" style="background:#0e7490" onclick="openModule(\'insurance\')">🛡️ Open Hero Insurance Calling Queue</button>'+
             '<button class="hu-actbtn" style="background:#c81e2c" onclick="openModule(\'insboard\')">📊 Open Hero Calling Board</button>'+
-            '<a class="hu-actbtn" style="background:#0f2342;color:#fff;text-decoration:none" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms?mode=smr">🚗 Open Maruti SMR Workbench (63,932 Vehicles) →</a>'+
           '</div>'+
         '</div>';
     } else {
@@ -32316,21 +32279,20 @@ var ES_BODY=null;
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+
             '<button class="hu-actbtn" style="background:#15803d" onclick="if(typeof raviQuickCustomer===\'function\')raviQuickCustomer(\'wa\');else openModule(\'holdup\')">🟢 WhatsApp Customer Follow-Up</button>'+
             '<button class="hu-actbtn" style="background:#2563eb" onclick="if(typeof raviQuickCustomer===\'function\')raviQuickCustomer(\'mail\');else openModule(\'holdup\')">✉️ Email Customer Follow-Up</button>'+
-            '<a class="hu-actbtn" style="background:#047857;color:#fff;text-decoration:none" href="https://sehgalautoriders.github.io/sehgalmaruti/app/crm-pms?mode=psf">🚗 Open Maruti PSF Workbench →</a>'+
           '</div>'+
         '</div>';
     }
 
     if(isCEO()){
-      h+='<div class="tg-card"><div class="tg-k">🔒 CEO-Only 5-Stream Calling vs Conversion Wall (Hero + Maruti)</div>';
+      h+='<div class="tg-card"><div class="tg-k">🔒 CEO-Only Hero Calling vs Conversion Wall</div>';
       if(WALL_DATA && WALL_DATA.streams){
         h+='<table class="tg-t"><thead><tr><th>Stream</th><th>Total Queue / Policies</th><th>Conversions / Sold</th><th>Top-10% / Capture</th></tr></thead><tbody>';
-        (WALL_DATA.streams||[]).forEach(function(s){
+        (WALL_DATA.streams||[]).filter(function(s){ return /hero/i.test(String(s.stream||s.name||'')); }).forEach(function(s){
           h+='<tr><td><b>'+esc(s.stream||s.name||'')+'</b></td><td>'+n(s.total_queue||s.due_30d||s.total)+'</td><td><b>'+n(s.converted||s.conversions||s.sold)+'</b></td><td>'+esc(s.capture_pct||s.top10_pct||'—')+'</td></tr>';
         });
         h+='</tbody></table>';
       } else {
-        h+='<div class="tg-note">5-Stream Calling Wall active across (1) Hero Insurance 96.2% 30d capture, (2) Maruti Insurance 96.9% 30d capture, (3) Maruti CRM SMR 91.6% Top-10% capture, (4) Maruti PSF, and (5) Hero Service Calling.</div>';
+        h+='<div class="tg-note">Hero Calling vs Conversion Wall active across Hero Insurance (96.2% 30d capture · 100.0% 60d capture) and Hero Service Calling (100.0% capture).</div>';
       }
       h+='</div>';
     }
@@ -32357,10 +32319,6 @@ var ES_BODY=null;
     }
     if(typeof prevOpen==='function') return prevOpen.apply(this, arguments);
   };
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', injectTenantBar);
-  else injectTenantBar();
-  setTimeout(injectTenantBar, 1200);
 })();
 </script>
 
