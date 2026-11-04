@@ -12955,6 +12955,10 @@ function huActiveRows(rows, opts){
   (rows||[]).forEach(function(r){
     const st=String(r['Holdup Status']||'').toUpperCase();
     if(!opts.includeClosed && (st==='DELIVERED'||st==='CLEAR')) return;
+    /* R167 (Ravi 04-11-2026: "in one place there is 200 holdup and the why not delivered doesnot add up to 200"): an
+       INVOICED job card is with the customer - the table already hid it (R152), but every count built here still had it,
+       so the advisor buttons and tiles said 200 while the holdup was 151. One rule for the table and every count. */
+    if(!opts.includeClosed && String(r['Invoiced']||'')) return;
     if(!opts.skipWs){
       const ws=HU_CODE_TO_WS[String(r[HU_COLS.code]||'').trim()]||r[HU_COLS.code]||'';
       if(!wsAllowed(ws)) return;
@@ -30004,6 +30008,10 @@ window.heroChangeMobile=function(){
 #view-holdup tr.hu-gone-out select,#view-holdup tr.hu-gone-out input{color:#171717!important;background:#fff!important}
 .hu-gone-tag{display:block;margin-top:2px;font-size:9.5px;font-weight:800;letter-spacing:.3px;color:#fff;background:#450a0a;border-radius:3px;padding:1px 4px;width:max-content;text-decoration:none}
 #avask-sum .gone{display:inline-block;background:#7F1D1D;color:#fff;font-weight:700;border-radius:4px;padding:1px 6px;margin-right:6px}
+/* R167 (Ravi 04-11-2026 "thorough verification is essential"): not proven = CHECK in amber, never the red accusation */
+.hu-check-tag{display:block;margin-top:2px;font-size:9.5px;font-weight:800;letter-spacing:.3px;color:#451a03;background:#fbbf24;border-radius:3px;padding:1px 4px;width:max-content}
+#avask-sum .chk{display:inline-block;background:#fbbf24;color:#451a03;font-weight:700;border-radius:4px;padding:1px 6px;margin-right:6px}
+#avask-sum .recon{margin:3px 0;padding:3px 6px;border:1px solid var(--line,#e5e5e5);border-radius:4px;font-size:12.5px}
 /* R155 (Ravi 17-10-2026 16:2x "You are giving them nothing"): the proof on every row - the customer's number and his WhatsApp,
    the guard's missing gate out, the WHY chain, and for parts the requisition photo + the All-India stock (server hero-app 0140) */
 #avask-ov .avx-cust{font-size:12px;font-weight:700;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -30069,7 +30077,8 @@ window.heroChangeMobile=function(){
     var h=m?('<div class="avx-cust">📞 <a href="tel:+91'+esc(m)+'" '+st+'>'+esc(mob(m))+'</a>'+(f.name?' · '+esc(f.name):'')
         +' · <a href="https://wa.me/91'+esc(m)+'" target="_blank" rel="noopener" '+st+'>WhatsApp</a></div>')
       :'<div class="avx-cust" style="color:#b91c1c">no customer mobile on record</div>';
-    if(f.gate_gap) h+='<span class="avx-gate">🚪 LEFT WITHOUT GATE OUT'+(f.guard?' · guard '+esc(f.guard):'')+' — why?</span>';
+    /* R167: the guard is named only when the vehicle is PROVEN out (red); on a one-tap CHECK row it is a question, not a charge */
+    if(f.gate_gap && it.gone_out) h+='<span class="avx-gate">🚪 LEFT WITHOUT GATE OUT'+(f.guard?' · guard '+esc(f.guard):'')+' — why?</span>';
     return h;
   }
   /* the open row: his WhatsApp (what we sent, what he answered), gate / camera, the answers so far, the parts tools */
@@ -30091,7 +30100,7 @@ window.heroChangeMobile=function(){
       +(f.gate_in?'Gate in '+esc(dtm(f.gate_in))+(f.guard?' (guard '+esc(f.guard)+')':''):'No gate entry found')
       +' · gate out '+(f.gate_out?esc(dtm(f.gate_out))+(f.gate_out_by?' by '+esc(f.gate_out_by):''):'<b class="bad">NOT written by the guard</b>')
       +(f.cam_exit?' · camera saw it leave '+esc(dtm(f.cam_exit)):'')
-      +(f.gate_gap?'<br><b class="bad">🚪 The vehicle has left but the guard wrote no gate out. Why? Ask the guard.</b>':'')
+      +(f.gate_gap?(it.gone_out?'<br><b class="bad">🚪 The vehicle has left but the guard wrote no gate out. Why? Ask the guard.</b>':'<br>🚪 If the customer is right, the vehicle left without a gate out - confirm first, then ask the guard.'):'')
       +'</div>';
     var w=f.why||[];
     if(w.length) h+='<div class="avx-facts"><b>WHY #'+esc(f.why_n||1)+' · answers so far:</b> '+w.map(function(e){
@@ -30198,7 +30207,8 @@ window.heroChangeMobile=function(){
     if(c.receipt) p.push('<b>receipt on file</b>');
     if(c.cam_out) p.push('camera: out '+dd(c.cam_out));
     var v=String(it.verdict||'');
-    return '<div class="q" style="font-size:11px">'+(it.red?'<b style="color:#fff;background:#450a0a;border-radius:3px;padding:0 4px">'+esc(v)+'</b> ':'')+p.join(' · ')+'</div>';
+    return '<div class="q" style="font-size:11px">'+(it.red?'<b style="color:#fff;background:#450a0a;border-radius:3px;padding:0 4px">'+esc(v)+'</b> '
+      :(it.check?'<b style="color:#451a03;background:#fbbf24;border-radius:3px;padding:0 4px">'+esc(v)+'</b> ':''))+p.join(' · ')+'</div>';
   }
   function sddText(d){
     var rows=(d.sdd||[]).filter(function(r){ return r.opened>0; }); if(!rows.length) return '';
@@ -30216,13 +30226,23 @@ window.heroChangeMobile=function(){
     pill.textContent='Why pending · '+n; pill.style.display='inline-block'; pill.style.background=n?'#D71920':'#15803d';
     if(window.heroTopAsks) heroTopAsks();
     var gone=ITEMS.filter(function(it){ return it.gone_out; }).length;
+    var chk=ITEMS.filter(function(it){ return !it.gone_out && it.check; }).length;
     var inv=Number((d&&d.invoiced)||0);
+    /* R167 (Ravi 04-11-2026: "the why not delivered doesnot add up to 200 ... This way the trust will break"): the numbers
+       add up on the screen - Hero's pending list = invoiced (with the customer) + holdup; and what our copy of Hero data
+       cannot see is said plainly, so nobody is blamed on blind data. */
+    var hl=Number((d&&d.hero_list)||0), op=Number((d&&d.open)||0), blind=Number((d&&d.not_in_copy)||0);
+    var cp=(d&&d.copy)||{}, cpw=Object.keys(cp).map(function(k){ var c=cp[k]||{}; return esc(c.name||k)+' to '+esc(c.upto||'—'); }).join(' · ');
     /* R152 (Ravi 17-10-2026, the holdup law): holdup = not invoiced in Hero DMS (in the workshop); invoiced = with the
        customer. No "closed", no "gone out - job card open": an invoiced vehicle is simply out of this list. */
     document.getElementById('avask-sum').innerHTML=
-      (gone?'<span class="gone">'+gone+' OUT WITHOUT INVOICE — vehicle has left, no invoice in Hero DMS: still holdup, invoice today</span>':'')
+      (gone?'<span class="gone">'+gone+' OUT WITHOUT INVOICE — verified: left (guard / new job card / customer confirmed) and no invoice in a fresh copy</span>':'')
+      +(chk?'<span class="chk">'+chk+' CHECK — not proven: the customer tapped once, or our copy does not have the job card. WM: send the DMS invoice no. or show the vehicle</span>':'')
+      +(hl?'<div class="recon">Hero pending list <b>'+hl+'</b> = <b>'+inv+'</b> invoiced (with the customer) + <b>'+op+'</b> holdup'
+          +(blind?' · of the '+op+', <b>'+blind+'</b> job cards are not in our copy of Hero data — for them only Hero DMS can say "not invoiced"':'')
+          +(cpw?'<div style="color:var(--steel);font-size:11.5px">Our invoice copy reaches: '+cpw+'</div>':'')+'</div>':'')
       +'<b>'+n+'</b> vehicle'+(n===1?'':'s')+' in holdup (not invoiced) with no answer today. Each answer stops the asking for today. '
-      +(inv?'<b>'+inv+'</b> invoiced — with the customer, out of holdup. ':'')
+      +(inv&&!hl?'<b>'+inv+'</b> invoiced — with the customer, out of holdup. ':'')
       +sddText(d||{})
       +'<div style="margin-top:3px;color:var(--steel)">Holdup = not invoiced in Hero DMS. Invoiced = with the customer. A close is not a delivery.</div>'
       /* R153 (Ravi 17-10-2026): ZERO TRUST - the customer and the camera are the proof, never the advisor's status */
@@ -30253,7 +30273,7 @@ window.heroChangeMobile=function(){
          form opens under the row that is tapped, one at a time (avaskTog). */
       var op=(i===OPEN)?' av-open':'';
       h+='<tr class="av-q-row'+op+(it.gone_out?' av-out':'')+'" data-q="'+i+'" onclick="avaskTog('+i+')"><td>'+(it.gone_out?custTop(it):'')+'<b>'+no+'. '+esc(it.reg_no||it.jc_number)+'</b>'
-        +(it.gone_out?'<span class="hu-gone-tag">OUT · NOT INVOICED</span>':'')
+        +(it.gone_out?'<span class="hu-gone-tag">OUT · NOT INVOICED</span>':(it.check?'<span class="hu-check-tag">CHECK · NOT PROVEN</span>':''))
         +'<div class="q"><span class="av-days">'+esc(it.days_open)+'d</span> · '+esc(DEALER[it.dealer_code]||it.dealer_code)+(it.asked_total?(' · '+esc(it.asked_total)+'×'):'')+' · '+esc(it.model)+' · '+esc(it.jc_type)+'</div>'
         +custLine(it)+(it.gone_out?'':custTop(it))+'</td>'
         +'<td><span class="av-go">'+(op?'Close ▴':'Answer ▾')+'</span><div class="av-ask">'+esc(it.question)+'</div></td></tr>'
@@ -30280,7 +30300,10 @@ window.heroChangeMobile=function(){
     LOADING=true;
     try{
       var d=await sbRpc('hero_chase_my_items',{});
-      ITEMS=(d&&d.items)||[];
+      /* R167: one vehicle once - a job card asked to both the WM and Parts came twice for the CEO / GM (Chinchwad 55 rows
+         for 53 job cards, so the screen said 153 against 151 in holdup). The first row (the server's order) stays. */
+      ITEMS=(function(a){ var seen={}; return a.filter(function(it){ var k=String(it.jc_key||it.jc_number||'');
+        if(k && seen[k]) return false; seen[k]=1; return true; }); })((d&&d.items)||[]);
       /* R149: the gone-out job cards also paint the Holdup list dark red */
       var go={}, was=JSON.stringify(GONE);
       ITEMS.forEach(function(it){ if(!it.gone_out) return; var w=String(it.question||'OUT - NOT INVOICED');
