@@ -3037,14 +3037,12 @@ function ins4Boot(){                              /* the name openModule calls *
         }
       }
       if(qs.indexOf('view=insurance')>=0 || qs.indexOf('#insurance')>=0 || (m && m[1])){
-        setTimeout(function(){
-          try{
-            ins4Boot();
-            if(m && m[1] && typeof i5StartSmreCallingSession==='function'){
-              i5StartSmreCallingSession();
-            }
-          }catch(e){}
-        }, 120);
+        try{
+          ins4Boot();
+          if(m && m[1] && typeof i5StartSmreCallingSession==='function'){
+            i5StartSmreCallingSession();
+          }
+        }catch(e){}
       }
     }catch(e){}
   }
