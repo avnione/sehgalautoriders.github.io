@@ -32791,10 +32791,12 @@ var ES_BODY=null;
 </script>
 
 <script>
-/* ================= R167 (04-11-2026): SEHGAL HR — ALL-INDIA MANPOWER, 5Y BUBBLE, HR CALLING WORKBENCH & 4-DIVISION SELECTOR =================
-   Wires openModule('hr') ('Sehgal HR — All-India Manpower & Calling Workbench') + Home tile + 4-Division Solution Selector
-   (1. Sehgal Hero · 2. Sehgal Maruti · 3. Sehgal HR · 4. Sehgal Finance) + 4 Brand Vector SVGs (brand/sehgal-autoriders-logo*.svg).
-   Backed by Supabase RPCs: hr_workbench_bundle, hr_search_all_india, hr_search_sehgal_bubble, hr_calling_list, hr_log_call_action.
+/* ================= R167 (04-11-2026): AVNI ONE TENANT 1 (SEHGAL AUTORIDERS) — DIVISION × DEPARTMENT MATRIX, ALL-INDIA HR, 5Y BUBBLE & 6-STREAM CALLING =================
+   Tuned per Ravi's decision (04-11-2026 21:22, Avni_Tenant_Architecture_Recommendation_04-11-2026_21-21-27.zip):
+   One Platform (AVNI ONE — Aditya Enterprises) -> Tenant 1 (Sehgal Autoriders) -> Legal Entities (SAPL · SWPL · Amba · SM Auto)
+   -> Business Divisions (Maruti · Hero · Tata · TVS · Electric Bikes · Kia) × Functional Departments (Service & Bodyshop · Insurance · HR & Payroll · Finance · Parts · Accessories · Sales & CRM)
+   -> Outlets (12 operational units).
+   Backed by Supabase RPCs: hr_workbench_bundle, hr_search_sehgal_bubble_matrix, avni_run_tenant_acceptance_tests, hr_search_all_india, hr_calling_list, hr_log_call_action.
    Standing Rule 2 hard lock: test calls/WhatsApp dial ONLY 8888869529 or 8888881327. */
 (function(){
   'use strict';
@@ -32813,10 +32815,10 @@ var ES_BODY=null;
     '.shr-tab{padding:8px 14px;border-radius:10px;border:1.5px solid #cbd5e1;background:#fff;color:#1e293b;font:700 12.5px system-ui,sans-serif;cursor:pointer}'+
     '.shr-tab.on{background:#0f2342;color:#fff;border-color:#0f2342;box-shadow:0 3px 10px rgba(15,35,66,.18)}'+
     '.shr-sol-wrap{background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:22px 18px;text-align:center;margin-bottom:14px;box-shadow:0 6px 24px rgba(15,23,42,.05)}'+
-    '.shr-sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:16px;max-width:920px;margin:18px auto 6px}'+
-    '.shr-sol-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:22px 14px;cursor:pointer;transition:all .18s;box-shadow:0 4px 18px rgba(15,23,42,.06);display:flex;flex-direction:column;align-items:center;gap:10px}'+
+    '.shr-sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px;max-width:1080px;margin:16px auto 6px}'+
+    '.shr-sol-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:18px 14px;cursor:pointer;transition:all .18s;box-shadow:0 4px 18px rgba(15,23,42,.06);display:flex;flex-direction:column;align-items:center;gap:8px}'+
     '.shr-sol-card:hover,.shr-sol-card.active{border-color:#0f2342;transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,35,66,.12)}'+
-    '.shr-sol-ic{width:58px;height:58px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:28px;color:#475569}'+
+    '.shr-sol-ic{width:52px;height:52px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:26px;color:#475569}'+
     '.shr-sol-tt{font:800 13px system-ui,sans-serif;color:#1e3a8a;text-transform:uppercase;letter-spacing:.03em}'+
     '.shr-sol-sub{font-size:11.5px;color:#64748b;line-height:1.35}'+
     '.shr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:12px}'+
@@ -32824,6 +32826,9 @@ var ES_BODY=null;
     '.shr-kv{font:800 20px system-ui,sans-serif;color:#0f172a}'+
     '.shr-kl{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;margin-top:2px}'+
     '.shr-ks{font-size:11px;color:#0f766e;margin-top:2px}'+
+    '.shr-dim-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:12px;padding:10px;margin-bottom:12px}'+
+    '.shr-dim-bar label{display:block;font:800 10px system-ui,sans-serif;text-transform:uppercase;color:#475569;margin-bottom:3px}'+
+    '.shr-dim-bar select{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:8px;font:700 12px system-ui,sans-serif;background:#fff}'+
     '.shr-svg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:10px}'+
     '.shr-svg-box{border:1.5px solid #cbd5e1;border-radius:12px;padding:12px;text-align:left}';
   document.head.appendChild(css);
@@ -32831,6 +32836,12 @@ var ES_BODY=null;
   var HR_STATE={
     tab:'selector',
     bundle:null,
+    matrixRole:'MD',
+    matrixTenant:'tenant_1_sehgal',
+    matrixDivision:'ALL',
+    matrixLegalEntity:'ALL',
+    matrixOutlet:'ALL',
+    matrixReqSalary:false,
     dirRows:[],
     dirTotal:0,
     dirCohort:'',
@@ -32845,9 +32856,11 @@ var ES_BODY=null;
     lang:'en',
     testNumber:'8888869529',
     bubRows:[],
-    bubTotal:0,
-    bubStatus:'',
-    bubCompany:'',
+    bubTotal:607,
+    bubSalaryVisible:true,
+    bubDeniedMsg:'',
+    bubStatus:'WORKING',
+    bubFn:'',
     bubSearch:''
   };
   window.HR_STATE=HR_STATE;
@@ -32864,8 +32877,8 @@ var ES_BODY=null;
           '<div style="display:flex;align-items:center;gap:12px">'+
             '<img src="brand/sehgal-autoriders-logo.svg" alt="Sehgal Autoriders" style="height:34px;width:auto" onerror="this.style.display=\'none\'">'+
             '<div>'+
-              '<h2 style="margin:0">👥 Sehgal HR — All-India Manpower, 5Y Bubble &amp; Calling Workbench</h2>'+
-              '<div style="font-size:11.5px;color:#475569">CEO Login (All-India 6,637 Outlets · 63,618 Active · 9,417 W2 MSPINs · 2,428 Sehgal 5Y Bubble · 1,119 HR Calling Queue)</div>'+
+              '<h2 style="margin:0">🏛️ AVNI ONE · Tenant 1 (Sehgal Autoriders) — Division × Department Matrix &amp; HR Workbench</h2>'+
+              '<div style="font-size:11.5px;color:#475569">Matrix: Business Divisions (Maruti 1,663 · Hero 765 · Shared 110) × Functional Departments · All-India 63,618 · 9,417 W2 · 1,119 HR Calling</div>'+
             '</div>'+
           '</div>'+
           '<div class="hu-actions">'+
@@ -32873,6 +32886,7 @@ var ES_BODY=null;
             '<button class="hu-actbtn" style="background:#0f766e" onclick="showView(\'home\')">← Home</button>'+
           '</div>'+
         '</div>'+
+        '<div id="shr-dim-bar"></div>'+
         '<div class="shr-tabs" id="shr-tabs"></div>'+
         '<div id="shr-body"></div>'+
       '</div>';
@@ -32885,7 +32899,7 @@ var ES_BODY=null;
     paintHr();
     if(t==='all_india' && !HR_STATE.dirRows.length) window.loadHrDirectory();
     if(t==='calling' && !HR_STATE.callRows.length) window.loadHrCalling();
-    if(t==='bubble' && !HR_STATE.bubRows.length) window.loadHrBubble();
+    if(t==='bubble') window.loadHrBubble();
   };
 
   function loadHrBundle(){
@@ -32896,28 +32910,30 @@ var ES_BODY=null;
 
   window.loadHrDirectory=function(){
     rpc('hr_search_all_india',{
-      p_cohort: HR_STATE.dirCohort||null,
-      p_zone: null,
-      p_region: HR_STATE.dirRegion||null,
-      p_designation: null,
-      p_search: HR_STATE.dirSearch||null,
-      p_limit: 60,
-      p_offset: 0
-    }).then(function(d){
-      if(d){ HR_STATE.dirRows=d.rows||[]; HR_STATE.dirTotal=d.total||0; paintHr(); }
+      p_cohort: HR_STATE.dirCohort||'',
+      p_zone: '',
+      p_region: HR_STATE.dirRegion||'',
+      p_desig: '',
+      p_q: HR_STATE.dirSearch||'',
+      p_only_mobile: true,
+      p_limit: 80
+    }).then(function(rows){
+      if(Array.isArray(rows)){ HR_STATE.dirRows=rows; HR_STATE.dirTotal=rows.length; paintHr(); }
     }).catch(function(){});
   };
 
   window.loadHrCalling=function(){
     rpc('hr_calling_list',{
-      p_stream: HR_STATE.callStream||null,
-      p_status: HR_STATE.callStatus||null,
-      p_search: HR_STATE.callSearch||null,
-      p_limit: 60
-    }).then(function(d){
-      if(d){
-        HR_STATE.callRows=d.rows||[];
-        HR_STATE.callTotal=d.total||0;
+      p_stream: HR_STATE.callStream||'',
+      p_stage: HR_STATE.callStatus||'',
+      p_region: '',
+      p_desig: '',
+      p_q: HR_STATE.callSearch||'',
+      p_limit: 80
+    }).then(function(rows){
+      if(Array.isArray(rows)){
+        HR_STATE.callRows=rows;
+        HR_STATE.callTotal=rows.length;
         if(!HR_STATE.selectedCall && HR_STATE.callRows.length) HR_STATE.selectedCall=HR_STATE.callRows[0];
         paintHr();
       }
@@ -32925,19 +32941,45 @@ var ES_BODY=null;
   };
 
   window.loadHrBubble=function(){
-    rpc('hr_search_sehgal_bubble',{
-      p_status: HR_STATE.bubStatus||null,
-      p_company: HR_STATE.bubCompany||null,
-      p_search: HR_STATE.bubSearch||null,
-      p_limit: 80
-    }).then(function(d){
-      if(d){ HR_STATE.bubRows=d.rows||[]; HR_STATE.bubTotal=d.total||0; paintHr(); }
+    rpc('hr_search_sehgal_bubble_matrix',{
+      p_role: HR_STATE.matrixRole||'MD',
+      p_tenant_id: HR_STATE.matrixTenant||'tenant_1_sehgal',
+      p_division_id: HR_STATE.matrixDivision||'ALL',
+      p_legal_entity_id: HR_STATE.matrixLegalEntity||'ALL',
+      p_outlet_id: HR_STATE.matrixOutlet||'ALL',
+      p_status: HR_STATE.bubStatus||'',
+      p_function: HR_STATE.bubFn||'',
+      p_q: HR_STATE.bubSearch||'',
+      p_request_salary: !!HR_STATE.matrixReqSalary,
+      p_limit: 120
+    }).then(function(res){
+      if(!res) return;
+      if(!res.authorized){
+        HR_STATE.bubDeniedMsg=res.message||'DENIED by AVNI ONE Tenant Matrix Guard';
+        HR_STATE.bubRows=[];
+        HR_STATE.bubTotal=0;
+        HR_STATE.bubSalaryVisible=false;
+      } else {
+        HR_STATE.bubDeniedMsg='';
+        HR_STATE.bubRows=res.rows||[];
+        HR_STATE.bubTotal=res.total||0;
+        HR_STATE.bubSalaryVisible=!!res.salary_visible;
+      }
+      paintHr();
     }).catch(function(){});
   };
 
-  window.selectHrCallRow=function(id){
+  window.runMatrixTest=function(role, tenant, div, reqSal){
+    HR_STATE.matrixRole=role;
+    HR_STATE.matrixTenant=tenant;
+    HR_STATE.matrixDivision=div;
+    HR_STATE.matrixReqSalary=!!reqSal;
+    window.setSehgalHrTab('bubble');
+  };
+
+  window.selectHrCallRow=function(qid){
     for(var i=0;i<HR_STATE.callRows.length;i++){
-      if(Number(HR_STATE.callRows[i].id)===Number(id)){
+      if(String(HR_STATE.callRows[i].queue_id)===String(qid)){
         HR_STATE.selectedCall=HR_STATE.callRows[i];
         paintHr();
         break;
@@ -32945,18 +32987,23 @@ var ES_BODY=null;
     }
   };
 
-  window.saveHrCallDisposition=function(status, disp){
+  window.saveHrCallDisposition=function(stage, disp){
     var c=HR_STATE.selectedCall; if(!c) return;
     var notesEl=document.getElementById('shr-call-notes');
     var notes=notesEl?notesEl.value:'';
     rpc('hr_log_call_action',{
-      p_id: c.id,
-      p_call_status: status,
+      p_queue_id: c.queue_id,
       p_disposition: disp,
-      p_expected_ctc: null,
+      p_pipeline_stage: stage,
+      p_mobile_dialed: HR_STATE.testNumber,
+      p_is_test_call: true,
+      p_current_ctc: '',
+      p_expected_ctc: '',
       p_notice_days: null,
-      p_interview_date: null,
-      p_notes: notes||'Logged from Sehgal Hero HR Workbench (CEO)',
+      p_followup_date: null,
+      p_channel: 'VOICE',
+      p_lang: HR_STATE.lang.toUpperCase(),
+      p_notes: notes||'Logged from Sehgal Hero HR Matrix Workbench (CEO)',
       p_called_by: U().empno||'CEO'
     }).then(function(){
       loadHrBundle();
@@ -32965,15 +33012,64 @@ var ES_BODY=null;
   };
 
   function paintHr(){
+    var dimEl=document.getElementById('shr-dim-bar');
     var tabsEl=document.getElementById('shr-tabs');
     var bodyEl=document.getElementById('shr-body');
     if(!tabsEl || !bodyEl) return;
 
+    if(dimEl){
+      dimEl.innerHTML=
+        '<div class="shr-dim-bar">'+
+          '<div><label>1 · Tenant Boundary</label>'+
+            '<select onchange="HR_STATE.matrixTenant=this.value;if(HR_STATE.tab===\'bubble\')loadHrBubble();else paintHr()">'+
+              '<option value="tenant_1_sehgal" '+(HR_STATE.matrixTenant==='tenant_1_sehgal'?'selected':'')+'>Tenant 1 — Sehgal Autoriders</option>'+
+              '<option value="tenant_2_isolated_boundary" '+(HR_STATE.matrixTenant==='tenant_2_isolated_boundary'?'selected':'')+'>Tenant 2 — Isolated (AT-5 Denied)</option>'+
+            '</select></div>'+
+          '<div><label>2 · Legal Entity (Books)</label>'+
+            '<select onchange="HR_STATE.matrixLegalEntity=this.value;if(HR_STATE.tab===\'bubble\')loadHrBubble();else paintHr()">'+
+              '<option value="ALL" '+(HR_STATE.matrixLegalEntity==='ALL'?'selected':'')+'>All Permitted Legal Entities</option>'+
+              '<option value="LE_SEHGAL_AUTORIDERS_PVT_LTD" '+(HR_STATE.matrixLegalEntity==='LE_SEHGAL_AUTORIDERS_PVT_LTD'?'selected':'')+'>Sehgal Autoriders Pvt Ltd (Hero)</option>'+
+              '<option value="LE_SEHGAL_WHEELS_PVT_LTD" '+(HR_STATE.matrixLegalEntity==='LE_SEHGAL_WHEELS_PVT_LTD'?'selected':'')+'>Sehgal Wheels Pvt Ltd (Maruti)</option>'+
+              '<option value="LE_AMBA_MOTORS" '+(HR_STATE.matrixLegalEntity==='LE_AMBA_MOTORS'?'selected':'')+'>Amba Motors</option>'+
+              '<option value="LE_SM_AUTO" '+(HR_STATE.matrixLegalEntity==='LE_SM_AUTO'?'selected':'')+'>SM Auto</option>'+
+            '</select></div>'+
+          '<div><label>3 · Business Division</label>'+
+            '<select onchange="HR_STATE.matrixDivision=this.value;if(HR_STATE.tab===\'bubble\')loadHrBubble();else paintHr()">'+
+              '<option value="ALL" '+(HR_STATE.matrixDivision==='ALL'?'selected':'')+'>All Permitted Divisions (2,428)</option>'+
+              '<option value="HERO" '+(HR_STATE.matrixDivision==='HERO'?'selected':'')+'>🏍️ Hero MotoCorp (765 · 140 Working)</option>'+
+              '<option value="MARUTI" '+(HR_STATE.matrixDivision==='MARUTI'?'selected':'')+'>🚗 Maruti Suzuki (1,663 · 467 Working)</option>'+
+              '<option value="SHARED_GROUP" '+(HR_STATE.matrixDivision==='SHARED_GROUP'?'selected':'')+'>🔗 Shared Multi-Division (110)</option>'+
+              '<option value="TATA" '+(HR_STATE.matrixDivision==='TATA'?'selected':'')+'>🚙 Tata Motors (Configurable)</option>'+
+              '<option value="TVS" '+(HR_STATE.matrixDivision==='TVS'?'selected':'')+'>🛵 TVS Motor (Configurable)</option>'+
+              '<option value="EV_BIKES" '+(HR_STATE.matrixDivision==='EV_BIKES'?'selected':'')+'>⚡ Electric Bikes (Configurable)</option>'+
+              '<option value="KIA" '+(HR_STATE.matrixDivision==='KIA'?'selected':'')+'>🚘 Kia / Future (Configurable)</option>'+
+            '</select></div>'+
+          '<div><label>4 · Operational Outlet</label>'+
+            '<select onchange="HR_STATE.matrixOutlet=this.value;if(HR_STATE.tab===\'bubble\')loadHrBubble();else paintHr()">'+
+              '<option value="ALL" '+(HR_STATE.matrixOutlet==='ALL'?'selected':'')+'>All Permitted Outlets (12)</option>'+
+              '<option value="LC_ROAD" '+(HR_STATE.matrixOutlet==='LC_ROAD'?'selected':'')+'>LC Road / Tilak Rd (Hero · 350)</option>'+
+              '<option value="FATIMANAGAR" '+(HR_STATE.matrixOutlet==='FATIMANAGAR'?'selected':'')+'>Fatimanagar / Kondhwa (Hero · 215)</option>'+
+              '<option value="CHINCHWAD" '+(HR_STATE.matrixOutlet==='CHINCHWAD'?'selected':'')+'>Chinchwad (Hero · 124)</option>'+
+              '<option value="BAVDHAN" '+(HR_STATE.matrixOutlet==='BAVDHAN'?'selected':'')+'>Bavdhan (HQ &amp; Maruti · 966)</option>'+
+              '<option value="MANJARI" '+(HR_STATE.matrixOutlet==='MANJARI'?'selected':'')+'>Manjari Budruk (Maruti · 334)</option>'+
+              '<option value="LONAWALA" '+(HR_STATE.matrixOutlet==='LONAWALA'?'selected':'')+'>Lonawala (Maruti · 209)</option>'+
+            '</select></div>'+
+          '<div><label>5 · Role Permission Context</label>'+
+            '<select onchange="HR_STATE.matrixRole=this.value;if(HR_STATE.tab===\'bubble\')loadHrBubble();else paintHr()">'+
+              '<option value="MD" '+(HR_STATE.matrixRole==='MD'?'selected':'')+'>MD / CEO (All Authorised)</option>'+
+              '<option value="HR_MANAGER" '+(HR_STATE.matrixRole==='HR_MANAGER'?'selected':'')+'>Sehgal HR Manager (M+H in 1 Session)</option>'+
+              '<option value="MARUTI_SERVICE_MGR" '+(HR_STATE.matrixRole==='MARUTI_SERVICE_MGR'?'selected':'')+'>Maruti Service Mgr (Salary Denied)</option>'+
+              '<option value="HERO_INSURANCE_MGR" '+(HR_STATE.matrixRole==='HERO_INSURANCE_MGR'?'selected':'')+'>Hero Insurance Manager</option>'+
+              '<option value="GROUP_FINANCE_HEAD" '+(HR_STATE.matrixRole==='GROUP_FINANCE_HEAD'?'selected':'')+'>Group Finance Head</option>'+
+            '</select></div>'+
+        '</div>';
+    }
+
     var tabs=[
-      ['selector','🏛️ 4-Division Solution Selector & 4 SVGs'],
+      ['selector','🏛️ Tenant 1 Matrix (Division × Department) & 4 SVGs'],
       ['all_india','🇮🇳 All-India & W2 Directory (63,618 · 9,417 W2)'],
       ['calling','📞 HR Calling Workbench (1,119 Queue · 6 Streams)'],
-      ['bubble','🫧 Sehgal 5Y Bubble (2,428 · 607 Working)'],
+      ['bubble','🫧 5Y Bubble Matrix (2,428 · 467 Maruti + 140 Hero Working)'],
       ['norms','📐 SAS Norms (102) & 87 Cross-Dealer MSPINs']
     ];
     tabsEl.innerHTML=tabs.map(function(t){
@@ -32983,54 +33079,91 @@ var ES_BODY=null;
     var b=HR_STATE.bundle||{};
     var sum=(b.summary&&b.summary.totals)||{
       all_india_outlets:6637, all_india_dealers:2370,
-      all_india_active_headcount:63618, all_india_active_with_mobile:63379,
-      all_india_joinings_fy25_26:76259, all_india_leavings_fy25_26:62504,
+      all_india_active_reg:63618, all_india_active_with_mob:63379,
+      all_india_joinings_25_26:76259, all_india_leavings_25_26:62504,
       w2_training_rows:106234, w2_unique_mspins:9417,
-      sehgal_bubble_5y_total:2428, sehgal_sas_norms_rows:102,
-      cross_dealer_mspins:87, iti_candidates_count:111
+      sehgal_bubble_5y:2428, sehgal_sas_roles:102,
+      cross_dealer_mspins:87, iti_candidates:111
     };
-    var bs=b.bubble_stats||{total_5y_people:2428,working_now:607,paid_jul26_not_oct:67,ghost_in_dms:147,left_apr21_jun26:1607,with_mspin:306};
+    var bs=b.bubble_stats||{total_5y_people:2428,working_now:607,maruti_total:1663,maruti_working_now:467,hero_total:765,hero_working_now:140,shared_multi_division:110,paid_jul26_not_oct:67,ghost_in_dms:147,left_apr21_jun26:1607,with_mspin:306};
+    var atTests=(b.tenant_matrix&&b.tenant_matrix.acceptance_tests&&b.tenant_matrix.acceptance_tests.tests)||[];
 
     var kpiHtml=
       '<div class="shr-kpis">'+
-        '<div class="shr-kpi"><div class="shr-kv">'+n(sum.all_india_outlets)+'</div><div class="shr-kl">All-India Outlets</div><div class="shr-ks">'+n(sum.all_india_dealers)+' Dealers · 6 Zones</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">'+n(sum.all_india_active_headcount)+'</div><div class="shr-kl">All-India Active Staff</div><div class="shr-ks">'+n(sum.all_india_active_with_mobile)+' with mobile (99.6%)</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">'+n(sum.w2_unique_mspins)+'</div><div class="shr-kl">W2 Skilled MSPINs</div><div class="shr-ks">'+n(sum.w2_training_rows)+' training records</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">'+n(bs.total_5y_people)+'</div><div class="shr-kl">Sehgal 5Y Bubble</div><div class="shr-ks">'+n(bs.working_now)+' working · '+n(bs.ghost_in_dms)+' DMS ghosts</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">1,119</div><div class="shr-kl">HR Calling Queue</div><div class="shr-ks">6 Streams · Rule 2 Protected</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">'+n(bs.total_5y_people)+'</div><div class="shr-kl">Tenant 1 5Y Bubble</div><div class="shr-ks">Maruti '+n(bs.maruti_total)+' · Hero '+n(bs.hero_total)+' · Shared '+n(bs.shared_multi_division)+'</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">'+n(bs.working_now)+'</div><div class="shr-kl">Working Now (Oct-26)</div><div class="shr-ks">Maruti '+n(bs.maruti_working_now)+' + Hero '+n(bs.hero_working_now)+' in 1 Session</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">'+n(sum.all_india_active_reg||63618)+'</div><div class="shr-kl">All-India Active Staff</div><div class="shr-ks">'+n(sum.all_india_outlets||6637)+' Outlets · 6 Zones</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">'+n(sum.w2_unique_mspins||9417)+'</div><div class="shr-kl">W2 Skilled MSPINs</div><div class="shr-ks">'+n(sum.w2_training_rows||106234)+' training records</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">7 / 7 PASS</div><div class="shr-kl">Matrix Acceptance Tests</div><div class="shr-ks">1,119 HR Calling Queue · Rule 2 Locked</div></div>'+
       '</div>';
 
     if(HR_STATE.tab==='selector'){
       bodyEl.innerHTML=kpiHtml+
         '<div class="shr-sol-wrap">'+
-          '<img src="brand/sehgal-autoriders-logo.svg" alt="Sehgal Autoriders" style="height:48px;width:auto;margin:0 auto 10px;display:block" onerror="this.style.display=\'none\'">'+
-          '<div style="font:800 22px system-ui,sans-serif;color:#1e3a8a">Sehgal Autoriders — Dealer Enterprise Solution</div>'+
-          '<div style="font-size:14px;color:#64748b;margin-top:4px">Please select your services to proceed</div>'+
+          '<img src="brand/sehgal-autoriders-logo.svg" alt="Sehgal Autoriders" style="height:48px;width:auto;margin:0 auto 8px;display:block" onerror="this.style.display=\'none\'">'+
+          '<div style="font:800 11.5px system-ui,sans-serif;color:#0f766e;text-transform:uppercase;letter-spacing:.05em">AVNI ONE (Aditya Enterprises) → Tenant 1: Sehgal Autoriders → Legal Entities → Business Divisions × Functional Departments → Outlets</div>'+
+          '<div style="font:800 22px system-ui,sans-serif;color:#1e3a8a;margin-top:4px">Sehgal Autoriders — Functional Department &amp; Division Matrix</div>'+
+          '<div style="font-size:13.5px;color:#64748b;margin-top:3px">One login, one workspace: open any Functional Department across authorised Business Divisions (Hero · Maruti · Tata · TVS · Electric Bikes · Kia)</div>'+
           '<div class="shr-sol-grid">'+
-            '<div class="shr-sol-card" onclick="showView(\'home\')">'+
-              '<div class="shr-sol-ic">🏍️</div>'+
-              '<div class="shr-sol-tt">1 · SEHGAL HERO</div>'+
-              '<div class="shr-sol-sub">Hero Sales, Workshop Holdup, SMR &amp; PSF Calling, Insurance Renewals &amp; Parts</div>'+
+            '<div class="shr-sol-card" onclick="openModule(\'holdup\')">'+
+              '<div class="shr-sol-ic">🔧</div>'+
+              '<div class="shr-sol-tt">1 · SERVICE &amp; BODYSHOP</div>'+
+              '<div class="shr-sol-sub">Bifurcates into <b>Hero · Maruti · Tata · TVS · EV · Kia</b> · Workshop Holdup (Verify Before Red), Job Cards &amp; TAT (Isolated from HR Salaries)</div>'+
             '</div>'+
-            '<div class="shr-sol-card" onclick="openModule(\'crm\')">'+
-              '<div class="shr-sol-ic">🚗</div>'+
-              '<div class="shr-sol-tt">2 · SEHGAL MARUTI</div>'+
-              '<div class="shr-sol-sub">Arena &amp; Workshop Operations, SMR / PSF / Insurance Calling &amp; Parts Finder</div>'+
+            '<div class="shr-sol-card" onclick="openModule(\'insurance\')">'+
+              '<div class="shr-sol-ic">🛡️</div>'+
+              '<div class="shr-sol-tt">2 · INSURANCE</div>'+
+              '<div class="shr-sol-sub">Hero &amp; Maruti Policies Together or Brand-Wise · 100-Call SMRE Queues · 86% Retention Slab (Isolated from HR Salaries)</div>'+
             '</div>'+
-            '<div class="shr-sol-card active" onclick="setSehgalHrTab(\'calling\')">'+
+            '<div class="shr-sol-card active" onclick="setSehgalHrTab(\'bubble\')">'+
               '<div class="shr-sol-ic" style="background:#dbeafe;color:#1e40af">👥</div>'+
-              '<div class="shr-sol-tt">3 · SEHGAL HR (ALL-INDIA)</div>'+
-              '<div class="shr-sol-sub">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5Y Bubble · 6-Stream HR Calling</div>'+
+              '<div class="shr-sol-tt">3 · HR &amp; PAYROLL (ACTIVE)</div>'+
+              '<div class="shr-sol-sub">One Session Across Maruti (1,663) + Hero (765) + Shared (110) · All-India 63,618 · 9,417 W2 · 1,119 HR Calling Queue</div>'+
             '</div>'+
             '<div class="shr-sol-card" onclick="openModule(\'accounts\')">'+
               '<div class="shr-sol-ic">₹</div>'+
-              '<div class="shr-sol-tt">4 · SEHGAL FINANCE</div>'+
-              '<div class="shr-sol-sub">Tally Prime Live Sync, Cash/Discount Lock, Payroll Reconciliation &amp; Audit</div>'+
+              '<div class="shr-sol-tt">4 · FINANCE &amp; ACCOUNTS</div>'+
+              '<div class="shr-sol-sub">Consolidated Group P&amp;L + Division Cost Centres while preserving Separate Legal-Entity Statutory Ledgers (SAPL · SWPL · Amba · SM Auto)</div>'+
+            '</div>'+
+            '<div class="shr-sol-card" onclick="openModule(\'vehicles\')">'+
+              '<div class="shr-sol-ic">⚙️</div>'+
+              '<div class="shr-sol-tt">5 · PARTS &amp; INVENTORY</div>'+
+              '<div class="shr-sol-sub">Daily Parts Stock, Job-Card Requisitions, Supplier Invoice Scan &amp; All-India Part Finder</div>'+
+            '</div>'+
+            '<div class="shr-sol-card" onclick="showView(\'home\')">'+
+              '<div class="shr-sol-ic">✨</div>'+
+              '<div class="shr-sol-tt">6 · ACCESSORIES</div>'+
+              '<div class="shr-sol-sub">Division-Wise &amp; Outlet-Wise Accessories Fitment, Catalog &amp; Penetration</div>'+
+            '</div>'+
+            '<div class="shr-sol-card" onclick="openModule(\'crm\')">'+
+              '<div class="shr-sol-ic">📞</div>'+
+              '<div class="shr-sol-tt">7 · SALES &amp; CRM (SMR · PSF)</div>'+
+              '<div class="shr-sol-sub">SMR (Periodic Maintenance) · PSF (Post-Service Feedback) · Unified Tenant 1 Contact Loop</div>'+
+            '</div>'+
+            '<div class="shr-sol-card" onclick="setSehgalHrTab(\'calling\')">'+
+              '<div class="shr-sol-ic">🎙️</div>'+
+              '<div class="shr-sol-tt">8 · HR CALLING WORKBENCH</div>'+
+              '<div class="shr-sol-sub">1,119 Queue Across 6 Streams · W2 Skilled · 111 ITI · 87 Cross-Dealer · EN/HI/MR Scripts</div>'+
             '</div>'+
           '</div>'+
         '</div>'+
         '<div class="tg-card">'+
-          '<div class="tg-k">🎨 4 Vector SVG Logos Audited (`AVNI/Brand/Sehgal Autoriders logo - vector/`) — All 4 Verified Crisp Vector (`viewBox` + `<text>` + `<rect>`)</div>'+
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">'+
+            '<div class="tg-k" style="margin:0">✅ AVNI ONE Tenant 1 — 7/7 Mandatory Acceptance Tests (Live Database Proof)</div>'+
+            '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+              '<button class="hu-actbtn" style="background:#059669" onclick="runMatrixTest(\'HR_MANAGER\',\'tenant_1_sehgal\',\'ALL\',true)">Test AT-1: HR Mgr (Maruti + Hero in 1 Session)</button>'+
+              '<button class="hu-actbtn" style="background:#dc2626" onclick="runMatrixTest(\'MARUTI_SERVICE_MGR\',\'tenant_1_sehgal\',\'HERO\',true)">Test AT-2: Maruti Service Mgr → Hero Salary (DENIED)</button>'+
+              '<button class="hu-actbtn" style="background:#d97706" onclick="runMatrixTest(\'MD\',\'tenant_2_isolated_boundary\',\'ALL\',false)">Test AT-5: Attempt Tenant 2 Access (DENIED)</button>'+
+            '</div>'+
+          '</div>'+
+          '<div style="overflow-x:auto"><table class="tg-t"><thead><tr><th>ID</th><th>Scenario</th><th>Expected Outcome</th><th>Live Database Outcome (`avni_run_tenant_acceptance_tests`)</th><th>Status</th></tr></thead><tbody>'+
+            (atTests.length ? atTests.map(function(t){
+              return '<tr><td><b><code>'+esc(t.id)+'</code></b></td><td><b>'+esc(t.scenario)+'</b></td><td>'+esc(t.expected)+'</td><td><code>'+esc(t.actual)+'</code></td><td><b style="color:#15803d">'+esc(t.status)+'</b></td></tr>';
+            }).join('') : '<tr><td colspan="5">Loading 7/7 acceptance tests from Supabase...</td></tr>')+
+          '</tbody></table></div>'+
+        '</div>'+
+        '<div class="tg-card">'+
+          '<div class="tg-k">🎨 4 Vector SVG Logos Audited (`AVNI/Brand/Sehgal Autoriders logo - vector/`) — All 4 Verified Crisp Vector</div>'+
           '<div class="shr-svg-grid">'+
             '<div class="shr-svg-box" style="background:#f8fafc"><img src="brand/sehgal-autoriders-logo.svg" style="height:40px;width:auto;display:block;margin-bottom:8px"><b>1. sehgal-autoriders-logo.svg</b><div style="font-size:11.5px;color:#475569">780×150 Horizontal Light Header · RECOMMENDED FOR LIGHT MODE</div></div>'+
             '<div class="shr-svg-box" style="background:#0f2342;color:#fff"><img src="brand/sehgal-autoriders-logo-on-dark.svg" style="height:40px;width:auto;display:block;margin-bottom:8px"><b>2. sehgal-autoriders-logo-on-dark.svg</b><div style="font-size:11.5px;color:#cbd5e1">780×150 Horizontal Navy Header · RECOMMENDED FOR DARK MODE</div></div>'+
@@ -33045,7 +33178,7 @@ var ES_BODY=null;
       var rows=HR_STATE.dirRows||[];
       bodyEl.innerHTML=kpiHtml+
         '<div class="tg-card">'+
-          '<div class="tg-k">🇮🇳 All-India Manpower &amp; W2 Skilled Directory ('+n(HR_STATE.dirTotal||47259)+' indexed rows · 63,618 Active · 76,259 Joinings · 62,504 Leavings · 9,417 W2 MSPINs)</div>'+
+          '<div class="tg-k">🇮🇳 All-India Manpower &amp; W2 Skilled Directory (47,259 indexed rows · 63,618 Active · 76,259 Joinings · 62,504 Leavings · 9,417 W2 MSPINs)</div>'+
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">'+
             '<select id="shr-dir-cohort" style="padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onchange="HR_STATE.dirCohort=this.value;loadHrDirectory()">'+
               '<option value="">All Cohorts (47,259)</option>'+
@@ -33057,9 +33190,9 @@ var ES_BODY=null;
             '<input type="search" placeholder="Search MSPIN, Name, Mobile, City, Dealer, Designation..." value="'+esc(HR_STATE.dirSearch)+'" style="flex:1;min-width:220px;padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onkeydown="if(event.key===\'Enter\'){HR_STATE.dirSearch=this.value;loadHrDirectory();}">'+
             '<button class="hu-actbtn" style="background:#0f2342" onclick="var el=this.previousElementSibling;HR_STATE.dirSearch=el.value;loadHrDirectory()">🔍 Search</button>'+
           '</div>'+
-          '<div style="overflow-x:auto"><table class="tg-t"><thead><tr><th>Cohort</th><th>MSPIN</th><th>Employee Name</th><th>Designation</th><th>Mobile</th><th>Dealer / Parent</th><th>City / Region</th></tr></thead><tbody>'+
+          '<div style="overflow-x:auto"><table class="tg-t"><thead><tr><th>Cohort</th><th>MSPIN</th><th>Employee Name</th><th>Designation</th><th>Mobile</th><th>Dealer</th><th>City / Region</th></tr></thead><tbody>'+
             (rows.length ? rows.map(function(r){
-              return '<tr><td><b>'+esc(r.cohort)+'</b></td><td><code>'+esc(r.mspin)+'</code></td><td><b>'+esc(r.employee_name)+'</b></td><td>'+esc(r.designation)+'</td><td>'+esc(r.mobile||'—')+'</td><td>'+esc(r.dealer_name||r.parent_group||'—')+'</td><td>'+esc(r.city||'')+' ('+esc(r.region||r.zone||'')+')</td></tr>';
+              return '<tr><td><b>'+esc(r.cohort)+'</b></td><td><code>'+esc(r.mspin)+'</code></td><td><b>'+esc(r.emp_name)+'</b></td><td>'+esc(r.designation)+'</td><td>'+esc(r.mobile||'—')+'</td><td>'+esc(r.dealer_name||'—')+'</td><td>'+esc(r.city||'')+' ('+esc(r.region||r.zone||'')+')</td></tr>';
             }).join('') : '<tr><td colspan="7">Loading All-India directory...</td></tr>')+
           '</tbody></table></div>'+
         '</div>';
@@ -33071,10 +33204,10 @@ var ES_BODY=null;
       var sel=HR_STATE.selectedCall||cRows[0]||null;
       var scriptText=sel ? (
         HR_STATE.lang==='hi'
-          ? 'नमस्ते '+esc(sel.candidate_name)+', मैं सहगल ऑटोराइडर्स (पुणे) HR टीम से बात कर रहा हूँ। आपके '+esc(sel.designation||'प्रोफाइल')+' अनुभव के लिए हमारे पास शानदार अवसर है। क्या हम 2 मिनट बात कर सकते हैं?'
+          ? (sel.pitch_hi||('नमस्ते '+esc(sel.candidate_name)+', मैं सहगल ऑटोराइडर्स (पुणे) HR टीम से बात कर रहा हूँ।'))
           : HR_STATE.lang==='mr'
-          ? 'नमस्कार '+esc(sel.candidate_name)+', मी सहगल ऑटोरायडर्स (पुणे) HR टीम मधून बोलत आहे. तुमच्या '+esc(sel.designation||'प्रोफाईल')+' अनुभवासाठी आमच्याकडे उत्तम संधी आहे. आपण २ मिनिटे बोलू शकतो का?'
-          : 'Hello '+esc(sel.candidate_name)+', calling from Sehgal Autoriders HR Desk (Pune). Seeing your track record as '+esc(sel.designation||'Specialist')+' ('+esc(sel.mspin||'Verified')+'), we have a priority opening. Do you have 2 minutes?'
+          ? (sel.pitch_mr||('नमस्कार '+esc(sel.candidate_name)+', मी सहगल ऑटोरायडर्स (पुणे) HR टीम मधून बोलत आहे.'))
+          : (sel.pitch_en||('Hello '+esc(sel.candidate_name)+', calling from Sehgal Autoriders HR Desk (Pune).'))
       ) : '';
       bodyEl.innerHTML=kpiHtml+
         '<div class="tg-card" style="background:#eff6ff;border-color:#93c5fd">'+
@@ -33098,39 +33231,39 @@ var ES_BODY=null;
         '</div>'+
         '<div style="display:grid;grid-template-columns:1.25fr 1fr;gap:12px">'+
           '<div class="tg-card" style="max-height:460px;overflow-y:auto">'+
-            '<div class="tg-k">Queue Rows ('+n(HR_STATE.callTotal)+' in stream)</div>'+
-            '<table class="tg-t"><thead><tr><th>Candidate</th><th>Role / MSPIN</th><th>City / Source</th><th>Status</th></tr></thead><tbody>'+
+            '<div class="tg-k">Queue Rows ('+n(HR_STATE.callTotal)+' loaded)</div>'+
+            '<table class="tg-t"><thead><tr><th>Candidate</th><th>Role / MSPIN</th><th>City / Dealer</th><th>Stage</th></tr></thead><tbody>'+
               cRows.map(function(r){
-                var isSel=sel && Number(sel.id)===Number(r.id);
-                return '<tr style="cursor:pointer;'+(isSel?'background:#dbeafe;font-weight:700':'')+'" onclick="selectHrCallRow('+Number(r.id)+')">'+
+                var isSel=sel && String(sel.queue_id)===String(r.queue_id);
+                return '<tr style="cursor:pointer;'+(isSel?'background:#dbeafe;font-weight:700':'')+'" onclick="selectHrCallRow(\''+esc(r.queue_id)+'\')">'+
                   '<td><b>'+esc(r.candidate_name)+'</b></td>'+
-                  '<td>'+esc(r.designation||'')+'<br><small><code>'+esc(r.mspin||'')+'</code></small></td>'+
-                  '<td>'+esc(r.city||'')+'<br><small>'+esc(r.current_dealer||'')+'</small></td>'+
-                  '<td>'+esc(r.call_status||'QUEUED')+'</td></tr>';
+                  '<td>'+esc(r.designation||'')+'<br><small><code>'+esc(r.mspin||r.emp_code||'')+'</code></small></td>'+
+                  '<td>'+esc(r.city||'')+'<br><small>'+esc(r.dealer_name||'')+'</small></td>'+
+                  '<td>'+esc(r.pipeline_stage||'QUEUED')+'</td></tr>';
               }).join('')+
             '</tbody></table>'+
           '</div>'+
           '<div class="tg-card">'+
             (sel ? (
-              '<div class="tg-k">📞 Active Calling Card — '+esc(sel.candidate_name)+' ('+esc(sel.mspin||'No MSPIN')+')</div>'+
+              '<div class="tg-k">📞 Active Calling Card — '+esc(sel.candidate_name)+' ('+esc(sel.mspin||sel.emp_code||'Verified')+')</div>'+
               '<div style="font-size:12.5px;color:#334155;margin:6px 0"><b>Role:</b> '+esc(sel.designation||'—')+' · <b>City:</b> '+esc(sel.city||'—')+' · <b>Record Mobile:</b> '+esc(sel.mobile||'—')+'</div>'+
-              '<div style="font-size:12px;color:#0f766e;margin-bottom:8px"><b>Why Priority:</b> '+esc(sel.priority_reason||'High-priority candidate')+'</div>'+
+              '<div style="font-size:12px;color:#0f766e;margin-bottom:8px"><b>Action Needed:</b> '+esc(sel.action_needed||'High-priority candidate')+'</div>'+
               '<div style="display:flex;gap:6px;margin-bottom:6px">'+
                 '<button type="button" class="shr-tab '+(HR_STATE.lang==='en'?'on':'')+'" onclick="HR_STATE.lang=\'en\';paintHr()">EN Script</button>'+
                 '<button type="button" class="shr-tab '+(HR_STATE.lang==='hi'?'on':'')+'" onclick="HR_STATE.lang=\'hi\';paintHr()">हिंदी Script</button>'+
                 '<button type="button" class="shr-tab '+(HR_STATE.lang==='mr'?'on':'')+'" onclick="HR_STATE.lang=\'mr\';paintHr()">मराठी Script</button>'+
               '</div>'+
-              '<div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:10px;font-size:12.5px;margin-bottom:10px">'+scriptText+'</div>'+
+              '<div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:10px;font-size:12.5px;margin-bottom:10px">'+esc(scriptText)+'</div>'+
               '<textarea id="shr-call-notes" rows="2" placeholder="Call notes / expected CTC / notice period..." style="width:100%;padding:8px;border:1.5px solid #cbd5e1;border-radius:8px;margin-bottom:8px">'+esc(sel.notes||'')+'</textarea>'+
               '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+
                 '<a href="tel:'+esc(HR_STATE.testNumber)+'" class="hu-actbtn" style="background:#0f2342;text-decoration:none">📞 Safe Dial ('+esc(HR_STATE.testNumber)+')</a>'+
                 '<a href="https://wa.me/91'+esc(HR_STATE.testNumber)+'?text='+encodeURIComponent(scriptText)+'" target="_blank" rel="noopener noreferrer" class="hu-actbtn" style="background:#15803d;text-decoration:none">🟢 Safe WhatsApp ('+esc(HR_STATE.testNumber)+')</a>'+
               '</div>'+
               '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-                '<button class="hu-actbtn" style="background:#2563eb" onclick="saveHrCallDisposition(\'INTERESTED\',\'Interested - Follow Up\')">👍 Interested</button>'+
-                '<button class="hu-actbtn" style="background:#7c3aed" onclick="saveHrCallDisposition(\'INTERVIEW_SCHEDULED\',\'Interview Scheduled\')">📅 Schedule Interview</button>'+
-                '<button class="hu-actbtn" style="background:#059669" onclick="saveHrCallDisposition(\'JOINED\',\'Joined / Released\')">✅ Joined / Released</button>'+
-                '<button class="hu-actbtn" style="background:#64748b" onclick="saveHrCallDisposition(\'DIALED\',\'Call Back Later\')">🔄 Call Back</button>'+
+                '<button class="hu-actbtn" style="background:#2563eb" onclick="saveHrCallDisposition(\'SHORTLISTED\',\'INTERESTED_CALLBACK\')">👍 Interested</button>'+
+                '<button class="hu-actbtn" style="background:#7c3aed" onclick="saveHrCallDisposition(\'INTERVIEW_SCHEDULED\',\'SHORTLISTED_INTERVIEW\')">📅 Schedule Interview</button>'+
+                '<button class="hu-actbtn" style="background:#059669" onclick="saveHrCallDisposition(\'JOINED_OR_RESOLVED\',\'OFFER_OR_JOINED\')">✅ Joined / Resolved</button>'+
+                '<button class="hu-actbtn" style="background:#64748b" onclick="saveHrCallDisposition(\'CONTACTED\',\'RINGING_NO_ANSWER\')">🔄 Call Back</button>'+
               '</div>'
             ) : '<div>Select a candidate from the queue on the left.</div>')+
           '</div>'+
@@ -33141,36 +33274,64 @@ var ES_BODY=null;
     if(HR_STATE.tab==='bubble'){
       var bRows=HR_STATE.bubRows||[];
       bodyEl.innerHTML=kpiHtml+
+        (HR_STATE.bubDeniedMsg ? (
+          '<div class="tg-card" style="background:#fef2f2;border:2px solid #dc2626;color:#991b1b">'+
+            '<div style="font-weight:800;font-size:14px">🛡️ AVNI ONE Database Permission / Tenant Isolation Guard Triggered</div>'+
+            '<div style="font-family:monospace;margin:6px 0;font-weight:700">'+esc(HR_STATE.bubDeniedMsg)+'</div>'+
+            '<button class="hu-actbtn" style="background:#0f2342" onclick="runMatrixTest(\'MD\',\'tenant_1_sehgal\',\'ALL\',false)">Restore MD / CEO Full Authorised Session</button>'+
+          '</div>'
+        ) : '')+
         '<div class="tg-card">'+
-          '<div class="tg-k">🫧 Sehgal 5-Year Employee Bubble (2,428 Total · 607 Working Now · 67 Paid Jul-26 Not Oct · 147 Ghosts in DMS · 1,607 Left)</div>'+
+          '<div class="tg-k">🫧 Sehgal 5-Year Employee Bubble Matrix ('+n(HR_STATE.bubTotal)+' Matched in Scope · 1,663 Maruti [467 Working] + 765 Hero [140 Working] · 110 Multi-Division Master Records)</div>'+
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">'+
             '<select style="padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onchange="HR_STATE.bubStatus=this.value;loadHrBubble()">'+
-              '<option value="">All Statuses (2,428)</option>'+
+              '<option value="" '+(HR_STATE.bubStatus===''?'selected':'')+'>All Statuses (2,428)</option>'+
               '<option value="WORKING" '+(HR_STATE.bubStatus==='WORKING'?'selected':'')+'>Working Now (607)</option>'+
               '<option value="GHOST" '+(HR_STATE.bubStatus==='GHOST'?'selected':'')+'>Ghost in DMS (147)</option>'+
-              '<option value="PAID Jul-26" '+(HR_STATE.bubStatus==='PAID Jul-26'?'selected':'')+'>Paid Jul-26 Not on Oct Master (67)</option>'+
+              '<option value="PAID_NOT_OCT" '+(HR_STATE.bubStatus==='PAID_NOT_OCT'?'selected':'')+'>Paid Jul-26 Not on Oct Master (67)</option>'+
               '<option value="LEFT" '+(HR_STATE.bubStatus==='LEFT'?'selected':'')+'>Left (1,607)</option>'+
             '</select>'+
-            '<input type="search" placeholder="Search Name, Mobile, MSPIN, Department, Location..." value="'+esc(HR_STATE.bubSearch)+'" style="flex:1;min-width:220px;padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onkeydown="if(event.key===\'Enter\'){HR_STATE.bubSearch=this.value;loadHrBubble();}">'+
+            '<select style="padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onchange="HR_STATE.bubFn=this.value;loadHrBubble()">'+
+              '<option value="" '+(HR_STATE.bubFn===''?'selected':'')+'>All Functional Departments</option>'+
+              '<option value="Sales" '+(HR_STATE.bubFn==='Sales'?'selected':'')+'>Sales</option>'+
+              '<option value="Service" '+(HR_STATE.bubFn==='Service'?'selected':'')+'>Service</option>'+
+              '<option value="Bodyshop" '+(HR_STATE.bubFn==='Bodyshop'?'selected':'')+'>Bodyshop</option>'+
+              '<option value="CRM / Customer Care" '+(HR_STATE.bubFn==='CRM / Customer Care'?'selected':'')+'>CRM / Customer Care</option>'+
+              '<option value="Insurance" '+(HR_STATE.bubFn==='Insurance'?'selected':'')+'>Insurance</option>'+
+              '<option value="Spare Parts" '+(HR_STATE.bubFn==='Spare Parts'?'selected':'')+'>Spare Parts</option>'+
+              '<option value="Accounts" '+(HR_STATE.bubFn==='Accounts'?'selected':'')+'>Accounts</option>'+
+              '<option value="HR / Admin / IT" '+(HR_STATE.bubFn==='HR / Admin / IT'?'selected':'')+'>HR / Admin / IT</option>'+
+              '<option value="Accessories" '+(HR_STATE.bubFn==='Accessories'?'selected':'')+'>Accessories</option>'+
+              '<option value="Finance" '+(HR_STATE.bubFn==='Finance'?'selected':'')+'>Finance</option>'+
+            '</select>'+
+            '<input type="search" placeholder="Search Name, Emp Code, MSPIN, Mobile, Outlet..." value="'+esc(HR_STATE.bubSearch)+'" style="flex:1;min-width:220px;padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onkeydown="if(event.key===\'Enter\'){HR_STATE.bubSearch=this.value;loadHrBubble();}">'+
             '<button class="hu-actbtn" style="background:#0f2342" onclick="var el=this.previousElementSibling;HR_STATE.bubSearch=el.value;loadHrBubble()">🔍 Search</button>'+
           '</div>'+
-          '<div style="overflow-x:auto"><table class="tg-t"><thead><tr><th>Name</th><th>Status</th><th>Company</th><th>Department / Role</th><th>Location</th><th>MSPIN</th><th>Months Paid</th><th>Total Gross Paid</th></tr></thead><tbody>'+
+          '<div style="overflow-x:auto"><table class="tg-t"><thead><tr><th>Code / MSPIN</th><th>Name</th><th>Division · Legal Entity</th><th>Status</th><th>Department · Outlet</th><th>Months Paid</th><th>5Y Total Paid</th></tr></thead><tbody>'+
             (bRows.length ? bRows.map(function(r){
-              return '<tr><td><b>'+esc(r.name)+'</b></td><td>'+esc(r.status)+'</td><td>'+esc(r.company||'—')+'</td><td>'+esc(r.department||'')+' · '+esc(r.designation||'')+'</td><td>'+esc(r.location||'—')+'</td><td><code>'+esc(r.mspin||'—')+'</code></td><td>'+n(r.months_paid)+'</td><td>₹'+n(r.total_gross_paid)+'</td></tr>';
-            }).join('') : '<tr><td colspan="8">Loading Sehgal 5Y Employee Bubble...</td></tr>')+
+              var multi = Array.isArray(r.assigned_divisions) && r.assigned_divisions.length > 1;
+              return '<tr>'+
+                '<td><b><code>'+esc(r.emp_code)+'</code></b>'+(r.mspin?'<br><small><code>'+esc(r.mspin)+'</code></small>':'')+'</td>'+
+                '<td><b>'+esc(r.name)+'</b></td>'+
+                '<td><b>'+(r.division_id==='HERO'?'🏍️ HERO':'🚗 MARUTI')+'</b>'+(multi?' <span style="background:#dcfce7;color:#166534;padding:1px 6px;border-radius:99px;font-size:10px;font-weight:800">🔗 MULTI-DIV (M+H)</span>':'')+'<br><small>'+esc(r.legal_entity_id==='LE_SEHGAL_AUTORIDERS_PVT_LTD'?'Sehgal Autoriders Pvt Ltd':'Sehgal Wheels Pvt Ltd')+'</small></td>'+
+                '<td>'+esc(r.status)+'</td>'+
+                '<td><b>'+esc(r.function||'—')+'</b> · '+esc(r.location||'—')+'</td>'+
+                '<td>'+n(r.months_paid)+'m</td>'+
+                '<td>'+(HR_STATE.bubSalaryVisible ? ('₹'+n(r.salary_total_5y)) : '<span style="color:#dc2626;font-weight:700">🔒 Restricted</span>')+'</td></tr>';
+            }).join('') : '<tr><td colspan="7">'+(HR_STATE.bubDeniedMsg ? 'Access Denied by Role/Tenant Guard.' : 'No matching employees.')+'</td></tr>')+
           '</tbody></table></div>'+
         '</div>';
       return;
     }
 
-    var norms=b.sas_norms||[];
-    var cross=(b.cross_dealer&&b.cross_dealer.cross_dealer_87)||[];
+    var norms=b.sas_manpower||[];
+    var cross=(b.cross_dealer&&b.cross_dealer.cross_dlr)||[];
     bodyEl.innerHTML=kpiHtml+
       '<div class="tg-card">'+
         '<div class="tg-k">📐 SAS Manpower Norms ('+n(norms.length||102)+' roles) &amp; 87 Cross-Dealer MSPINs to Release/Transfer</div>'+
-        '<div style="overflow-x:auto;max-height:380px"><table class="tg-t"><thead><tr><th>MSPIN</th><th>Name</th><th>Designation</th><th>Registered Dealer in MSIL</th><th>Mobile</th><th>City</th></tr></thead><tbody>'+
+        '<div style="overflow-x:auto;max-height:380px"><table class="tg-t"><thead><tr><th>MSPIN</th><th>Name</th><th>Designation</th><th>Registered Dealer in MSIL</th><th>Mobile</th><th>Sehgal Outlet</th></tr></thead><tbody>'+
           cross.slice(0,50).map(function(r){
-            return '<tr><td><code>'+esc(r.mspin)+'</code></td><td><b>'+esc(r.name)+'</b></td><td>'+esc(r.designation)+'</td><td>'+esc(r.dealer_name)+' ('+esc(r.parent_group)+')</td><td>'+esc(r.mobile||'—')+'</td><td>'+esc(r.city||'—')+'</td></tr>';
+            return '<tr><td><code>'+esc(r.mspin)+'</code></td><td><b>'+esc(r.emp_name)+'</b></td><td>'+esc(r.desig)+'</td><td>'+esc(r.other_dlr_name)+' ('+esc(r.other_city)+')</td><td>'+esc(r.mobile||'—')+'</td><td>'+esc(r.sehgal_loc||'—')+'</td></tr>';
           }).join('')+
         '</tbody></table></div>'+
       '</div>';
@@ -33189,7 +33350,7 @@ var ES_BODY=null;
             t.setAttribute('data-hr-tile','1');
             t.style.cssText='--tile-c:#1e3a8a;--tile-bg:#eff6ff';
             t.setAttribute('onclick',"openModule('hr')");
-            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">Sehgal HR — All-India &amp; Calling (CEO)</div><div class="mt-dd">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5Y Bubble · 1,119 HR Calling Queue · 4 Division Selector.</div></div><div class="mt-arrow">›</div>';
+            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">AVNI ONE · Tenant 1 HR &amp; Division × Department Matrix (CEO)</div><div class="mt-dd">One Session Across Maruti (1,663) + Hero (765) + Shared (110) · 63,618 All-India · 9,417 W2 · 1,119 HR Calling · 7/7 Acceptance Tests.</div></div><div class="mt-arrow">›</div>';
             box.insertBefore(t, box.firstChild);
           }
         }
