@@ -3856,11 +3856,10 @@ function i5CallRpc(name, args){
 }
 function i5AnonRpcFallback(name, args){
   var u=(typeof SB_URL==='string'&&SB_URL)?SB_URL:'https://tiwfuwfzjxcsbrifcdpu.supabase.co';
-  var k=(typeof SB_ANON==='string'&&SB_ANON)?SB_ANON:'';
-  if(!k) return Promise.reject(new Error('no-anon-key'));
+  var k=(typeof SB_ANON==='string'&&SB_ANON)?SB_ANON:'sb_publishable_slimmjt0POF4fhAnTAfLyQ_P1jYG9Xh';
   return fetch(u+'/rest/v1/rpc/'+name,{
     method:'POST',
-    headers:{apikey:k,Authorization:'Bearer '+k,'Content-Type':'application/json'},
+    headers:{apikey:k,'Content-Type':'application/json'},
     body:JSON.stringify(args||{})
   }).then(function(r){ return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status)); });
 }
