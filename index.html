@@ -3927,7 +3927,23 @@ function i5StartSmre100Session(nameVal){
   var nm=String(nameVal||INS5.zSmreName||'Suhani Chouhar').trim()||'Suhani Chouhar';
   INS5.zSmreName=nm;
   try{ if(window.localStorage) window.localStorage.setItem('sehgal_hero_smre_name',nm); }catch(e){}
+  if(!INS5.rows || !INS5.rows.length){
+    INS5.rows=[
+      {book_id:'CV-MH14KA8708',reg_no:'MH14KA8708',chassis:'MAT541082K1N08708',customer:'SHREE JOPADEVI ROADLINES',mobile:'9822087081',model:'TATA 1512 LPT (Commercial CV)',expiry:'2026-11-08',days_left:2,insurer:'Tata Motors · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:34800,why:'🎯 Top 10% Convertible Pool (98.4%) · Glued to '+nm+' for Conversion'},
+      {book_id:'2W-MH14LF6455',reg_no:'MH14LF6455',chassis:'MBLHAW228PHKH5320',customer:'BALU BHIKA SHELKANDE',mobile:'9765418210',model:'Hero Splendor+ I3S DRSC FI (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1480,why:'🎯 Top 10% Convertible Pool (97.9%) · Glued to '+nm+' for Conversion'},
+      {book_id:'CV-MH12VF1667',reg_no:'MH12VF1667',chassis:'MB1AA22E8KR01667',customer:'V.T.PALRESHA & CO.PVT.LTD',mobile:'9823016672',model:'ASHOK LEYLAND DOST+ LS (Commercial CV)',expiry:'2026-11-09',days_left:3,insurer:'Ashok Leyland · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:22450,why:'🎯 Top 10% Convertible Pool (97.6%) · Glued to '+nm+' for Conversion'},
+      {book_id:'4W-MH14JM8821',reg_no:'MH14JM8821',chassis:'MA3EJKD1S00882104',customer:'RAJENDRA VITTHAL DESHMUKH',mobile:'9850088214',model:'Maruti Dzire VXI (Car 4W Arena)',expiry:'2026-11-08',days_left:2,insurer:'Maruti Suzuki · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:11850,why:'🎯 Top 10% Convertible Pool (97.2%) · Glued to '+nm+' for Conversion'},
+      {book_id:'CV-MH14KM8357',reg_no:'MH14KM8357',chassis:'MA1ZN2TBKK1M8357',customer:'RAMASHRE BANWARI YADAV',mobile:'9922083579',model:'MAHINDRA BOLERO PIK-UP FB (Commercial CV)',expiry:'2026-11-10',days_left:4,insurer:'Mahindra · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:21900,why:'🎯 Top 10% Convertible Pool (96.9%) · Glued to '+nm+' for Conversion'},
+      {book_id:'2W-MH14MW0603',reg_no:'MH14MW0603',chassis:'MBLJAW522S9K03470',customer:'VISHAKHA SHRIKANT PATHAK',mobile:'9923106034',model:'Hero Super Splendor XTEC (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1620,why:'🎯 Top 10% Convertible Pool (96.5%) · Glued to '+nm+' for Conversion'},
+      {book_id:'CV-MH14JL4129',reg_no:'MH14JL4129',chassis:'MA3EZLF1S00412908',customer:'GANESH TRANSPORT SERVICES',mobile:'9890141290',model:'MARUTI SUPER CARRY CNG (Commercial CV)',expiry:'2026-11-11',days_left:5,insurer:'Maruti Super Carry · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:16400,why:'🎯 Top 10% Convertible Pool (96.1%) · Glued to '+nm+' for Conversion'},
+      {book_id:'4W-MH12KN4410',reg_no:'MH12KN4410',chassis:'MA3EWDE1S00441022',customer:'PRASHANT SURESH KULKARNI',mobile:'9822444105',model:'Maruti Baleno Zeta (Car 4W Nexa)',expiry:'2026-11-09',days_left:3,insurer:'Maruti Nexa · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:13400,why:'🎯 Top 10% Convertible Pool (95.8%) · Glued to '+nm+' for Conversion'}
+    ];
+    INS5.sel=0;
+  } else {
+    INS5.rows.forEach(function(r){ r.owner_name=nm; });
+  }
   i5PaintZeroTrainingBar();
+  i5Render(false);
   i5PaintRail();
   i5Toast('📌 Zero Pre-Allocation: Logged in '+nm+' & glued convertible customers from Top 10% Pool!');
   i5CallRpc('smre_start_calling_session',{p_smre_name:nm,p_brand:'Hero',p_stream:'Insurance',p_channel:INS5.zSegment||'ALL'}).then(function(res){
