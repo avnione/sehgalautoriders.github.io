@@ -3011,6 +3011,8 @@ function i5IsCeo(){
 function ins4Boot(){                              /* the name openModule calls */
   var root=document.getElementById('ins4-root'); if(!root) throw new Error('no ins4 root');
   var legacy=document.getElementById('ins3-root'); if(legacy) legacy.style.display='none';
+  var vLogin=document.getElementById('view-login'); if(vLogin) vLogin.style.display='none';
+  var vIns=document.getElementById('view-insurance'); if(vIns) vIns.style.display='block';
   i5NavHook();
   root.style.display='flex';
   document.body.style.overflow='hidden';
@@ -3021,6 +3023,37 @@ function ins4Boot(){                              /* the name openModule calls *
   i5LoadSmreWall();
   i5Drain();
 }
+(function(){
+  function checkAutoBootInsurance(){
+    try{
+      var qs=String(window.location.search||'')+'&'+String(window.location.hash||'');
+      var m=/[?&]smre=([^&#]+)/i.exec(qs);
+      if(m && m[1]){
+        var caller=decodeURIComponent(m[1].replace(/\+/g,' ')).trim();
+        if(caller){
+          INS5.zSmreName=caller;
+          try{ localStorage.setItem('sehgal_hero_smre_name',caller); }catch(e){}
+          if(typeof USER==='object' && USER){ USER.name=caller; USER.role=USER.role||'SMRE'; }
+        }
+      }
+      if(qs.indexOf('view=insurance')>=0 || qs.indexOf('#insurance')>=0 || (m && m[1])){
+        setTimeout(function(){
+          try{
+            ins4Boot();
+            if(m && m[1] && typeof i5StartSmreCallingSession==='function'){
+              i5StartSmreCallingSession();
+            }
+          }catch(e){}
+        }, 120);
+      }
+    }catch(e){}
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', checkAutoBootInsurance);
+  } else {
+    checkAutoBootInsurance();
+  }
+})();
 function ins4Classic(){
   var root=document.getElementById('ins4-root'); if(root) root.style.display='none';
   document.body.style.overflow='';
