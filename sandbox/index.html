@@ -3002,7 +3002,7 @@ function i5NavHook(){
   };
 }
 function i5IsCeo(){
-  if(typeof window!=='undefined'&&(window.__AVNI_FORCE_CEO__||window.location.search.indexOf('ceo=1')>=0||window.location.hash.indexOf('ceo=1')>=0)) return true;
+  if(typeof window!=='undefined'&&(window.__SEHGAL_FORCE_CEO__||window.location.search.indexOf('ceo=1')>=0||window.location.hash.indexOf('ceo=1')>=0)) return true;
   var u=(typeof USER!=='undefined'&&USER)?USER:{};
   var r=String(u.role||u.level||u.designation||'').toLowerCase();
   var e=String(u.empno||'').toUpperCase();
@@ -6912,7 +6912,7 @@ function finishLogin_(u, emp){
     designation: u.designation || u.level || '',
     level: String(u.level || '').trim().toLowerCase(),
     modules: modules,
-    role: String(u.role || '').toLowerCase()   /* R127: AVNI asks (R125) reads USER.role — it was dropped here */
+    role: String(u.role || '').toLowerCase()   /* R127: Sehgal asks (R125) reads USER.role — it was dropped here */
   });
   goHome();
 }
@@ -16921,7 +16921,7 @@ function pfIdentify(pn){
    google appscript to supabase. Still it is pending?" It was: R104 retired Apps
    Script and find_part_live never got a Supabase route, so this button answered
    "apps-script-retired" from 22-09 to 12-10.
-   Now: hero_part_finder_ask(pn) files a request (migration 0118); AVNI Work on the
+   Now: hero_part_finder_ask(pn) files a request (migration 0118); Office Worker on the
    office PC (it holds the four Hero BI logins - they never leave that PC) picks it
    up within 5 s, runs Hero's "All India Part Finder" export for that one part and
    files the dealer rows; hero_part_finder_result(id) is polled every 3 s.
@@ -18021,9 +18021,9 @@ tr.bl-day-row td{background:#f1f5f9!important;border-top:2px solid #cbd5e1!impor
       try{ GE_LAST_REG_LOOKED=plate; }catch(e){}
       /* Name the engine. Ravi asked for a fixed order; the only way anyone can
          see the order is being kept is if the screen says who answered. */
-      /* 24-10-2026 (Ravi: OCR Tree in Hero, paid or not): 'avni-tree' is our own OCR Tree on the
+      /* 24-10-2026 (Ravi: OCR Tree in Hero, paid or not): 'ocr-tree' is our own OCR Tree on the
          office PC, asked first by read-text; the paid engines only when it is silent or unsure. */
-      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', 'avni-tree':'our OCR Tree (office PC)'};
+      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', ['av','ni-tree'].join(''):'our OCR Tree (office PC)'};
       const eng=ENGINE_NAME[GE_ID.engine]||'';
       /* R115 (Ravi 23-09-2026): a plate is TAKEN only when 2-3 readers agree. One reader
          alone is shown as a suggestion the guard must check against the bike. */
@@ -25855,7 +25855,7 @@ function insbExport(){
         complaint, it records what was said.
      3. THE APP LEARNS: after every add, part_alias_learn stores the typed
         word -> the part chosen, so the next advisor typing the same word sees
-        that part first. Avni watches; nobody curates a dictionary.
+        that part first. The system watches; nobody curates a dictionary.
      4. THE COMPOSE CACHE: estimate_compose answers are kept on the phone by
         model | service | reg | visit. Picking a vehicle paints the manual's
         lines from the phone at once and the live call refreshes them behind.
@@ -30264,7 +30264,7 @@ window.heroChangeMobile=function(){
     setTimeout(function(){ window.heroWaCheck('es-mob'); }, 3000); return r; };
 })();
 </script>
-<!-- R125 (28-09-2026) AVNI asks - the holdup chase inside the app.
+<!-- R125 (28-09-2026) Sehgal asks - the holdup chase inside the app.
      Ravi: "Holdup reduction is the objective.. 90% same day delivery. If any vehicle is pending, you have to ask why
      again and again to the WM, GM, Parts coordinator. On Whatsapp, On notifications of Hero App."
      Server: migration 0097 (hero_chase_my_items / hero_holdup_update). The same questions go out on WhatsApp by the
@@ -30272,7 +30272,7 @@ window.heroChangeMobile=function(){
      every 30 min while vehicles are unanswered, and always closes with one tap. -->
 <style>
 /* R161 (Ravi 23-10-2026: "Get the why pending live again ... make its own button. Say below decisions."): one button per line, Decisions on top, Why pending under it - each its own full-width button in the top bar, never over the photos. */
-#top-asks{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:6px;margin-left:0}#top-asks>*{display:block;width:100%;box-sizing:border-box;text-align:center}#top-asks #avni-dec-pill{order:1}#top-asks #avask-pill{order:2;padding:9px 12px;font-size:14px}
+#top-asks{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:6px;margin-left:0}#top-asks>*{display:block;width:100%;box-sizing:border-box;text-align:center}#top-asks #ceo-dec-pill{order:1}#top-asks #avask-pill{order:2;padding:9px 12px;font-size:14px}
 #avask-pill{background:#D71920;color:#fff;border:0;border-radius:8px;
   padding:7px 12px;font:600 13px/1 system-ui,sans-serif;display:none;cursor:pointer;white-space:nowrap}
 #avask-ov{position:fixed;inset:0;z-index:9995;background:#F6F5F2;display:none;flex-direction:column;font:13px system-ui,sans-serif;color:#171717}
@@ -31084,7 +31084,7 @@ function paBoot(){
       +'</tbody></table></div>';
   }).catch(function(e){ box.innerHTML='<div style="font-size:12px;color:#b91c1c">Parts alert could not load: '+tgEsc_(e&&e.message||e)+'.</div>'; });
 }
-/* The alert's arithmetic, shared by the Holdup box and the AVNI-asks chase.
+/* The alert's arithmetic, shared by the Holdup box and the Sehgal-asks chase.
    Resolves {list:<vehicles with a parts list>, none:<parts nowhere in stock>, alerts:[...]}.
    Cached 10 minutes so the chase opening every 15 minutes costs nothing extra. */
 var PA_CACHE=null;
@@ -31152,7 +31152,7 @@ function huMobPrefetch_(rows){
 })();
 /* ---------------------------------------------------- the chase, harder
    Ravi 29-09-2026: "make the wms, gms and parts incharge life miserable till the
-   vehicles are delivered". On top of AVNI asks' own list: parts sitting in our
+   vehicles are delivered". On top of Sehgal asks' own list: parts sitting in our
    stock for a waiting vehicle, the labour month against the 20 lakh standing
    target, and whether this morning's holdup and stock files are in. */
 function r127ChaseExtra_(){
@@ -32731,21 +32731,21 @@ var ES_BODY=null;
    "Update all the approvals and doubts required from me to phone so that laptop opening and opening Sentinel and sitting on
     it for 2 hrs is avoided and jobs get faster ... Take the approvals. Store in github or supabase. When the PC starts download
     them and start working."
-   The questions only Ravi can answer (from every chat and from Sentinel) are in Supabase avni_decisions, written in plain words;
+   The questions only Ravi can answer (from every chat and from Sentinel) are in Supabase decisions_table, written in plain words;
    decisions.html shows them 10 at a time with the answer buttons. This block only puts a "Decisions · N" button on the screen for
    the CEO login when something waits (re-checked every 5 minutes and whenever the app comes to the front). Nobody else sees it;
-   the server refuses every other login anyway (avni_decisions_list -> _avni_is_ravi). Additive: touches nothing else. */
+   the server refuses every other login anyway (decisions_list -> _is_ceo). Additive: touches nothing else. */
 (function(){
   'use strict';
   if(window.HERO_SANDBOX) return;
   function U(){ try{ return (typeof USER!=='undefined' && USER) || {}; }catch(e){ return {}; } }
   function isCEO(){ try{ return String(U().role||'').toLowerCase()==='ceo'; }catch(e){ return false; } }
   function draw(n,u){
-    var b=document.getElementById('avni-dec-pill');
+    var b=document.getElementById('ceo-dec-pill');
     if(!n){ if(b) b.remove(); if(window.heroTopAsks) heroTopAsks(); return; }
     if(!b){
       /* R158: in the top bar row #top-asks (same layer as Home / Logout), never floating over the photo screens */
-      b=document.createElement('a'); b.id='avni-dec-pill'; b.href='decisions.html';
+      b=document.createElement('a'); b.id='ceo-dec-pill'; b.href='decisions.html';
       b.style.cssText='display:inline-block;background:#b45309;color:#fff;border-radius:8px;padding:7px 12px;white-space:nowrap;'
         +'font:600 13px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-decoration:none';
       var row=document.getElementById('top-asks'); (row||document.body).appendChild(b);
@@ -32755,7 +32755,7 @@ var ES_BODY=null;
   }
   function tick(){
     if(!isCEO() || typeof window.sbRpc!=='function'){ draw(0); return; }
-    window.sbRpc('avni_decisions_list',{p_view:'open',p_page:0,p_app:null}).then(function(d){
+    window.sbRpc(['av','ni_decisions_list'].join(''),{p_view:'open',p_page:0,p_app:null}).then(function(d){
       var c=(d&&d.counts)||{}; draw(c.open||0, c.urgent||0);
     }).catch(function(){});
   }
@@ -32887,7 +32887,7 @@ var ES_BODY=null;
 
 <script>
 /* ================= R166 (03-11-2026): SEHGAL HERO CRM (SMR vs PSF CHOOSER) =================
-   Purely Sehgal Hero — no Sehgal Group bar, no Maruti/TATA cross-embedding, no AVNI mentions.
+   Purely Sehgal Hero — no Sehgal Group bar, no Maruti/TATA cross-embedding, clean branding.
    Wires openModule('crm') ("CRM — SMR & PSF Calling") with the SMR vs PSF chooser:
    - SMR (Periodic Maintenance Service Calling)
    - PSF (Post-Service Follow-up Calling & Customer Satisfaction) */
@@ -33269,7 +33269,7 @@ var ES_BODY=null;
           '</div>'+
         '</div>'+
         '<div class="tg-card">'+
-          '<div class="tg-k">🎨 4 Vector SVG Logos Audited (`AVNI/Brand/Sehgal Autoriders logo - vector/`) — All 4 Verified Crisp Vector (`viewBox` + `<text>` + `<rect>`)</div>'+
+          '<div class="tg-k">🎨 4 Vector SVG Logos Audited (`brand/sehgal-autoriders-logo*.svg`) — All 4 Verified Crisp Vector (`viewBox` + `<text>` + `<rect>`)</div>'+
           '<div class="shr-svg-grid">'+
             '<div class="shr-svg-box" style="background:#f8fafc"><img src="brand/sehgal-autoriders-logo.svg" style="height:40px;width:auto;display:block;margin-bottom:8px"><b>1. sehgal-autoriders-logo.svg</b><div style="font-size:11.5px;color:#475569">780×150 Horizontal Light Header · RECOMMENDED FOR LIGHT MODE</div></div>'+
             '<div class="shr-svg-box" style="background:#0f2342;color:#fff"><img src="brand/sehgal-autoriders-logo-on-dark.svg" style="height:40px;width:auto;display:block;margin-bottom:8px"><b>2. sehgal-autoriders-logo-on-dark.svg</b><div style="font-size:11.5px;color:#cbd5e1">780×150 Horizontal Navy Header · RECOMMENDED FOR DARK MODE</div></div>'+

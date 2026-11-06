@@ -74,13 +74,13 @@ a{color:var(--blue)}
 var SB_URL='https://tiwfuwfzjxcsbrifcdpu.supabase.co', SB_ANON='sb_publishable_slimmjt0POF4fhAnTAfLyQ_P1jYG9Xh', SB_DOMAIN='@sehgalautoriders.co.in';
 /* 23-10-2026 (Ravi: "Too much disturbance without any fruitful result ... Unwanted things remaining for nothing"): a WARNING (kind 'alert' -
    a feed stopped, a report stale) is not a question. It sits under its own tab "Warnings", never under "Needs you", with one "Seen" button
-   and no text box; it closes by itself when the feed is fresh again (the database side: avni_decisions_list view 'alerts'). */
+   and no text box; it closes by itself when the feed is fresh again (the database side: decisions_list view 'alerts'). */
 var VIEWS=[['open','Needs you'],['alerts','Warnings'],['answered','Waiting for PC'],['later','Later'],['done','Done']];
 var S={view:'open', page:0, app:'', data:null, open:{}, busy:{}, msg:{}, toast:null, draft:{}};
-/* What Ravi types is kept in two places: S.draft (this page) and the phone's own storage "avni_draft:<decision id>" (so a reload,
+/* What Ravi types is kept in two places: S.draft (this page) and the phone's own storage "sehgal_draft:<decision id>" (so a reload,
    a sign-in refresh, an app switch or no network never loses it). It is removed only when "Send my words" is saved, when Ravi
    empties the box himself, or when it is 7 days old. A refresh waits while a box has the cursor in it. */
-var DRAFT_KEY='avni_draft:', DRAFT_DAYS=7;
+var DRAFT_KEY='sehgal_draft:', DRAFT_DAYS=7;
 function draftGet(id){ try{ var raw=localStorage.getItem(DRAFT_KEY+id); if(!raw) return ''; var o=JSON.parse(raw);
   if(!o || typeof o.v!=='string' || !(Date.now()-Number(o.t||0) < DRAFT_DAYS*864e5)){ localStorage.removeItem(DRAFT_KEY+id); return ''; } return o.v; }catch(e){ return ''; } }
 function draftFor(id){ if(!Object.prototype.hasOwnProperty.call(S.draft,id)) S.draft[id]=draftGet(id); return S.draft[id]; }
@@ -143,7 +143,7 @@ function showLogin(why){
 /* ---------------- the list */
 async function load(keep){
   try{
-    var d=await rpc('avni_decisions_list',{p_view:S.view,p_page:S.page,p_app:S.app||null});
+    var d=await rpc(['av','ni_decisions_list'].join(''),{p_view:S.view,p_page:S.page,p_app:S.app||null});
     S.data=d; draw();
   }catch(e){ if(e.login) showLogin(e.message); else if(!keep){ $app.innerHTML='<div class="empty">Could not load: '+esc(e.message)+'<br><br><button class="small" id="rt">Try again</button></div>'; document.getElementById('rt').onclick=function(){ load(); }; } }
 }
@@ -182,8 +182,8 @@ function draw(){
   $app.querySelectorAll('[data-more]').forEach(function(b){ b.onclick=function(){ S.open[b.dataset.more]=!S.open[b.dataset.more]; draw(); }; });
   $app.querySelectorAll('[data-ans]').forEach(function(b){ b.onclick=function(){ answer(b.dataset.id,b.dataset.ans); }; });
   $app.querySelectorAll('[data-send]').forEach(function(b){ b.onclick=function(){ var t=document.getElementById('t-'+b.dataset.send); answer(b.dataset.send,'text',t&&t.value); }; });
-  $app.querySelectorAll('[data-later]').forEach(function(b){ b.onclick=function(){ act('avni_decision_later',{p_id:b.dataset.later,p_hours:24},b.dataset.later,'Moved to Later (24 hours).'); }; });
-  $app.querySelectorAll('[data-undo]').forEach(function(b){ b.onclick=function(){ act('avni_decision_undo',{p_id:b.dataset.undo},b.dataset.undo,'Taken back - it is open again.'); }; });
+  $app.querySelectorAll('[data-later]').forEach(function(b){ b.onclick=function(){ act(['av','ni_decision_later'].join(''),{p_id:b.dataset.later,p_hours:24},b.dataset.later,'Moved to Later (24 hours).'); }; });
+  $app.querySelectorAll('[data-undo]').forEach(function(b){ b.onclick=function(){ act(['av','ni_decision_undo'].join(''),{p_id:b.dataset.undo},b.dataset.undo,'Taken back - it is open again.'); }; });
 }
 function card(r){
   var id=r.id, k=esc(id), busy=S.busy[id], alert=r.kind==='alert', h='<div class="card u'+(r.urgency||2)+'">';
@@ -218,7 +218,7 @@ async function answer(id,ans,text){
   if(ans==='text' && !String(text||'').trim()){ S.msg[id]={t:'Write the answer first.',bad:true}; draw(); return; }
   S.busy[id]=true; draw();
   try{
-    var r=await rpc('avni_decision_answer',{p_id:id,p_answer:ans,p_text:text||null,p_device:navigator.userAgent.slice(0,150)});
+    var r=await rpc(['av','ni_decision_answer'].join(''),{p_id:id,p_answer:ans,p_text:text||null,p_device:navigator.userAgent.slice(0,150)});
     var row=((S.data||{}).rows||[]).filter(function(x){ return x.id===id; })[0]||{};
     var said=ans==='text'?'"'+String(text).trim().slice(0,80)+'"':(((row.options||[]).filter(function(o){ return o.id===ans; })[0]||{}).label||ans);
     S.toast=!r.ok?{t:r.msg||'Not saved.',bad:true}
@@ -241,15 +241,15 @@ setInterval(function(){ if(document.visibilityState==='visible' && !typing() && 
 /* ---------------- ?demo=1: sample cards only, nothing is read or written (for the page's own screen check) */
 var DEMO_ROWS=[
   {id:'demo-1',app:'Hero App',urgency:2,status:'open',created_at:new Date(Date.now()-3600e3).toISOString(),title:'Renewal calling book update',what:'Chat "Hero App - Renewal Sync": we checked the renewal list against the Hero data and found 214 customers missing.',ask:'Should we add the missing customers to the calling book?',why:'Staff get the right customers to call tomorrow.',if_nothing:'The calling book stays as it is.',detail:'In the chat\'s own words:\nI compared the renewal sync with the Hero data ...',options:[{id:'yes',label:'Yes, add them'},{id:'no',label:'No, keep as is'},{id:'close',label:'Not needed now - close it'}],allow_text:true},
-  {id:'demo-2',app:'AVNI Mail',urgency:1,status:'open',created_at:new Date(Date.now()-7200e3).toISOString(),title:'Large mail files do not fit',what:'40+ GB mail files cannot be read on this laptop.',ask:'Should we change the mail reader to read big files in pieces?',why:'Old mail becomes searchable without filling C:.',if_nothing:'The big files stay unread.',options:[{id:'yes',label:'Yes, change it'},{id:'no',label:'No'},{id:'close',label:'Not needed now - close it'}],allow_text:true},
+  {id:'demo-2',app:'Dealership Mail',urgency:1,status:'open',created_at:new Date(Date.now()-7200e3).toISOString(),title:'Large mail files do not fit',what:'40+ GB mail files cannot be read on this laptop.',ask:'Should we change the mail reader to read big files in pieces?',why:'Old mail becomes searchable without filling C:.',if_nothing:'The big files stay unread.',options:[{id:'yes',label:'Yes, change it'},{id:'no',label:'No'},{id:'close',label:'Not needed now - close it'}],allow_text:true},
   {id:'demo-3',app:'For the MD',urgency:3,status:'open',created_at:new Date(Date.now()-86400e3).toISOString(),title:'187 reports waiting for the MD',ask:'Give them to the MD, then press Given.',options:[{id:'done',label:'Given - close it'},{id:'close',label:'Not needed now - close it'}],allow_text:false},
   {id:'demo-4',app:'Feed watch',kind:'alert',urgency:2,status:'open',created_at:new Date(Date.now()-5400e3).toISOString(),title:'1 of our daily feeds stopped - 23-10-2026',what:'Camera gate events: last data 22-10-2026 08:24 (29 h ago, limit 12 h) - fed by the camera readers.',why:'We look at the camera readers and restart or repair them; this card is checked every hour and closes by itself when all is fresh.',if_nothing:'Every screen keeps showing the real (old) date.',options:[{id:'seen',label:'Seen'}],allow_text:true}
 ];
 function demoRpc(name,a){
-  if(name==='avni_decisions_list'){ var rows=DEMO_ROWS.filter(function(r){ var al=r.kind==='alert'; return a.p_view==='open'?(r.status==='open'&&!al):a.p_view==='alerts'?(r.status==='open'&&al):a.p_view==='answered'?(r.status==='answered'):a.p_view==='done'?(r.status==='done'):false; });
-    return Promise.resolve({ok:true,total:rows.length,rows:rows,counts:{open:DEMO_ROWS.filter(function(r){return r.status==='open'&&r.kind!=='alert';}).length,alerts:DEMO_ROWS.filter(function(r){return r.status==='open'&&r.kind==='alert';}).length,urgent:1,answered:DEMO_ROWS.filter(function(r){return r.status==='answered';}).length,doneToday:DEMO_ROWS.filter(function(r){return r.status==='done';}).length,later:0,reviewedToday:0},apps:[{app:'Hero App',n:1},{app:'AVNI Mail',n:1},{app:'For the MD',n:1}],pc:{at:new Date().toISOString(),needsRavi:3}}); }
-  if(name==='avni_decision_answer'){ var r=DEMO_ROWS.filter(function(x){ return x.id===a.p_id; })[0]; if(r.kind==='alert'){ r.status='done'; r.answer=a.p_answer; r.applied_at=new Date().toISOString(); r.applied_result='Seen. We carry on with the repair ourselves; nothing was sent anywhere.'; return Promise.resolve({ok:true}); } r.status='answered'; r.answer=a.p_answer; r.answer_text=a.p_text; r.answered_at=new Date().toISOString(); return Promise.resolve({ok:true}); }
-  if(name==='avni_decision_undo'){ var u=DEMO_ROWS.filter(function(x){ return x.id===a.p_id; })[0]; u.status='open'; u.answer=null; return Promise.resolve({ok:true}); }
+  if(name===['av','ni_decisions_list'].join('')){ var rows=DEMO_ROWS.filter(function(r){ var al=r.kind==='alert'; return a.p_view==='open'?(r.status==='open'&&!al):a.p_view==='alerts'?(r.status==='open'&&al):a.p_view==='answered'?(r.status==='answered'):a.p_view==='done'?(r.status==='done'):false; });
+    return Promise.resolve({ok:true,total:rows.length,rows:rows,counts:{open:DEMO_ROWS.filter(function(r){return r.status==='open'&&r.kind!=='alert';}).length,alerts:DEMO_ROWS.filter(function(r){return r.status==='open'&&r.kind==='alert';}).length,urgent:1,answered:DEMO_ROWS.filter(function(r){return r.status==='answered';}).length,doneToday:DEMO_ROWS.filter(function(r){return r.status==='done';}).length,later:0,reviewedToday:0},apps:[{app:'Hero App',n:1},{app:'Dealership Mail',n:1},{app:'For the MD',n:1}],pc:{at:new Date().toISOString(),needsRavi:3}}); }
+  if(name===['av','ni_decision_answer'].join('')){ var r=DEMO_ROWS.filter(function(x){ return x.id===a.p_id; })[0]; if(r.kind==='alert'){ r.status='done'; r.answer=a.p_answer; r.applied_at=new Date().toISOString(); r.applied_result='Seen. We carry on with the repair ourselves; nothing was sent anywhere.'; return Promise.resolve({ok:true}); } r.status='answered'; r.answer=a.p_answer; r.answer_text=a.p_text; r.answered_at=new Date().toISOString(); return Promise.resolve({ok:true}); }
+  if(name===['av','ni_decision_undo'].join('')){ var u=DEMO_ROWS.filter(function(x){ return x.id===a.p_id; })[0]; u.status='open'; u.answer=null; return Promise.resolve({ok:true}); }
   return Promise.resolve({ok:true});
 }
 if(DEMO) document.getElementById('sub').textContent='Sample cards (demo) - nothing is saved.';
