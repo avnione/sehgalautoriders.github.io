@@ -30,7 +30,7 @@
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
 window.HERO_RELEASE = 122;
-window.HERO_BUILD = 'R170-2026.11.07.2';
+window.HERO_BUILD = 'R171-2026.11.07.1';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -227,7 +227,7 @@ window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
      everything the worker precached still comes back stale.
      So on localhost: register nothing, and tear down any worker a previous
      session left registered on this port, so the caches cannot outlive it.
-     This branch is dead on avnione.github.io — phone behaviour is
+     This branch is dead on app.sehgalautoriders.com — phone behaviour is
      byte-for-byte unchanged. */
   var HERO_IS_LOCAL = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)$/.test(location.hostname);
   if (HERO_IS_LOCAL) {
@@ -3995,7 +3995,7 @@ function i5StartSmre100Session(nameVal){
 
 function i5DownloadWindowsVersion(){
   var nm=String(INS5.zSmreName||i5MyName()||'Suhani Chouhar').trim();
-  var targetUrl='https://avnione.github.io/?view=insurance&smre='+encodeURIComponent(nm);
+  var targetUrl='https://app.sehgalautoriders.com/?view=insurance&smre='+encodeURIComponent(nm);
   var bat=[
     '@echo off',
     'title Sehgal Insurance - SMRE Windows Calling App (Our Common Method: Zero Pre-Alloc Glue-on-Login)',
@@ -29741,7 +29741,7 @@ Object.assign(window.HERO_LANG_EXTRA,{"📱 Change my mobile number": ["📱 म
    app as a real installed app, not a Chrome tab.
 
    The Android app (io.github.sehgalautoriders.hero, a Capacitor shell) opens
-   THIS page from avnione.github.io, so every push still reaches every
+   THIS page from app.sehgalautoriders.com, so every push still reaches every
    phone at once. A bare Android WebView lacks four things Chrome gives for free,
    and this block supplies them — only inside the app; in Chrome and on iPhone
    none of it runs and nothing changes:
