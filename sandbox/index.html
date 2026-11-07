@@ -30,7 +30,7 @@
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
 window.HERO_RELEASE = 122;
-window.HERO_BUILD = 'R170-2026.11.07.1';
+window.HERO_BUILD = 'R170-2026.11.07.2';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -18023,7 +18023,7 @@ tr.bl-day-row td{background:#f1f5f9!important;border-top:2px solid #cbd5e1!impor
          see the order is being kept is if the screen says who answered. */
       /* 24-10-2026 (Ravi: OCR Tree in Hero, paid or not): 'ocr-tree' is our own OCR Tree on the
          office PC, asked first by read-text; the paid engines only when it is silent or unsure. */
-      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', ['av','ni-tree'].join(''):'our OCR Tree (office PC)'};
+      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', [['av','ni-tree'].join('')]:'our OCR Tree (office PC)'};
       const eng=ENGINE_NAME[GE_ID.engine]||'';
       /* R115 (Ravi 23-09-2026): a plate is TAKEN only when 2-3 readers agree. One reader
          alone is shown as a suggestion the guard must check against the bike. */
