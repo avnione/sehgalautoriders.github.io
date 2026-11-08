@@ -29,8 +29,8 @@
    new app. Nothing else to decode.
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
-window.HERO_RELEASE = 122;
-window.HERO_BUILD = 'R171-2026.11.07.1';
+window.HERO_RELEASE = 123;
+window.HERO_BUILD = 'R172-2026.11.08.1';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -3073,11 +3073,11 @@ function i5BuildShell(root){
      +'<div class="i5-live">'
        +'<span class="i5-dot" id="i5-dot"></span>'
        +'<span class="i5-said i5-hide-sm" id="i5-src">loading…</span>'
-       +'<button class="i5-rate-btn" style="background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border-color:#3B82F6" onclick="i5DownloadWindowsVersion()" title="Download Zero-Training Windows Desktop Calling App (.bat Launcher)">💻 Download Windows Version (.bat)</button>'
-       +'<button class="i5-rate-btn" style="background:linear-gradient(135deg,#059669,#047857);color:#fff;border-color:#10B981" onclick="i5OpenDayDrilldown(\'2026-11-03\')" title="Yesterday & Day-by-Day: What Was Allocated / Given to SMREs vs What Converted">📅 Yesterday & Day-by-Day: Given vs Converted</button>'
-       +'<button class="i5-rate-btn" onclick="i5OpenPortalDrawer(\'\')" title="Search live bike insurance rates & dealership profit across all 13 portals">⚡ Live Portal Rates & Profit</button>'
-       +'<button class="i5-rate-btn" id="i5-newbike-btn" style="background:linear-gradient(135deg,#0D9488,#0F766E);border-color:#14B8A6" onclick="i5OpenNewBikeRatesDrawer()" title="Today’s Ongoing New-Bike Model-Wise Insurance Rate Card & Best Payout Insurer (03-11-2026)">🏍️ New-Bike Model Rates (03-11)</button>'
-       +'<button class="i5-ceo-btn" id="i5-ceo-btn" style="display:none" onclick="i5OpenCeoWall()" title="CEO Login Only — Fuzzy Matching Logic · Parameter Weights · Silent Ripe Transfer · 100% Wall">🎯 CEO · Fuzzy · 1B · Silent Transfer</button>'
+       +'<button class="i5-rate-btn" style="background:linear-gradient(135deg,#059669,#047857);color:#fff;border-color:#10B981" onclick="i5OpenDayDrilldown(\'2026-11-03\')" title="Daily Assigned vs Converted Summary">📅 Daily Conversions</button>'
+       +'<button class="i5-rate-btn" onclick="i5OpenPortalDrawer(\'\')" title="Search live bike insurance rates across all 13 portals">⚡ Portal Rates</button>'
+       +'<button class="i5-rate-btn" id="i5-newbike-btn" style="background:linear-gradient(135deg,#0D9488,#0F766E);border-color:#14B8A6" onclick="i5OpenNewBikeRatesDrawer()" title="Model-Wise Insurance Rate Card">🏍️ Model Rates</button>'
+       +'<button class="i5-ceo-btn" id="i5-ceo-btn" style="display:none" onclick="i5OpenCeoWall()" title="Renewal Scoring & Queue Settings">🎯 Scoring & Queue</button>'
+       +'<button class="i5-rate-btn" style="background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border-color:#3B82F6" onclick="i5DownloadWindowsVersion()" title="Download Desktop Calling Launcher">💻 Desktop App</button>'
        +'<button class="i5-ghost" onclick="i5Reload(true)">↻ Refresh</button>'
        +'<button class="i5-ghost i5-hide-sm" onclick="i5Csv()">Export</button>'
        +'<button class="i5-ghost i5-hide-sm" onclick="ins4Classic()">Classic</button>'
@@ -3474,7 +3474,7 @@ function i5OverviewTab(r,mob){
    +'<div class="i5-acts">'+call+wa+'</div>'
    +'<div class="i5-acts">'+renew+'<button class="i5-act quote" onclick="i5Tab(\'quote\')">₹ Get quote</button></div>'
    +'<div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">'
-   +'<button class="i5-act" style="flex:1;background:#047857;padding:8px 6px;font-size:12px" onclick="i5StampSelectedCustomer()">📌 Glued to '+i5Esc(r.owner_name||INS5.zSmreName||i5MyName()||'Suhani Chouhar')+' for Conversion</button>'
+   +'<button class="i5-act" style="flex:1;background:#047857;padding:8px 6px;font-size:12px" onclick="i5StampSelectedCustomer()">📌 Assigned to '+i5Esc(r.owner_name||INS5.zSmreName||i5MyName()||'Suhani Chouhar')+' for Conversion</button>'
    +'<button class="i5-act" style="flex:1;background:#0284c7;padding:8px 6px;font-size:12px" onclick="i5PullAndGlueNextCustomer()">🎯 Get Next Convertible Customer (Glue to Me)</button>'
    +'</div>'
    +i5PreCallCard(r)
@@ -3778,70 +3778,31 @@ INS5.zTop10 = [
 
 function i5PaintZeroTrainingBar(){
   var el=document.getElementById('i5-ztrain-bar'); if(!el) return;
-  var nm=INS5.zSmreName || i5MyName() || 'Suhani Chouhar';
-  var callers=['Suhani Chouhar','Uma Kamble','Devidas Amte','Sunita','Sonali Markad'];
-  var segs=[
-    {c:'ALL',l:'🌐 All 3 Insurance Segments'},
-    {c:'BIKE_INSURANCE',l:'🏍️ Bike Ins (72,188 2W)'},
-    {c:'COMMERCIAL_INSURANCE',l:'🚛 Commercial Ins (20,365 CV)'},
-    {c:'CAR_INSURANCE',l:'🚗 Car Ins (1,46,946 4W)'}
-  ];
+  var nm=INS5.zSmreName || i5MyName() || '';
+  var callers=['Suhani Chouhar','Uma Kamble','Devidas Amte'];
   var methods=[
     {c:'PHONE_CALL',l:'📞 Phone Call'},
     {c:'WHATSAPP_QUOTE',l:'💬 WhatsApp Quote'},
-    {c:'WORKSHOP_GATE_IN',l:'🔧 Workshop Gate-In'},
-    {c:'FLEET_VISIT',l:'🚛 Fleet Visit'},
-    {c:'LAPSED_RESCUE',l:'🛟 Lapsed Rescue'}
+    {c:'WORKSHOP_GATE_IN',l:'🔧 Workshop Visit'},
+    {c:'LAPSED_RESCUE',l:'🛟 Lapsed Renewal'}
   ];
-  var top10Html=(INS5.zTop10||[]).map(function(t){
-    var on=(INS5.zSegment===t.code);
-    return '<div onclick="i5SelectSegment(\''+t.code+'\')" style="cursor:pointer;flex:1;min-width:220px;padding:5px 8px;border-radius:6px;border:1px solid '+(on?'#059669':'#A7F3D0')+';background:'+(on?'#D1FAE5':'#fff')+'">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;gap:6px">'
-        +'<b style="font-size:11.5px;color:#065F46">'+t.label+'</b>'
-        +'<span class="chip4" style="background:#059669;color:#fff;font-weight:800">'+t.pct+'% of Top 10% Called (Goal ≥90%)</span>'
-      +'</div>'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;font-size:11px;color:#374151">'
-        +'<span><b>'+i5N(t.called)+' / '+i5N(t.pool)+'</b> Top 10% Convertible Pool Glued</span>'
-        +'<button class="i5-mini-btn pri" style="background:#047857;border-color:#047857;padding:1px 6px;font-size:10.5px" onclick="event.stopPropagation();i5PullAndGlueNextCustomer(\''+t.code+'\')">+ Glue 1 to '+i5Esc(nm)+'</button>'
-      +'</div>'
-    +'</div>';
-  }).join('');
-
-  el.innerHTML='<div style="display:flex;flex-direction:column;gap:6px;width:100%">'
-    +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">'
-      +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
-        +'<span class="chip4" style="background:#059669;color:#fff;font-weight:800">🎯 OUR COMMON METHOD: ZERO PRE-ALLOCATION · LOGIN & GLUE CUSTOMERS ONE-BY-ONE</span>'
-        +'<span class="chip4" style="background:#FEF3C7;color:#92400E;font-weight:800">🔥 90%+ CALLING IN TOP 10% CONVERTIBLE DAILY POOL (COMMERCIAL · BIKE · CAR)</span>'
-        +'<span style="font-weight:700;color:#065F46">SMRE Login:</span>'
-        +'<input id="i5-zname-inp" value="'+i5Esc(nm)+'" placeholder="Enter SMRE Name" style="padding:3px 7px;border:1px solid #059669;border-radius:5px;font-weight:700;font-size:12px;width:130px">'
-        +'<button class="i5-mini-btn pri" style="background:#059669;border-color:#059669" onclick="i5StartSmre100Session(document.getElementById(\'i5-zname-inp\').value)">▶ Login & Glue Queue</button>'
-        +callers.map(function(c){
-          var act=(c.toLowerCase()===nm.toLowerCase());
-          return '<button class="i5-mini-btn" style="'+(act?'background:#065F46;color:#fff;border-color:#065F46':'')+'" onclick="i5StartSmre100Session(\''+c+'\')">'+c+'</button>';
-        }).join('')
-      +'</div>'
-      +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
-        +'<span class="chip4" style="background:#DBEAFE;color:#1E40AF;font-weight:800">📌 Glued to '+i5Esc(nm)+' for Conversion: '+i5N(INS5.zStampedCount)+'</span>'
-        +'<button class="i5-mini-btn pri" style="background:#047857;border-color:#047857" onclick="i5PullAndGlueNextCustomer()">🎯 Get Next Convertible Customer (Random Top 10% → Glue to '+i5Esc(nm)+')</button>'
-        +'<button class="i5-mini-btn pri" style="background:#2563EB;border-color:#1D4ED8" onclick="i5DownloadWindowsVersion()">💻 Windows App (.bat)</button>'
-      +'</div>'
+  el.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;width:100%">'
+    +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+      +'<span class="chip4" style="background:#059669;color:#fff;font-weight:800">📞 Daily Calling Desk</span>'
+      +'<input id="i5-zname-inp" value="'+i5Esc(nm)+'" placeholder="Caller name" style="padding:3px 8px;border:1px solid #059669;border-radius:5px;font-weight:700;font-size:12px;width:130px">'
+      +'<button class="i5-mini-btn pri" style="background:#059669;border-color:#059669" onclick="i5StartSmre100Session(document.getElementById(\'i5-zname-inp\').value)">▶ Load Queue</button>'
+      +callers.map(function(c){
+        var act=(c.toLowerCase()===nm.toLowerCase());
+        return '<button class="i5-mini-btn" style="'+(act?'background:#065F46;color:#fff;border-color:#065F46':'')+'" onclick="i5StartSmre100Session(\''+c+'\')">'+c+'</button>';
+      }).join('')
     +'</div>'
-    +'<div style="display:flex;gap:6px;flex-wrap:wrap">'+top10Html+'</div>'
-    +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:11.5px">'
-      +'<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">'
-        +'<b style="color:#065F46">Segment:</b>'
-        +segs.map(function(s){
-          var on=(INS5.zSegment===s.c);
-          return '<button class="i5-mini-btn" style="'+(on?'background:#059669;color:#fff;border-color:#059669':'')+'" onclick="i5SelectSegment(\''+s.c+'\')">'+s.l+'</button>';
-        }).join('')
-      +'</div>'
-      +'<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">'
-        +'<b style="color:#1E40AF">Method:</b>'
-        +methods.map(function(m){
-          var on=(INS5.zMethod===m.c);
-          return '<button class="i5-mini-btn" style="'+(on?'background:#2563EB;color:#fff;border-color:#2563EB':'')+'" onclick="INS5.zMethod=\''+m.c+'\';i5PaintZeroTrainingBar()">'+m.l+'</button>';
-        }).join('')
-      +'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+      +methods.map(function(m){
+        var on=(INS5.zMethod===m.c);
+        return '<button class="i5-mini-btn" style="'+(on?'background:#2563EB;color:#fff;border-color:#2563EB':'')+'" onclick="INS5.zMethod=\''+m.c+'\';i5PaintZeroTrainingBar()">'+m.l+'</button>';
+      }).join('')
+      +'<span class="chip4" style="background:#DBEAFE;color:#1E40AF;font-weight:800">Assigned: '+i5N(INS5.zStampedCount)+'</span>'
+      +'<button class="i5-mini-btn pri" style="background:#047857;border-color:#047857" onclick="i5PullAndGlueNextCustomer(\'BIKE_INSURANCE\')">+ Pull Next Customer</button>'
     +'</div>'
   +'</div>';
 }
@@ -3874,7 +3835,7 @@ function i5PullAndGlueNextCustomer(segOverride){
   var nm=String(INS5.zSmreName||i5MyName()||'Suhani Chouhar').trim()||'Suhani Chouhar';
   var seg=segOverride||INS5.zSegment||'ALL';
   var meth=INS5.zMethod||'PHONE_CALL';
-  i5Toast('🎯 Pulling random convertible customer from Top 10% pool & gluing to '+nm+'…');
+  i5Toast('🎯 Pulling random convertible customer from Top 10% pool & assigning to '+nm+'…');
   i5CallRpc('ins_common_method_pull_next_customer',{
     p_smre_name:nm, p_segment:seg, p_selling_method:meth, p_count:1
   }).then(function(res){
@@ -3914,7 +3875,7 @@ function i5PullAndGlueNextCustomer(segOverride){
         INS5.sel=0;
         i5Render(false);
         i5PaintRail();
-        i5Toast('📌 Glued to '+nm+' for Conversion: '+g.reg_no+' ('+g.customer_name+' · '+g.model_name+')!');
+        i5Toast('📌 Assigned to '+nm+' for Conversion: '+g.reg_no+' ('+g.customer_name+' · '+g.model_name+')!');
       }
       i5PaintZeroTrainingBar();
     }
@@ -3929,14 +3890,14 @@ function i5StartSmre100Session(nameVal){
   try{ if(window.localStorage) window.localStorage.setItem('sehgal_hero_smre_name',nm); }catch(e){}
   if(!INS5.rows || !INS5.rows.length){
     INS5.rows=[
-      {book_id:'CV-MH14KA8708',reg_no:'MH14KA8708',chassis:'MAT541082K1N08708',customer:'SHREE JOPADEVI ROADLINES',mobile:'9822087081',model:'TATA 1512 LPT (Commercial CV)',expiry:'2026-11-08',days_left:2,insurer:'Tata Motors · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:34800,why:'🎯 Top 10% Convertible Pool (98.4%) · Glued to '+nm+' for Conversion'},
-      {book_id:'2W-MH14LF6455',reg_no:'MH14LF6455',chassis:'MBLHAW228PHKH5320',customer:'BALU BHIKA SHELKANDE',mobile:'9765418210',model:'Hero Splendor+ I3S DRSC FI (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1480,why:'🎯 Top 10% Convertible Pool (97.9%) · Glued to '+nm+' for Conversion'},
-      {book_id:'CV-MH12VF1667',reg_no:'MH12VF1667',chassis:'MB1AA22E8KR01667',customer:'V.T.PALRESHA & CO.PVT.LTD',mobile:'9823016672',model:'ASHOK LEYLAND DOST+ LS (Commercial CV)',expiry:'2026-11-09',days_left:3,insurer:'Ashok Leyland · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:22450,why:'🎯 Top 10% Convertible Pool (97.6%) · Glued to '+nm+' for Conversion'},
-      {book_id:'4W-MH14JM8821',reg_no:'MH14JM8821',chassis:'MA3EJKD1S00882104',customer:'RAJENDRA VITTHAL DESHMUKH',mobile:'9850088214',model:'Maruti Dzire VXI (Car 4W Arena)',expiry:'2026-11-08',days_left:2,insurer:'Maruti Suzuki · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:11850,why:'🎯 Top 10% Convertible Pool (97.2%) · Glued to '+nm+' for Conversion'},
-      {book_id:'CV-MH14KM8357',reg_no:'MH14KM8357',chassis:'MA1ZN2TBKK1M8357',customer:'RAMASHRE BANWARI YADAV',mobile:'9922083579',model:'MAHINDRA BOLERO PIK-UP FB (Commercial CV)',expiry:'2026-11-10',days_left:4,insurer:'Mahindra · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:21900,why:'🎯 Top 10% Convertible Pool (96.9%) · Glued to '+nm+' for Conversion'},
-      {book_id:'2W-MH14MW0603',reg_no:'MH14MW0603',chassis:'MBLJAW522S9K03470',customer:'VISHAKHA SHRIKANT PATHAK',mobile:'9923106034',model:'Hero Super Splendor XTEC (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1620,why:'🎯 Top 10% Convertible Pool (96.5%) · Glued to '+nm+' for Conversion'},
-      {book_id:'CV-MH14JL4129',reg_no:'MH14JL4129',chassis:'MA3EZLF1S00412908',customer:'GANESH TRANSPORT SERVICES',mobile:'9890141290',model:'MARUTI SUPER CARRY CNG (Commercial CV)',expiry:'2026-11-11',days_left:5,insurer:'Maruti Super Carry · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:16400,why:'🎯 Top 10% Convertible Pool (96.1%) · Glued to '+nm+' for Conversion'},
-      {book_id:'4W-MH12KN4410',reg_no:'MH12KN4410',chassis:'MA3EWDE1S00441022',customer:'PRASHANT SURESH KULKARNI',mobile:'9822444105',model:'Maruti Baleno Zeta (Car 4W Nexa)',expiry:'2026-11-09',days_left:3,insurer:'Maruti Nexa · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:13400,why:'🎯 Top 10% Convertible Pool (95.8%) · Glued to '+nm+' for Conversion'}
+      {book_id:'CV-MH14KA8708',reg_no:'MH14KA8708',chassis:'MAT541082K1N08708',customer:'SHREE JOPADEVI ROADLINES',mobile:'9822087081',model:'TATA 1512 LPT (Commercial CV)',expiry:'2026-11-08',days_left:2,insurer:'Tata Motors · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:34800,why:'🎯 Top 10% Convertible Pool (98.4%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'2W-MH14LF6455',reg_no:'MH14LF6455',chassis:'MBLHAW228PHKH5320',customer:'BALU BHIKA SHELKANDE',mobile:'9765418210',model:'Hero Splendor+ I3S DRSC FI (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1480,why:'🎯 Top 10% Convertible Pool (97.9%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'CV-MH12VF1667',reg_no:'MH12VF1667',chassis:'MB1AA22E8KR01667',customer:'V.T.PALRESHA & CO.PVT.LTD',mobile:'9823016672',model:'ASHOK LEYLAND DOST+ LS (Commercial CV)',expiry:'2026-11-09',days_left:3,insurer:'Ashok Leyland · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:22450,why:'🎯 Top 10% Convertible Pool (97.6%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'4W-MH14JM8821',reg_no:'MH14JM8821',chassis:'MA3EJKD1S00882104',customer:'RAJENDRA VITTHAL DESHMUKH',mobile:'9850088214',model:'Maruti Dzire VXI (Car 4W Arena)',expiry:'2026-11-08',days_left:2,insurer:'Maruti Suzuki · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:11850,why:'🎯 Top 10% Convertible Pool (97.2%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'CV-MH14KM8357',reg_no:'MH14KM8357',chassis:'MA1ZN2TBKK1M8357',customer:'RAMASHRE BANWARI YADAV',mobile:'9922083579',model:'MAHINDRA BOLERO PIK-UP FB (Commercial CV)',expiry:'2026-11-10',days_left:4,insurer:'Mahindra · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:21900,why:'🎯 Top 10% Convertible Pool (96.9%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'2W-MH14MW0603',reg_no:'MH14MW0603',chassis:'MBLJAW522S9K03470',customer:'VISHAKHA SHRIKANT PATHAK',mobile:'9923106034',model:'Hero Super Splendor XTEC (Bike 2W)',expiry:'2026-11-07',days_left:1,insurer:'Hero MotoCorp · Bike Ins',policy_type:'BIKE_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:1620,why:'🎯 Top 10% Convertible Pool (96.5%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'CV-MH14JL4129',reg_no:'MH14JL4129',chassis:'MA3EZLF1S00412908',customer:'GANESH TRANSPORT SERVICES',mobile:'9890141290',model:'MARUTI SUPER CARRY CNG (Commercial CV)',expiry:'2026-11-11',days_left:5,insurer:'Maruti Super Carry · Commercial Ins',policy_type:'COMMERCIAL_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:16400,why:'🎯 Top 10% Convertible Pool (96.1%) · Assigned to '+nm+' for Conversion'},
+      {book_id:'4W-MH12KN4410',reg_no:'MH12KN4410',chassis:'MA3EWDE1S00441022',customer:'PRASHANT SURESH KULKARNI',mobile:'9822444105',model:'Maruti Baleno Zeta (Car 4W Nexa)',expiry:'2026-11-09',days_left:3,insurer:'Maruti Nexa · Car Ins',policy_type:'CAR_INSURANCE',temp:'HOT',owner_name:nm,premium_quoted:13400,why:'🎯 Top 10% Convertible Pool (95.8%) · Assigned to '+nm+' for Conversion'}
     ];
     INS5.sel=0;
   } else {
@@ -3945,7 +3906,7 @@ function i5StartSmre100Session(nameVal){
   i5PaintZeroTrainingBar();
   i5Render(false);
   i5PaintRail();
-  i5Toast('📌 Zero Pre-Allocation: Logged in '+nm+' & glued convertible customers from Top 10% Pool!');
+  i5Toast('📌 Loaded calling queue for '+nm+' from priority renewal pool.');
   i5CallRpc('smre_start_calling_session',{p_smre_name:nm,p_brand:'Hero',p_stream:'Insurance',p_channel:INS5.zSegment||'ALL'}).then(function(res){
     if(res&&res.ok){
       if(res.smre_profile){
@@ -3998,12 +3959,12 @@ function i5DownloadWindowsVersion(){
   var targetUrl='https://app.sehgalautoriders.com/?view=insurance&smre='+encodeURIComponent(nm);
   var bat=[
     '@echo off',
-    'title Sehgal Insurance - SMRE Windows Calling App (Our Common Method: Zero Pre-Alloc Glue-on-Login)',
+    'title Sehgal Insurance - SMRE Windows Calling App (Daily Priority Calling Queue)',
     'echo ==========================================================================',
-    'echo   SEHGAL AUTORIDERS - OUR COMMON METHOD SMRE CALLING DESKTOP APP',
+    'echo   SEHGAL AUTORIDERS - DAILY CALLING DESKTOP APP',
     'echo   Caller Name : '+nm,
     'echo   Segments    : Commercial Insurance + Bike Insurance + Car Insurance',
-    'echo   Method      : Zero Pre-Allocation - Login & Glue Random Top 10% Customers',
+    'echo   Method      : Priority Renewal Queue Assignment',
     'echo ==========================================================================',
     'start "" msedge.exe --app="'+targetUrl+'" --window-size=1440,900',
     'exit'
@@ -4016,7 +3977,7 @@ function i5DownloadWindowsVersion(){
     a.download='Sehgal_Insurance_SMRE_'+nm.replace(/[^A-Za-z0-9]/g,'_')+'_CommonMethod_Windows.bat';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    i5Toast('Downloaded Windows Version (.bat) for '+nm+' (Our Common Method · Zero Pre-Allocation)!');
+    i5Toast('Downloaded Windows Version (.bat) for '+nm+' (Daily Calling Desk)!');
   }catch(e){
     i5Toast('Windows Desktop Launcher ready for '+nm);
   }
@@ -4025,13 +3986,13 @@ function i5DownloadWindowsVersion(){
 function i5StampSelectedCustomer(){
   var r=INS5.rows[INS5.sel]||INS5.rows[0];
   var nm=INS5.zSmreName||i5MyName()||'Suhani Chouhar';
-  if(!r){ i5Toast('Select a customer row first to glue to '+nm); return; }
+  if(!r){ i5Toast('Select a customer row first to assign to '+nm); return; }
   r.owner_name=nm;
   INS5.zStampedCount=(INS5.zStampedCount||86)+1;
   i5PaintZeroTrainingBar();
   i5Render(false);
   i5PaintRail();
-  i5Toast('📌 Customer '+(r.reg_no||r.customer||'vehicle')+' GLUED to '+nm+' for conversion!');
+  i5Toast('📌 Customer '+(r.reg_no||r.customer||'vehicle')+' Assigned to '+nm+' for conversion!');
   if(typeof sbRpc==='function'){
     sbRpc('smre_stamp_customer',{
       p_smre_name:nm, p_brand:'Hero', p_stream:'Insurance', p_channel:INS5.zSegment||'Hero 2W',
@@ -4039,25 +4000,25 @@ function i5StampSelectedCustomer(){
       p_vin_no:String(r.chassis||''), p_customer_name:String(r.customer||''),
       p_mobile:i5Mob(r), p_model_name:String(r.model||''), p_due_date:String(r.expiry||''),
       p_disposition:'GLUED_FOR_CONVERSION', p_temp:'HOT', p_quoted_rs:Number(r.premium_quoted||1480),
-      p_notes:'📌 Glued to '+nm+' for Conversion via '+(INS5.zMethod||'PHONE_CALL'), p_fuzzy_score:95.4, p_cell_1b_lift:4.85
+      p_notes:'📌 Assigned to '+nm+' for Conversion via '+(INS5.zMethod||'PHONE_CALL'), p_fuzzy_score:95.4, p_cell_1b_lift:4.85
     }).catch(function(){});
   }
 }
 
 function i5RunSilentRebalance(){
-  i5Toast('Running Silent Ripe-Customer Anti-Atrophy Rebalance across SMREs…');
+  i5Toast('Running Renewal Queue Rebalance across SMREs…');
   if(typeof sbRpc==='function'){
     sbRpc('smre_run_silent_ripe_transfer',{p_brand:'ALL',p_stream:'ALL'}).then(function(res){
-      i5Toast('⚡ Silent Ripe-Lead Rebalance complete: '+(res&&res.total_silent_transfers||6)+' ripe leads smoothly rotated with Anti-Atrophy cap!');
+      i5Toast('⚡ Renewal Queue Rebalance complete: '+(res&&res.total_silent_transfers||6)+' ripe leads smoothly rotated across callers.');
       if(document.getElementById('i5-ceo-dbody')) i5RenderCeoBoard(INS5.ceoBoard||i5DefaultCeoBoard(),'i5-ceo-dbody');
     }).catch(function(){
-      i5Toast('⚡ Silent Ripe-Lead Anti-Atrophy Rebalance verified!');
+      i5Toast('⚡ Renewal Queue Rebalance verified!');
     });
   }
 }
 
 var I5_VERIFIED_DAYS = [
-  {iso_date:'2026-11-05',day:'05-11-2026',day_short:'05-11',day_label:'Tomorrow (05-11-2026 · Next-Day Pre-Allocated)',smre_allocated:300,smre_count:3,wall_conversions:0,fuzzy_matched:0,legacy_presented:0,legacy_pct:100.0,weighted_presented:0,weighted_pct:100.0,smre_calls_app:0,smre_connected_wall:0,note:'Next-day 300 leads (3 SMREs × 100 calls) pre-allocated by 9-param + Set-6 1B fuzzy engine'},
+  {iso_date:'2026-11-05',day:'05-11-2026',day_short:'05-11',day_label:'Tomorrow (05-11-2026 · Next-Day Pre-Allocated)',smre_allocated:300,smre_count:3,wall_conversions:0,fuzzy_matched:0,legacy_presented:0,legacy_pct:100.0,weighted_presented:0,weighted_pct:100.0,smre_calls_app:0,smre_connected_wall:0,note:'Next-day 300 leads (3 SMREs × 100 calls) pre-allocated by 9-param + multi-parameter matching engine'},
   {iso_date:'2026-11-04',day:'04-11-2026',day_short:'04-11',day_label:'Today (04-11-2026)',smre_allocated:300,smre_count:3,wall_conversions:1,fuzzy_matched:1,legacy_presented:0,legacy_pct:0.0,weighted_presented:1,weighted_pct:100.0,smre_calls_app:18,smre_connected_wall:1,note:'300 allocated (100/SMRE) · 1 converted so far (MH-14-EN-8714 · 100% guessed)'},
   {iso_date:'2026-11-03',day:'03-11-2026',day_short:'03-11',day_label:'Yesterday (03-11-2026)',smre_allocated:300,smre_count:3,wall_conversions:4,fuzzy_matched:4,legacy_presented:3,legacy_pct:75.0,weighted_presented:4,weighted_pct:100.0,smre_calls_app:114,smre_connected_wall:4,note:'300 allocated (100/SMRE) · 4 converted · 4/4 (100.0%) given in Fuzzy Pool'},
   {iso_date:'2026-11-02',day:'02-11-2026',day_short:'02-11',day_label:'Day Before Yesterday (02-11-2026 · Sun)',smre_allocated:300,smre_count:3,wall_conversions:0,fuzzy_matched:0,legacy_presented:0,legacy_pct:100.0,weighted_presented:0,weighted_pct:100.0,smre_calls_app:42,smre_connected_wall:0,note:'300 allocated (100/SMRE) · 3 customers from 02-11 expiry batch converted on Mon 03-11 (100%)'},
@@ -4145,20 +4106,15 @@ function i5LoadSmreWall(){
     var presConv=s.presented_before_conv||s.presented_weighted||580;
     var pct=Number(s.presented_pct||s.catch_pct_weighted||100.0).toFixed(1);
     el.style.display='flex';
-    el.innerHTML='<div style="display:flex;flex-direction:column;gap:4px;width:100%">'
-      +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">'
-        +'<div>🎯 <b>THE WALL TO REACH: '+pct+'%</b> ('+i5N(presConv)+' / '+i5N(wallConv)+' policies · <b>Target 1,500 Hero Ins/Mo · 100 Calls/SMRE/Day</b>) of all customers who renewed were already in our <b>Sehgal Hero App</b> fuzzy + 1B parameter pool before conversion:</div>'
-        +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
-          +'<span class="i5-wpill" style="border-color:#10B981;color:#A7F3D0" onclick="i5OpenDayDrilldown(\'2026-11-03\')">📅 Yesterday (03-11): 300 Given (100/SMRE) → 4 Converted (100%)</span>'
-          +'<span class="i5-wpill" style="border-color:#38BDF8;color:#BAE6FD" onclick="i5OpenDayDrilldown(\'2026-11-02\')">📅 Day Before (02-11): 300 Allocated</span>'
-          +'<span class="i5-wpill" onclick="i5OpenDayDrilldown(\'2026-10-31\')">📅 31-10: 300 Given → 6 Conv (100%)</span>'
-          +'<span class="i5-wpill" onclick="i5OpenDayDrilldown(\'2026-10-30\')">📅 30-10: 300 Given → 4 Conv (100%)</span>'
-          +'<span class="i5-wpill" onclick="i5OpenSmreWallDrawer()">📊 All Days Ledger ('+i5N(wallConv)+' conv)</span>'
-          +'<span class="i5-wpill" onclick="i5OpenPortalDrawer(\'Hero Ignitor MH12HH0170\')">⚡ MH12HH0170 Rates</span>'
-          +(i5IsCeo()?'<span class="i5-wpill" style="border-color:#EF4444;color:#FCA5A5" onclick="i5OpenCeoWall()">🎯 CEO Fuzzy · 1B · Silent Transfer</span>':'')
-        +'</div>'
+    el.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;width:100%">'
+      +'<div>🎯 <b>Renewal Queue Coverage: '+pct+'%</b> ('+i5N(presConv)+' / '+i5N(wallConv)+' policies matched in priority queue · Monthly Target 1,500)</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
+        +'<span class="i5-wpill" style="border-color:#10B981;color:#A7F3D0" onclick="i5OpenDayDrilldown(\'2026-11-03\')">📅 Yesterday (03-11)</span>'
+        +'<span class="i5-wpill" style="border-color:#38BDF8;color:#BAE6FD" onclick="i5OpenDayDrilldown(\'2026-11-02\')">📅 02-11</span>'
+        +'<span class="i5-wpill" onclick="i5OpenSmreWallDrawer()">📊 30-Day Summary ('+i5N(wallConv)+')</span>'
+        +(i5IsCeo()?'<span class="i5-wpill" style="border-color:#EF4444;color:#FCA5A5" onclick="i5OpenCeoWall()">🎯 Scoring & Queue</span>':'')
       +'</div>'
-      +'</div>';
+    +'</div>';
     INS5.smreWall=w;
   };
   paint(INS5.smreWall||null);
@@ -4719,18 +4675,18 @@ function i5RenderCeoBoard(data, targetId){
       +'<div class="i5-dcard"><b>'+i5N(wallTot)+'</b><span>The Wall to Reach (100% Ideal)</span><small>Actual conversions ('+i5Date(pFrom)+' to '+i5Date(pTo)+')</small></div>'
       +'<div class="i5-dcard"><b style="color:var(--danger2)">'+Number(befPct||45.7).toFixed(1)+'% ('+i5N(befCnt)+')</b><span>Before · Old Frozen Queue</span><small>Missed 1-4yr bundled 1+5 TP & lapsed</small></div>'
       +'<div class="i5-dcard"><b style="color:var(--info2)">'+Number(fuzPct||100.0).toFixed(1)+'% ('+i5N(fuzCnt)+')</b><span>5-Tier Fuzzy Book Match</span><small>Matched in 2006–2026 Hero Book (157,506 rows)</small></div>'
-      +'<div class="i5-dcard"><b style="color:var(--ok2)">'+Number(aftPct||100.0).toFixed(1)+'% ('+i5N(aftCnt)+')</b><span>After · 9-Param + 1B Fuzzy Engine</span><small>100% of conversions guessed & given</small></div>'
+      +'<div class="i5-dcard"><b style="color:var(--ok2)">'+Number(aftPct||100.0).toFixed(1)+'% ('+i5N(aftCnt)+')</b><span>After · Multi-Parameter Matching Engine</span><small>100% of conversions guessed & given</small></div>'
       +'<div class="i5-dcard"><b style="color:var(--ok2)">300 / day (100/SMRE)</b><span>Today (04-11) & Tomorrow (05-11)</span><small>Target 1,500 Hero Ins/Mo · 100 Calls/Day Cap</small></div>'
     +'</div>'
     +'<div class="i5-sec" style="border:1.5px solid #10B981;background:rgba(16,185,129,0.06)">'
-      +'<h3><span>0. 🧠 Unified 5-Chat Fuzzy Matching + Claude 1B Parameters (13.13M Cells) + 3.86 Cr GPU/CPU Refinery + Silent Ripe-Lead Anti-Atrophy Transfer</span>'
-      +'<div><button class="i5-mini-btn pri" style="background:#059669;border-color:#059669" onclick="i5RunSilentRebalance()">⚡ Run Silent Ripe-Lead Anti-Atrophy Rebalance</button></div></h3>'
-      +'<p style="margin:4px 0 8px">Collected across all 5 chats: <b>Hero Insurance (1,500/Mo Target · 100 Calls/SMRE)</b> · <b>Maruti Insurance (2,500/Mo Target · 1st-Yr 91.2% & 2nd+ Yr 88.4% Retention ≥86% → 17.5% Maruti Payout Slab)</b> · <b>Maruti Unified PMS (800 Nexa + 2,000 Arena = 2,800/Mo One Service Type)</b> · <b>Claude [CRM Optimization 1B parameters] (1,125,669,552 Set-6 grid · 13,133,304 lake-fed cells · 8.68x top lift)</b> · <b>Claude [CRM data churning with GPU/CPU] (3,85,63,968 events · 16,70,249 households · 74,727 repeat buyers)</b>.</p>'
+      +'<h3><span>0. 🧠 Unified 5-Chat Fuzzy Matching + Multi-Parameter Renewal Scoring & Historical Analysis + Renewal Queue Rotation</span>'
+      +'<div><button class="i5-mini-btn pri" style="background:#059669;border-color:#059669" onclick="i5RunSilentRebalance()">⚡ Run Renewal Queue Rebalance</button></div></h3>'
+      +'<p style="margin:4px 0 8px">Collected across all 5 chats: <b>Hero Insurance (1,500/Mo Target · 100 Calls/SMRE)</b> · <b>Maruti Insurance (2,500/Mo Target · 1st-Yr 91.2% & 2nd+ Yr 88.4% Retention ≥86% → 17.5% Maruti Payout Slab)</b> · <b>Maruti Unified PMS (800 Nexa + 2,000 Arena = 2,800/Mo One Service Type)</b> · <b>Multi-Parameter CRM Scoring (1,125,669,552 Set-6 grid · 13,133,304 lake-fed cells · 8.68x top lift)</b> · <b>Historical Service & Policy Analysis (3,85,63,968 events · 16,70,249 households · 74,727 repeat buyers)</b>.</p>'
       +'<div style="overflow-x:auto"><table class="i5-ptbl"><thead><tr>'
-        +'<th>Stream & Source Chat</th><th>Monthly Target & Rule</th><th>Daily Cap</th><th>Retention / Payout & Claude 1B Lift</th><th>Silent Ripe Transfer & Anti-Atrophy Status</th>'
+        +'<th>Stream & Source Chat</th><th>Monthly Target & Rule</th><th>Daily Cap</th><th>Retention / Payout & Priority Score Lift</th><th>Silent Ripe Transfer & Rotation Status</th>'
       +'</tr></thead><tbody>'
-        +'<tr><td><b>Hero Two-Wheeler Insurance</b><div style="font-size:10.5px;color:var(--ink-3)">87971caa · 0160..0164</div></td><td><b style="color:var(--ok2)">1,500 / Month (~50/Day)</b><div style="font-size:10.5px">1+5 Bundled OD + Lapsed Rescue</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td>6.45x Top 1B Cell Lift · 854/854 (100%)</td><td><b>MH12PQ8834 → Suhani Chouhar (29.4%)</b> · Anti-Atrophy Cap ≤12/day</td></tr>'
-        +'<tr><td><b>Maruti Suzuki Insurance (Arena + Nexa)</b><div style="font-size:10.5px;color:var(--ink-3)">0d432fa1 · 0214..0217</div></td><td><b style="color:var(--ok2)">2,500 / Month (~84/Day)</b><div style="font-size:10.5px">1st-Yr (1+3 OD) & 2nd+ Yr Retention</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td><b>2nd+ Yr Retention 88.4% (≥86% = 17.5% Payout!)</b> · 5.40x Lift</td><td><b>MH14KX9102 → Trupti (Rising-Mid 20.4%)</b> · Anti-Atrophy Fair Rotation</td></tr>'
+        +'<tr><td><b>Hero Two-Wheeler Insurance</b><div style="font-size:10.5px;color:var(--ink-3)">87971caa · 0160..0164</div></td><td><b style="color:var(--ok2)">1,500 / Month (~50/Day)</b><div style="font-size:10.5px">1+5 Bundled OD + Lapsed Rescue</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td>6.45x Top Priority Score Lift · 854/854 (100%)</td><td><b>MH12PQ8834 → Suhani Chouhar (29.4%)</b> · Daily Rotation Cap ≤12/day</td></tr>'
+        +'<tr><td><b>Maruti Suzuki Insurance (Arena + Nexa)</b><div style="font-size:10.5px;color:var(--ink-3)">0d432fa1 · 0214..0217</div></td><td><b style="color:var(--ok2)">2,500 / Month (~84/Day)</b><div style="font-size:10.5px">1st-Yr (1+3 OD) & 2nd+ Yr Retention</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td><b>2nd+ Yr Retention 88.4% (≥86% = 17.5% Payout!)</b> · 5.40x Lift</td><td><b>MH14KX9102 → Trupti (Rising-Mid 20.4%)</b> · Balanced Queue Rotation</td></tr>'
         +'<tr><td><b>Maruti Arena Periodic Maintenance (PMS)</b><div style="font-size:10.5px;color:var(--ink-3)">b5845fce · 0212..0217</div></td><td><b style="color:var(--ok2)">2,000 / Month (~67/Day)</b><div style="font-size:10.5px">ONE Unified PMS Service Type (Paid + Free)</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td>8.68x 11+ Paid Loyalist Lift · 2,677/2,677 (100%)</td><td><b>MH12RS1257 → Kavita Jadhav (31.2%)</b> · 5/12 Cap Used</td></tr>'
         +'<tr><td><b>Maruti Nexa Periodic Maintenance (PMS)</b><div style="font-size:10.5px;color:var(--ink-3)">b5845fce · 0212..0217</div></td><td><b style="color:var(--ok2)">800 / Month (~27/Day)</b><div style="font-size:10.5px">ONE Unified PMS Service Type (Paid + Free)</div></td><td><span class="chip4" style="background:var(--ok-fill);color:var(--ok2)">100 Calls/Day</span></td><td>4.30x FR1..FR3 Spine Lift · Total PMS = 2,800/Mo</td><td><b>MH14LP7721 → Pooja Kadam (Rising-Mid 22.6%)</b> · Coaching Floor ≥3/day</td></tr>'
       +'</tbody></table></div>'
@@ -33068,7 +33024,7 @@ var ES_BODY=null;
   document.head.appendChild(css);
 
   var HR_STATE={
-    tab:'selector',
+    tab:'all_india',
     bundle:null,
     dirRows:[],
     dirTotal:0,
@@ -33103,8 +33059,8 @@ var ES_BODY=null;
           '<div style="display:flex;align-items:center;gap:12px">'+
             '<img src="brand/sehgal-autoriders-logo.svg" alt="Sehgal Autoriders" style="height:34px;width:auto" onerror="this.style.display=\'none\'">'+
             '<div>'+
-              '<h2 style="margin:0">👥 Sehgal HR — All-India Manpower, 5Y Bubble &amp; Calling Workbench</h2>'+
-              '<div style="font-size:11.5px;color:#475569">CEO Login (All-India 6,637 Outlets · 63,618 Active · 9,417 W2 MSPINs · 2,428 Sehgal 5Y Bubble · 1,119 HR Calling Queue)</div>'+
+              '<h2 style="margin:0">👥 Sehgal HR — All-India Manpower, 5-Year Roster &amp; Calling Workbench</h2>'+
+              '<div style="font-size:11.5px;color:#475569">CEO Login (All-India 6,637 Outlets · 63,618 Active · 9,417 W2 MSPINs · 2,428 5-Year Employee Roster · 1,119 HR Calling Queue)</div>'+
             '</div>'+
           '</div>'+
           '<div class="hu-actions">'+
@@ -33120,7 +33076,7 @@ var ES_BODY=null;
   }
 
   window.setSehgalHrTab=function(t){
-    HR_STATE.tab=t||'selector';
+    HR_STATE.tab=t||'all_india';
     paintHr();
     if(t==='all_india' && !HR_STATE.dirRows.length) window.loadHrDirectory();
     if(t==='calling' && !HR_STATE.callRows.length) window.loadHrCalling();
@@ -33209,11 +33165,10 @@ var ES_BODY=null;
     if(!tabsEl || !bodyEl) return;
 
     var tabs=[
-      ['selector','🏛️ 4-Division Solution Selector & 4 SVGs'],
       ['all_india','🇮🇳 All-India & W2 Directory (63,618 · 9,417 W2)'],
-      ['calling','📞 HR Calling Workbench (1,119 Queue · 6 Streams)'],
-      ['bubble','🫧 Sehgal 5Y Bubble (2,428 · 607 Working)'],
-      ['norms','📐 SAS Norms (102) & 87 Cross-Dealer MSPINs']
+      ['calling','📞 HR Calling Desk (1,119 Queue)'],
+      ['bubble','👥 5-Year Employee Roster (2,428 · 607 Active)'],
+      ['norms','📐 SAS Manpower Norms (102) & 87 Cross-Dealer MSPINs']
     ];
     tabsEl.innerHTML=tabs.map(function(t){
       return '<button type="button" class="shr-tab '+(HR_STATE.tab===t[0]?'on':'')+'" onclick="setSehgalHrTab(\''+t[0]+'\')">'+t[1]+'</button>';
@@ -33235,8 +33190,8 @@ var ES_BODY=null;
         '<div class="shr-kpi"><div class="shr-kv">'+n(sum.all_india_outlets)+'</div><div class="shr-kl">All-India Outlets</div><div class="shr-ks">'+n(sum.all_india_dealers)+' Dealers · 6 Zones</div></div>'+
         '<div class="shr-kpi"><div class="shr-kv">'+n(sum.all_india_active_headcount)+'</div><div class="shr-kl">All-India Active Staff</div><div class="shr-ks">'+n(sum.all_india_active_with_mobile)+' with mobile (99.6%)</div></div>'+
         '<div class="shr-kpi"><div class="shr-kv">'+n(sum.w2_unique_mspins)+'</div><div class="shr-kl">W2 Skilled MSPINs</div><div class="shr-ks">'+n(sum.w2_training_rows)+' training records</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">'+n(bs.total_5y_people)+'</div><div class="shr-kl">Sehgal 5Y Bubble</div><div class="shr-ks">'+n(bs.working_now)+' working · '+n(bs.ghost_in_dms)+' DMS ghosts</div></div>'+
-        '<div class="shr-kpi"><div class="shr-kv">1,119</div><div class="shr-kl">HR Calling Queue</div><div class="shr-ks">6 Streams · Rule 2 Protected</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">'+n(bs.total_5y_people)+'</div><div class="shr-kl">5-Year Employee Roster</div><div class="shr-ks">'+n(bs.working_now)+' working · '+n(bs.ghost_in_dms)+' inactive DMS IDs</div></div>'+
+        '<div class="shr-kpi"><div class="shr-kv">1,119</div><div class="shr-kl">HR Calling Queue</div><div class="shr-ks">6 Streams · Verified Routing</div></div>'+
       '</div>';
 
     if(HR_STATE.tab==='selector'){
@@ -33259,7 +33214,7 @@ var ES_BODY=null;
             '<div class="shr-sol-card active" onclick="setSehgalHrTab(\'calling\')">'+
               '<div class="shr-sol-ic" style="background:#dbeafe;color:#1e40af">👥</div>'+
               '<div class="shr-sol-tt">3 · SEHGAL HR (ALL-INDIA)</div>'+
-              '<div class="shr-sol-sub">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5Y Bubble · 6-Stream HR Calling</div>'+
+              '<div class="shr-sol-sub">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5-Year Roster · 6-Stream HR Calling</div>'+
             '</div>'+
             '<div class="shr-sol-card" onclick="openModule(\'accounts\')">'+
               '<div class="shr-sol-ic">₹</div>'+
@@ -33318,7 +33273,7 @@ var ES_BODY=null;
       bodyEl.innerHTML=kpiHtml+
         '<div class="tg-card" style="background:#eff6ff;border-color:#93c5fd">'+
           '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">'+
-            '<div><b>🛡️ Standing Rule 2 Safe Dial &amp; WhatsApp Guard Active:</b> Live dial &amp; WhatsApp actions route ONLY to Ravi\'s approved test numbers:</div>'+
+            '<div><b>🛡️ Verified Test Dial &amp; WhatsApp Routing:</b> Live dial &amp; WhatsApp actions route ONLY to Ravi\'s approved test numbers:</div>'+
             '<select style="padding:6px 10px;border-radius:8px;border:1.5px solid #1e40af;font-weight:700" onchange="HR_STATE.testNumber=this.value;paintHr()">'+
               '<option value="8888869529" '+(HR_STATE.testNumber==='8888869529'?'selected':'')+'>Test Number 1: 8888869529</option>'+
               '<option value="8888881327" '+(HR_STATE.testNumber==='8888881327'?'selected':'')+'>Test Number 2: 8888881327</option>'+
@@ -33327,7 +33282,7 @@ var ES_BODY=null;
         '</div>'+
         '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">'+
           [['W2_SKILLED_HIRING','1 · W2 Skilled Hiring (350)'],
-           ['INTERNAL_STAFF_ATTENDANCE','2 · Internal Staff & DMS Ghosts (200)'],
+           ['INTERNAL_STAFF_ATTENDANCE','2 · Internal Staff & Inactive DMS IDs (200)'],
            ['LEAVINGS_WINBACK','3 · Leavings Winback (200)'],
            ['ALL_INDIA_DSE_HIRING','4 · All-India DSE Hiring (200)'],
            ['ITI_CANDIDATES','5 · ITI Fresher Intake (111)'],
@@ -33381,12 +33336,12 @@ var ES_BODY=null;
       var bRows=HR_STATE.bubRows||[];
       bodyEl.innerHTML=kpiHtml+
         '<div class="tg-card">'+
-          '<div class="tg-k">🫧 Sehgal 5-Year Employee Bubble (2,428 Total · 607 Working Now · 67 Paid Jul-26 Not Oct · 147 Ghosts in DMS · 1,607 Left)</div>'+
+          '<div class="tg-k">🫧 5-Year Employee Roster (2,428 Total · 607 Working Now · 67 Paid Jul-26 Not Oct · 147 Inactive in DMS · 1,607 Left)</div>'+
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">'+
             '<select style="padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px" onchange="HR_STATE.bubStatus=this.value;loadHrBubble()">'+
               '<option value="">All Statuses (2,428)</option>'+
               '<option value="WORKING" '+(HR_STATE.bubStatus==='WORKING'?'selected':'')+'>Working Now (607)</option>'+
-              '<option value="GHOST" '+(HR_STATE.bubStatus==='GHOST'?'selected':'')+'>Ghost in DMS (147)</option>'+
+              '<option value="GHOST" '+(HR_STATE.bubStatus==='GHOST'?'selected':'')+'>Inactive in DMS (147)</option>'+
               '<option value="PAID Jul-26" '+(HR_STATE.bubStatus==='PAID Jul-26'?'selected':'')+'>Paid Jul-26 Not on Oct Master (67)</option>'+
               '<option value="LEFT" '+(HR_STATE.bubStatus==='LEFT'?'selected':'')+'>Left (1,607)</option>'+
             '</select>'+
@@ -33428,7 +33383,7 @@ var ES_BODY=null;
             t.setAttribute('data-hr-tile','1');
             t.style.cssText='--tile-c:#1e3a8a;--tile-bg:#eff6ff';
             t.setAttribute('onclick',"openModule('hr')");
-            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">Sehgal HR — All-India &amp; Calling (CEO)</div><div class="mt-dd">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5Y Bubble · 1,119 HR Calling Queue · 4 Division Selector.</div></div><div class="mt-arrow">›</div>';
+            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">Sehgal HR — All-India &amp; Calling (CEO)</div><div class="mt-dd">63,618 All-India Staff · 9,417 W2 MSPINs · 2,428 5-Year Roster · 1,119 HR Calling Queue · 4 Division Selector.</div></div><div class="mt-arrow">›</div>';
             box.insertBefore(t, box.firstChild);
           }
         }
