@@ -3369,7 +3369,7 @@ function i5Render(stale){
     var hot=String(r.temp||'').toUpperCase().indexOf('HOT')===0?'<span class="i5-hot">HOT</span>':'';
     var ident=(r.reg_no?i5Esc(r.reg_no):('⋯'+i5Esc(String(r.chassis||'').slice(-6))));
     return '<tr id="i5r-'+i+'" class="'+(INS5.sel===i?'sel':'')+'" onclick="i5Pick('+i+')">'
-      +'<td><span class="chip4" style="background:#059669;color:#fff;font-weight:800;margin-right:5px">📌 Glued: '+i5Esc(r.owner_name||INS5.zSmreName||i5MyName()||'Suhani Chouhar')+'</span><b>'+i5Esc(r.customer||'—')+'</b>'+hot
+      +'<td><span class="chip4" style="background:#059669;color:#fff;font-weight:800;margin-right:5px">📌 Assigned: '+i5Esc(r.owner_name||INS5.zSmreName||i5MyName()||'Suhani Chouhar')+'</span><b>'+i5Esc(r.customer||'—')+'</b>'+hot
         +'<span class="sub">'+(mob?('📞 '+mob):'<span class="i5-miss">no mobile</span>')+'</span>'
         /* the phone drops the vehicle and stage columns, so both fold in here */
         +'<span class="sub i5-only-sm"><span class="i5-stage '+st.k+'">'+st.t+'</span> '
@@ -3475,7 +3475,7 @@ function i5OverviewTab(r,mob){
    +'<div class="i5-acts">'+renew+'<button class="i5-act quote" onclick="i5Tab(\'quote\')">₹ Get quote</button></div>'
    +'<div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">'
    +'<button class="i5-act" style="flex:1;background:#047857;padding:8px 6px;font-size:12px" onclick="i5StampSelectedCustomer()">📌 Assigned to '+i5Esc(r.owner_name||INS5.zSmreName||i5MyName()||'Suhani Chouhar')+' for Conversion</button>'
-   +'<button class="i5-act" style="flex:1;background:#0284c7;padding:8px 6px;font-size:12px" onclick="i5PullAndGlueNextCustomer()">🎯 Get Next Convertible Customer (Glue to Me)</button>'
+   +'<button class="i5-act" style="flex:1;background:#0284c7;padding:8px 6px;font-size:12px" onclick="i5PullAndGlueNextCustomer('BIKE_INSURANCE')">+ Assign Next Customer</button>'
    +'</div>'
    +i5PreCallCard(r)
    +'<div class="i5-h">This renewal</div>'
@@ -3907,7 +3907,7 @@ function i5StartSmre100Session(nameVal){
   i5Render(false);
   i5PaintRail();
   i5Toast('📌 Loaded calling queue for '+nm+' from priority renewal pool.');
-  i5CallRpc('smre_start_calling_session',{p_smre_name:nm,p_brand:'Hero',p_stream:'Insurance',p_channel:INS5.zSegment||'ALL'}).then(function(res){
+  i5CallRpc('smre_start_calling_session',{p_smre_name:nm,p_brand:'Hero',p_stream:'Insurance',p_channel:'BIKE_INSURANCE'}).then(function(res){
     if(res&&res.ok){
       if(res.smre_profile){
         INS5.zStampedCount=res.smre_profile.stamped_customers_count||86;
@@ -3926,7 +3926,12 @@ function i5StartSmre100Session(nameVal){
         });
       }
       if(Array.isArray(res.queue_100)&&res.queue_100.length){
-        var gluedTop=res.queue_100.slice(0,12).map(function(g){
+        var heroOnly=res.queue_100.filter(function(g){
+          var m=String((g.manufacturer||'')+' '+(g.model_name||'')+' '+(g.service_type||'')).toUpperCase();
+          return m.indexOf('MARUTI')<0 && m.indexOf('TATA')<0 && m.indexOf('MAHINDRA')<0 && m.indexOf('ASHOK')<0;
+        });
+        var srcList=heroOnly.length?heroOnly:res.queue_100;
+        var gluedTop=srcList.slice(0,12).map(function(g){
           return {
             book_id:g.lead_id,
             reg_no:g.reg_no,
@@ -3936,12 +3941,12 @@ function i5StartSmre100Session(nameVal){
             model:g.model_name,
             expiry:'2026-11-10',
             days_left:5,
-            insurer:g.manufacturer||'Top 10% Pool',
+            insurer:'Hero MISP Renewal',
             policy_type:g.service_type,
             temp:'HOT',
             owner_name:g.stamped_smre||nm,
             premium_quoted:g.estimate_or_quote_rs,
-            why:g.why_call
+            why:String(g.why_call||'Annual Renewal Due').replace(/Glued/gi,'Assigned')
           };
         });
         INS5.rows=gluedTop;
