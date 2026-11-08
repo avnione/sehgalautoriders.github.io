@@ -30,7 +30,7 @@
    release.ps1 bumps both together and refuses to publish on a mismatch. */
 const HERO_RELEASE = 122;
 const HERO_BUILD = 'R169-2026.11.05.1';
-const SHELL_CACHE = 'hero-shell-' + HERO_BUILD;
+const SHELL_CACHE = 'hero-shell-' + HERO_BUILD + '-move-notice-08-11-2026';
 /* Throttle for the background shell refresh — see the fetch handler. */
 let LAST_SHELL_REFRESH = 0;
 const SHELL_REFRESH_MS = 6 * 60 * 60 * 1000;
