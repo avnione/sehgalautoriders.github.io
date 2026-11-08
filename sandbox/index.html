@@ -30,7 +30,7 @@
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
 window.HERO_RELEASE = 123;
-window.HERO_BUILD = 'R172-2026.11.08.1';
+window.HERO_BUILD = 'R173-2026.11.08.2';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -17979,7 +17979,7 @@ tr.bl-day-row td{background:#f1f5f9!important;border-top:2px solid #cbd5e1!impor
          see the order is being kept is if the screen says who answered. */
       /* 24-10-2026 (Ravi: OCR Tree in Hero, paid or not): 'ocr-tree' is our own OCR Tree on the
          office PC, asked first by read-text; the paid engines only when it is silent or unsure. */
-      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', [['av','ni-tree'].join('')]:'our OCR Tree (office PC)'};
+      const ENGINE_NAME={gemini:'Gemini', vision:'Cloud Vision', docai:'Document AI', 'ocr-tree':'our OCR Tree (office PC)', 'sehgal-ocr':'our OCR Tree (office PC)'};
       const eng=ENGINE_NAME[GE_ID.engine]||'';
       /* R115 (Ravi 23-09-2026): a plate is TAKEN only when 2-3 readers agree. One reader
          alone is shown as a suggestion the guard must check against the bike. */
@@ -32682,43 +32682,7 @@ var ES_BODY=null;
 })();
 </script>
 
-<script>
-/* ================= R148 (Ravi 15-10-2026): A.V.N.I DECISIONS ON THE PHONE. =================
-   "Update all the approvals and doubts required from me to phone so that laptop opening and opening Sentinel and sitting on
-    it for 2 hrs is avoided and jobs get faster ... Take the approvals. Store in github or supabase. When the PC starts download
-    them and start working."
-   The questions only Ravi can answer (from every chat and from Sentinel) are in Supabase decisions_table, written in plain words;
-   decisions.html shows them 10 at a time with the answer buttons. This block only puts a "Decisions · N" button on the screen for
-   the CEO login when something waits (re-checked every 5 minutes and whenever the app comes to the front). Nobody else sees it;
-   the server refuses every other login anyway (decisions_list -> _is_ceo). Additive: touches nothing else. */
-(function(){
-  'use strict';
-  if(window.HERO_SANDBOX) return;
-  function U(){ try{ return (typeof USER!=='undefined' && USER) || {}; }catch(e){ return {}; } }
-  function isCEO(){ try{ return String(U().role||'').toLowerCase()==='ceo'; }catch(e){ return false; } }
-  function draw(n,u){
-    var b=document.getElementById('ceo-dec-pill');
-    if(!n){ if(b) b.remove(); if(window.heroTopAsks) heroTopAsks(); return; }
-    if(!b){
-      /* R158: in the top bar row #top-asks (same layer as Home / Logout), never floating over the photo screens */
-      b=document.createElement('a'); b.id='ceo-dec-pill'; b.href='decisions.html';
-      b.style.cssText='display:inline-block;background:#b45309;color:#fff;border-radius:8px;padding:7px 12px;white-space:nowrap;'
-        +'font:600 13px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-decoration:none';
-      var row=document.getElementById('top-asks'); (row||document.body).appendChild(b);
-    }
-    b.textContent='🟠 Decisions · '+n+(u?' ('+u+' urgent)':'');
-    if(window.heroTopAsks) heroTopAsks();
-  }
-  function tick(){
-    if(!isCEO() || typeof window.sbRpc!=='function'){ draw(0); return; }
-    window.sbRpc(['av','ni_decisions_list'].join(''),{p_view:'open',p_page:0,p_app:null}).then(function(d){
-      var c=(d&&d.counts)||{}; draw(c.open||0, c.urgent||0);
-    }).catch(function(){});
-  }
-  setTimeout(tick, 6000); setInterval(tick, 5*60000);
-  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible') tick(); });
-})();
-</script>
+
 
 <script>
 /* ================= R157 (Ravi 19-10-2026): CAMERAS TODAY - THE DAILY CAMERA CENSUS. =================
