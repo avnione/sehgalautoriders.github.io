@@ -81,6 +81,27 @@ footer{text-align:center;color:var(--mut);font-size:12px;margin-top:34px;padding
  section.mod h2{font-size:18px}
 }
 </style>
+
+<style id="hero-r174-subpage-safearea">
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+html, body {
+  max-width: 100% !important;
+  overflow-x: clip !important;
+}
+header, .top, .hdr {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  padding-top: max(12px, calc(var(--safe-top, 0px) + 8px)) !important;
+}
+body, main, .wrap {
+  padding-bottom: max(32px, calc(var(--safe-bottom, 0px) + 24px)) !important;
+}
+</style>
+
 </head>
 <body>
 
