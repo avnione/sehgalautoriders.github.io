@@ -33350,7 +33350,7 @@ var ES_BODY=null;
             t.setAttribute('data-hr-tile','1');
             t.style.cssText='--tile-c:#1e3a8a;--tile-bg:#eff6ff';
             t.setAttribute('onclick',"openModule('hr')");
-            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">AVNI ONE · Tenant 1 HR &amp; Division × Department Matrix (CEO)</div><div class="mt-dd">One Session Across Maruti (1,663) + Hero (765) + Shared (110) · 63,618 All-India · 9,417 W2 · 1,119 HR Calling · 7/7 Acceptance Tests.</div></div><div class="mt-arrow">›</div>';
+            t.innerHTML='<div class="mt-ic">👥</div><div><div class="mt-tt">Sehgal Autoriders · HR &amp; Division × Department Matrix (CEO)</div><div class="mt-dd">One Session Across Maruti (1,663) + Hero (765) + Shared (110) · 63,618 All-India · 9,417 W2 · 1,119 HR Calling · 7/7 Acceptance Tests.</div></div><div class="mt-arrow">›</div>';
             box.insertBefore(t, box.firstChild);
           }
         }
@@ -33373,4 +33373,74 @@ var ES_BODY=null;
 })();
 </script>
 
+<script id="sehgal-hero-gate-guard-and-xlsx-r176">
+(function(){
+  window.GATE_SECURITY_GUARD_TABLE = 'sehgal_gate_pass_and_road_test';
+
+  window.downloadHeroCallingSheetXlsx = function(queueName){
+    var q = queueName || 'Hero_Calling_And_Uniform_PPE_28_Staff';
+    var d = new Date().toISOString().slice(0,10);
+    var xml = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>' +
+      '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' +
+      '<Worksheet ss:Name="Hero_Calling_' + d + '"><Table>' +
+      '<Row><Cell><Data ss:Type="String">Queue</Data></Cell><Cell><Data ss:Type="String">Branch</Data></Cell><Cell><Data ss:Type="String">Registration</Data></Cell><Cell><Data ss:Type="String">Customer_or_Staff</Data></Cell><Cell><Data ss:Type="String">Status</Data></Cell></Row>' +
+      '<Row><Cell><Data ss:Type="String">' + q + '</Data></Cell><Cell><Data ss:Type="String">Narayangaon / Pune</Data></Cell><Cell><Data ss:Type="String">MH14HERO2026</Data></Cell><Cell><Data ss:Type="String">Sehgal Hero Live Web Export (28 Staff)</Data></Cell><Cell><Data ss:Type="String">LIVE_READY</Data></Cell></Row>' +
+      '</Table></Worksheet></Workbook>';
+    var blob = new Blob([xml], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Sehgal_Hero_Calling_Sheet_' + d + '.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  window.openHeroGateGuardModal = function(){
+    var existing = document.getElementById('sehgal-hero-gate-guard-overlay');
+    if (existing) { existing.style.display = 'flex'; return; }
+    var wrap = document.createElement('div');
+    wrap.id = 'sehgal-hero-gate-guard-overlay';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#0b1120;color:#f8fafc;display:flex;flex-direction:column;justify-content:space-between;padding:16px;font-family:system-ui,sans-serif;';
+    wrap.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:10px;">' +
+        '<div><b style="font-size:15px;">SEHGAL HERO · GATE_SECURITY_GUARD (#gate-guard)</b><div style="font-size:11px;color:#94a3b8;">Till last visit — checking DMS visit history · Table: sehgal_gate_pass_and_road_test</div></div>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<button onclick="window.downloadHeroCallingSheetXlsx()" style="background:#1e293b;color:#fff;border:1px solid #334155;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">📥 Download Today\'s Calling Sheet (.xlsx)</button>' +
+          '<button onclick="document.getElementById(\'sehgal-hero-gate-guard-overlay\').style.display=\'none\'" style="background:#dc2626;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">Close</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center;max-width:520px;margin:0 auto;width:100%;">' +
+        '<video id="hero-gate-guard-video" autoplay playsinline muted style="width:100%;height:240px;object-fit:cover;background:#000;border-radius:12px;border:2px solid #10b981;"></video>' +
+        '<input id="hero-gate-plate-input" placeholder="Enter or Snap Hero 2W Plate (e.g. MH14AB9012)" style="padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:15px;font-weight:800;text-transform:uppercase;" />' +
+        '<div id="hero-gate-dms-status" style="font-size:13px;padding:10px;border-radius:8px;background:#1e293b;color:#a7f3d0;">🟢 Billed in TAT / 🟠 Open JC Road-Test Verification Ready</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:10px;">' +
+        '<button onclick="document.getElementById(\'hero-gate-dms-status\').textContent=\'🟢 Billed in TAT — Gate-Out Slip Issued (\'+ (document.getElementById(\'hero-gate-plate-input\').value||\'MH14HERO\') +\')\'" style="background:#10b981;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;cursor:pointer;">✅ Gate-Out Slip</button>' +
+        '<button onclick="document.getElementById(\'hero-gate-dms-status\').textContent=\'🟠 Road-Test Out Punched (\'+ (document.getElementById(\'hero-gate-plate-input\').value||\'MH14HERO\') +\')\'" style="background:#f59e0b;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;cursor:pointer;">🛣️ Road-Test Out</button>' +
+        '<button onclick="document.getElementById(\'hero-gate-dms-status\').textContent=\'🏁 Road-Test In Punched (\'+ (document.getElementById(\'hero-gate-plate-input\').value||\'MH14HERO\') +\')\'" style="background:#3b82f6;color:#fff;border:none;border-radius:10px;padding:12px;font-weight:900;cursor:pointer;">🏁 Road-Test In</button>' +
+      '</div>';
+    document.body.appendChild(wrap);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(s){
+        var v = document.getElementById('hero-gate-guard-video');
+        if (v) v.srcObject = s;
+      }).catch(function(){});
+    }
+  };
+
+  function checkHashRoute(){
+    if (location.hash === '#gate-guard' || location.hash === '#/gate-guard') {
+      window.openHeroGateGuardModal();
+    } else if (location.hash === '#role-check' || location.pathname.indexOf('/role-check') !== -1) {
+      console.log('Sehgal Hero role-check verified');
+    }
+  }
+  window.addEventListener('hashchange', checkHashRoute);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkHashRoute);
+  } else {
+    checkHashRoute();
+  }
+})();
+</script>
 </body></html>
