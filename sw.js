@@ -1,5 +1,5 @@
-﻿/* ============================================================================
-   SEHGAL HERO APP â€” SERVICE WORKER
+/* ============================================================================
+   SEHGAL HERO APP — SERVICE WORKER
    Step A (16-Jul-2026). Purpose: stop re-downloading ~2.7 MB on every open.
 
    MEASURED before this file existed, on every single open of the app:
@@ -15,10 +15,10 @@
    again. This worker keeps them on the phone.
 
    WHAT THIS FILE DOES NOT TOUCH:
-     â€¢ script.google.com  â€” the Apps Script backend. Every call still goes to the
+     • script.google.com  — the Apps Script backend. Every call still goes to the
        server, live, exactly as today. Nothing is cached, nothing goes stale.
        No estimate, no gate entry, no token is served from an old copy.
-     â€¢ drive.google.com   â€” the photos. That is Step B, not this file.
+     • drive.google.com   — the photos. That is Step B, not this file.
 
    RULE FOR EVERY DEPLOY FROM NOW ON:
      Upload BOTH index.html AND sw.js to GitHub, together, every time.
@@ -28,30 +28,30 @@
 
 /* Must match window.HERO_RELEASE / window.HERO_BUILD in index.html exactly.
    release.ps1 bumps both together and refuses to publish on a mismatch. */
-const HERO_RELEASE = 126;
-const HERO_BUILD = 'R177-2026.11.12.2';
+const HERO_RELEASE = 127;
+const HERO_BUILD = 'R178-2026.11.12.3';
 const SHELL_CACHE = 'hero-shell-' + HERO_BUILD;
-/* Throttle for the background shell refresh â€” see the fetch handler. */
+/* Throttle for the background shell refresh — see the fetch handler. */
 let LAST_SHELL_REFRESH = 0;
 const SHELL_REFRESH_MS = 6 * 60 * 60 * 1000;
 const LIB_CACHE   = 'hero-lib-v1';   // versioned CDN URLs; contents never change
 
-/* The app shell â€” same-origin, changes on every deploy. */
+/* The app shell — same-origin, changes on every deploy. */
 /* SPEED 2 (Ravi 26-Jul-2026): this used to list BOTH './' and './index.html'.
    They are the same 590 KB page, so every install downloaded and stored it twice.
    One entry only. The fetch handler already matches with ignoreSearch, so './'
    navigations still hit this cached copy. */
 /* SPLIT BUILD (26-Jul-2026): the app is no longer one file. Every module must be
-   in the shell cache or the app breaks the moment the phone loses signal â€” it
+   in the shell cache or the app breaks the moment the phone loses signal — it
    would serve index.html from cache and then fail to fetch the scripts.
    Order here does not matter for caching; order in index.html is what matters
    for execution. */
-/* SINGLE-FILE BUILD â€” all JavaScript is inside index.html again.
+/* SINGLE-FILE BUILD — all JavaScript is inside index.html again.
    Do NOT list js/ modules here: if they are not on the server the install
    swallows the 404s and the app is left with a cached page and no code. */
 const SHELL_URLS = ['./index.html'];
 
-/* The heavy libraries â€” the URLs carry a version number, so the content behind
+/* The heavy libraries — the URLs carry a version number, so the content behind
    a URL can never change. Safe to keep forever. */
 const LIB_URLS = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
@@ -68,7 +68,7 @@ function isLibHost(url) {
       || url.hostname === 'fonts.gstatic.com';
 }
 
-/* Hosts we must NEVER cache â€” live data and photos. */
+/* Hosts we must NEVER cache — live data and photos. */
 function isLiveHost(url) {
   return url.hostname.indexOf('script.google.com') > -1
       || url.hostname.indexOf('googleusercontent.com') > -1
@@ -86,7 +86,7 @@ self.addEventListener('install', function (event) {
       try {
         const res = await fetch(new Request(u, { cache: 'reload' }));
         if (res && res.ok) await shell.put(u, res);
-      } catch (e) { /* offline during install â€” runtime fetch will fill it */ }
+      } catch (e) { /* offline during install — runtime fetch will fill it */ }
     }));
 
     const libs = await caches.open(LIB_CACHE);
@@ -100,12 +100,12 @@ self.addEventListener('install', function (event) {
     /* SILENT AUTO-UPDATE (Ravi 28-Jul-2026).
        This used to deliberately NOT call skipWaiting(), so a new build sat
        waiting until somebody tapped an update bar. In a workshop nobody taps
-       it â€” and when the bar is missed the phone stays on old code for weeks,
+       it — and when the bar is missed the phone stays on old code for weeks,
        which is why people were being told to "clear the cache". Nobody in a
        workshop knows what a cache is, and they should not have to.
 
        skipWaiting() lets the new worker take over as soon as it has finished
-       downloading. The page already open is NOT reloaded â€” the original concern
+       downloading. The page already open is NOT reloaded — the original concern
        was right, a build must never swap itself in halfway through a gate entry.
        The new shell is simply what loads the NEXT time the app is opened.
        Automatic, invisible, and never interrupts anyone mid-job. */
@@ -156,7 +156,7 @@ self.addEventListener('fetch', function (event) {
 
   /* Our own files (index.html): serve the phone's copy at once.
      SPEED 2 (Ravi 26-Jul-2026): this used to fire a full no-store re-download of the
-     whole 590 KB page on EVERY request, in the background, on every app open â€” on
+     whole 590 KB page on EVERY request, in the background, on every app open — on
      mobile data, every time. That was pure waste: sw.js itself already carries the
      build string, so when a new build is deployed the worker changes, installs, and
      re-caches the page anyway. The background refresh is now throttled to once every
@@ -166,7 +166,7 @@ self.addEventListener('fetch', function (event) {
       const cache = await caches.open(SHELL_CACHE);
       const hit = await cache.match(req, { ignoreSearch: true });
       if (!hit) {
-        // Nothing stored yet â€” must go to the network.
+        // Nothing stored yet — must go to the network.
         try {
           const res = await fetch(req);
           if (res && res.ok) { try { cache.put(req, res.clone()); } catch (e) {} }
