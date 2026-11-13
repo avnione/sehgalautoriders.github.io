@@ -29,8 +29,8 @@
    new app. Nothing else to decode.
    release.ps1 increments this automatically in BOTH index.html and sw.js, and
    refuses to publish if the two ever disagree. */
-window.HERO_RELEASE = 128;
-window.HERO_BUILD = 'R179-2026.11.13.1';
+window.HERO_RELEASE = 129;
+window.HERO_BUILD = 'R179-2026.11.13.2';
 window.HERO_FRONTEND_PATCH = 'S02-ESTIMATE-UI-POLISH-2026.07.20';
 (function () {
   if (!('serviceWorker' in navigator)) return;
@@ -34374,12 +34374,12 @@ var ES_BODY=null;
   function canSeeUniform(){
     if(window.HERO_SANDBOX) return true;
     try{
-      if(/[?&]ceo=1\b/i.test(location.search) || location.hash === '#uniform-ppe') return true;
       var u = curUser();
+      if(!u || !u.empno) return false;
       var r = String(u.role || u.designation || '').toLowerCase();
       if(!r) return false;
       return /ceo|gm|wm|manager|super|sa|advisor|parts|hr|admin|billing/.test(r);
-    }catch(e){ return true; }
+    }catch(e){ return false; }
   }
 
   function readLsObj(k, defVal){
@@ -34942,7 +34942,11 @@ var ES_BODY=null;
 
   function isCeoOrSandbox(){
     try{
-      return !!(window.HERO_SANDBOX || window.__SEHGAL_FORCE_CEO__ || /[?&]ceo=1\b/i.test(location.search) || location.hash.indexOf('ceo=1') >= 0);
+      if(window.HERO_SANDBOX) return true;
+      var u = curUser();
+      if(!u || !u.empno) return false;
+      var r = String(u.role || u.designation || '').toLowerCase();
+      return r === 'ceo' || r === 'owner' || r === 'md' || r === 'admin' || String(u.empno || '').toUpperCase() === 'CEO';
     }catch(e){ return false; }
   }
 
@@ -34971,6 +34975,7 @@ var ES_BODY=null;
   var prevOpen = window.openModule;
   window.openModule = function(id){
     if(id === 'uniform-ppe'){
+      if(!window.HERO_SANDBOX && (typeof USER === 'undefined' || !USER)) return;
       ensureUniformView();
       if(typeof window.showView === 'function') window.showView('uniform-ppe');
       if(!UNIF_STATE.bundle) loadHeroUniformBundle(); else paintHeroUniform();
