@@ -81,3 +81,11 @@
 !install/index.html
 !app/download/
 !app/download/*
+# R179 assets (16-11-2026): the HR division selector / HR header load brand/sehgal-autoriders-logo.svg and
+# it was never published (broken image). The four Sehgal Autoriders logo SVGs, by NAME, copied unchanged from the
+# live Maruti app. Vector logos only - no customer data.
+!brand/
+!brand/sehgal-autoriders-logo.svg
+!brand/sehgal-autoriders-logo-square.svg
+!brand/sehgal-autoriders-logo-on-dark.svg
+!brand/sehgal-autoriders-logo-square-white.svg
