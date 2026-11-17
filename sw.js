@@ -28,8 +28,8 @@
 
 /* Must match window.HERO_RELEASE / window.HERO_BUILD in index.html exactly.
    release.ps1 bumps both together and refuses to publish on a mismatch. */
-const HERO_RELEASE = 129;
-const HERO_BUILD = 'R179-2026.11.13.2';
+const HERO_RELEASE = 130;
+const HERO_BUILD = 'R180-2026.11.17.1';
 const SHELL_CACHE = 'hero-shell-' + HERO_BUILD;
 /* Throttle for the background shell refresh — see the fetch handler. */
 let LAST_SHELL_REFRESH = 0;
@@ -70,7 +70,8 @@ function isLibHost(url) {
 
 /* Hosts we must NEVER cache — live data and photos. */
 function isLiveHost(url) {
-  return url.hostname.indexOf('script.google.com') > -1
+  return url.hostname.indexOf('supabase.co') > -1
+      || url.hostname.indexOf('script.google.com') > -1
       || url.hostname.indexOf('googleusercontent.com') > -1
       || url.hostname.indexOf('drive.google.com') > -1
       || url.hostname.indexOf('generativelanguage.googleapis.com') > -1
@@ -135,7 +136,7 @@ self.addEventListener('fetch', function (event) {
 
   if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
   if (isLiveHost(url)) return;                     // backend + photos: never touched
-  /* R148 (15-10-2026): A.V.N.I Decisions is always read fresh from the network - a cached copy would show old buttons. */
+  /* R148 (15-10-2026): Decisions page is always read fresh from the network - a cached copy would show old buttons. */
   if (url.origin === self.location.origin && /\/decisions\.html$/.test(url.pathname)) return;
 
   /* Libraries and fonts: from the phone first. Only hit the network if we have
@@ -192,6 +193,28 @@ self.addEventListener('message', function (event) {
   if (event.data === 'HERO_SKIP_WAITING') self.skipWaiting();
   if (event.data === 'HERO_BUILD?') {
     if (event.source) event.source.postMessage({ heroBuild: HERO_BUILD });
+  }
+  if (event.data && event.data.type === 'HERO_PURGE_DELIVERED_MEDIA') {
+    const urls = Array.isArray(event.data.urls) ? event.data.urls : [];
+    event.waitUntil((async function () {
+      try {
+        const names = await caches.keys();
+        for (const nm of names) {
+          const c = await caches.open(nm);
+          const reqs = await c.keys();
+          for (const r of reqs) {
+            if (
+              r.url.indexOf('/storage/v1/object/') > -1 ||
+              r.url.indexOf('hik-snaps') > -1 ||
+              r.url.indexOf('hero-uploads') > -1 ||
+              urls.indexOf(r.url) > -1
+            ) {
+              await c.delete(r);
+            }
+          }
+        }
+      } catch (e) {}
+    })());
   }
 });
 
